@@ -1,3 +1,6 @@
+//判断亲家!!! 
+//b = [].concat(a)
+//gameend亲家拿棒 
 function md5(string){
   function md5_RotateLeft(lValue,iShiftBits){
     return(lValue<<iShiftBits)|(lValue>>>(32-iShiftBits));
@@ -1384,29 +1387,29 @@ paishan=randompaishan("3s");
 chang=0;ju=0;ben=1;
 addNewRound();
 qie(0,"6z",true);
-mingpai(1,["6z","6z"],1);
+mingpai(1,["6z","6z"]);
 qie(1,"8s",false);
-mingpai(2,["8s","8s"],1);
+mingpai(2,["8s","8s"]);
 qie(2,"3z",false);
-mingpai(3,["3z","3z"],1);
+mingpai(3,["3z","3z"]);
 qie(3,"5p",false);
-mingpai(1,["5p","5p"],1);
+mingpai(1,["5p","5p"]);
 qie(1,"2z",false);
-mingpai(3,["2z","2z"],1);
+mingpai(3,["2z","2z"]);
 qie(3,"6s",false);
-mingpai(2,["6s","6s"],1);
+mingpai(2,["6s","6s"]);
 qie(2,"7z",false);
-mingpai(1,["7z","7z"],1);
+mingpai(1,["7z","7z"]);
 qie(1,"2s",false);
-mingpai(2,["2s","2s"],1);
+mingpai(2,["2s","2s"]);
 qie(2,"4z",false);
-mingpai(3,["4z","4z"],1);
+mingpai(3,["4z","4z"]);
 qie(3,"4s",false);
-mingpai(2,["4s","4s"],1);
+mingpai(2,["4s","4s"]);
 qie(2,"5z",false);
-mingpai(1,["5z","5z"],1);
+mingpai(1,["5z","5z"]);
 qie(1,"1z",false);
-mingpai(3,["1z","1z"],1);
+mingpai(3,["1z","1z"]);
 qie(3,"9p",false);
 mo(0);
 qie(0,"3s",false);
