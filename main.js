@@ -1,6 +1,3 @@
-//判断亲家!!! 
-//b = [].concat(a)
-//gameend亲家拿棒 
 function md5(string){
   function md5_RotateLeft(lValue,iShiftBits){
     return(lValue<<iShiftBits)|(lValue>>>(32-iShiftBits));
@@ -1218,18 +1215,18 @@ function qie(player,kind,is_liqi,var1){
   } 
   else return 0;
 }
-function mingpai(seat,tiles,type){
+function mingpai(seat,tiles){
   let lstseat=actions[actions.length-1].data.seat,lsttile=actions[actions.length-1].data.tile;
-  if(type==0)addChiPengGang([lstseat,seat,seat],seat,[lsttile,tiles[0],tiles[1]],type);
-  if(type==1){
-    if(lstseat==(seat+3)%4)addChiPengGang([lstseat,seat,seat],seat,[lsttile,tiles[0],tiles[1]],type);
-    if(lstseat==(seat+2)%4)addChiPengGang([seat,lstseat,seat],seat,[tiles[0],lsttile,tiles[1]],type);
-    if(lstseat==(seat+1)%4)addChiPengGang([seat,seat,lstseat],seat,[tiles[0],tiles[1],lsttile],type);
+  if(!equaltile(tiles[0],lsttile))addChiPengGang([lstseat,seat,seat],seat,[lsttile,tiles[0],tiles[1]],0);
+  else if(tiles.length==3){
+    if(lstseat==(seat+3)%4)addChiPengGang([lstseat,seat,seat,seat],seat,[lsttile,tiles[0],tiles[1],tiles[2]],2);
+    if(lstseat==(seat+2)%4)addChiPengGang([seat,lstseat,seat,seat],seat,[tiles[0],lsttile,tiles[1],tiles[2]],2);
+    if(lstseat==(seat+1)%4)addChiPengGang([seat,seat,seat,lstseat],seat,[tiles[0],tiles[1],tiles[2],lsttile],2);
   }
-  if(type==2){
-    if(lstseat==(seat+3)%4)addChiPengGang([lstseat,seat,seat,seat],seat,[lsttile,tiles[0],tiles[1],tiles[2]],type);
-    if(lstseat==(seat+2)%4)addChiPengGang([seat,lstseat,seat,seat],seat,[tiles[0],lsttile,tiles[1],tiles[2]],type);
-    if(lstseat==(seat+1)%4)addChiPengGang([seat,seat,seat,lstseat],seat,[tiles[0],tiles[1],tiles[2],lsttile],type);
+  else{
+    if(lstseat==(seat+3)%4)addChiPengGang([lstseat,seat,seat],seat,[lsttile,tiles[0],tiles[1]],1);
+    if(lstseat==(seat+2)%4)addChiPengGang([seat,lstseat,seat],seat,[tiles[0],lsttile,tiles[1]],1);
+    if(lstseat==(seat+1)%4)addChiPengGang([seat,seat,lstseat],seat,[tiles[0],tiles[1],lsttile],1);
   }
 } 
 function huangpailiuju(){
