@@ -140,6 +140,8 @@ paishan=randompaishan("3s3s3s3s","1z");//以四个三索开头，东风为结尾
 
 3.荒牌流局时如果有人没听牌会有BUG。
 
+如果发现如何解决BUG，欢迎提 issue 和 pull request。（对于1，只需要提供一个牌谱就行了）
+
 ## 版权声明
 
 1.md5加密来自于[百度百科](https://baike.baidu.com/item/MD5/212708?fromtitle=MD5%E5%8A%A0%E5%AF%86&fromid=5706230&fr=aladdin)。
