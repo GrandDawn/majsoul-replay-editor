@@ -1,6 +1,3 @@
-//判断亲家!!! 
-//b = [].concat(a)
-//gameend亲家拿棒 
 function md5(string){
   function md5_RotateLeft(lValue,iShiftBits){
     return(lValue<<iShiftBits)|(lValue>>>(32-iShiftBits));
@@ -760,7 +757,7 @@ function addDiscardTile(is_liqi,is_wliqi,moqie,seat,tile){
       break;
     }
   }
-  actions.push({
+  let ret={
     name:"RecordDiscardTile",
     data:{
       'is_liqi':is_liqi,
@@ -769,43 +766,41 @@ function addDiscardTile(is_liqi,is_wliqi,moqie,seat,tile){
       'moqie':moqie,
       'seat':seat,
       'tile':tile,
-      'tingpais':tingpai(seat)
     }
-  });
+  },tingpais=tingpai(seat);
+  if(tingpais.length!=0)ret.data.tingpais=tingpais;
+  actions.push(ret);
   calcxun(0);
 }
 function addDealTile(left_tile_count,seat,tile){
+  if(doracnt.lsttype==2){
+    doracnt.lsttype=0;
+    doracnt.cnt++;
+  }
   for(let i=0;i<playercnt;i++)if(liqiinfo[i].yifa==2)liqiinfo[i].yifa=0;
   playertiles[seat].push(tile);
+  let ret={
+    name:"RecordDealTile",
+    data:{
+      'doras':calcdoras(),
+      'left_tile_count':left_tile_count,
+      'seat':seat,
+      'tile':tile,
+    }
+  };
   if(lstliqi==0){
-	actions.push({
-      name:"RecordDealTile",
-      data:{
-        'doras':calcdoras(),
-        'left_tile_count':left_tile_count,
-        'seat':seat,
-        'tile':tile,
-      }
-    });
+	actions.push(ret);
   }
   else{
     liqibang=liqibang+1;
     scores[lstliqi.seat]=scores[lstliqi.seat]-1000;
     liqiinfo[lstliqi.seat]={'liqi':lstliqi.type,'yifa':1};
-    actions.push({
-      name:"RecordDealTile",
-      data:{
-        'doras':doras,
-        'left_tile_count':left_tile_count,
-        'seat':seat,
-        'liqi':{
-          'liqibang':liqibang,
-          'score':scores[lstliqi.seat],
-          'seat':lstliqi.seat
-        },
-        'tile':tile,
-      }
-    });
+    ret.data.liqi={
+      'liqibang':liqibang,
+      'score':scores[lstliqi.seat],
+      'seat':lstliqi.seat
+    }
+    actions.push(ret);
   }
   lstliqi=0;
   calcxun(0);
@@ -836,35 +831,28 @@ function addChiPengGang(froms,seat,tiles,type){
       }
     }
   }
+  let ret={
+    name:"RecordChiPengGang",
+    data:{
+      'froms':froms,
+      'seat':seat,
+      'tiles':tiles,
+      'type':type
+    }  
+  };
   if(lstliqi==0){
-    actions.push({
-      name:"RecordChiPengGang",
-      data:{
-        'froms':froms,
-        'seat':seat,
-        'tiles':tiles,
-        'type':type
-      }  
-    });
+    actions.push(ret);
   }
   else{
     liqibang=liqibang+1;
     scores[lstliqi.seat]=scores[lstliqi.seat]-1000;
     liqiinfo[lstliqi.seat]={'liqi':lstliqi.type,'yifa':1};
-    actions.push({
-      name:"RecordChiPengGang",
-      data:{
-        'froms':froms,
-        'seat':seat,
-        'liqi':{
-          'liqibang':liqibang,
-          'score':scores[lstliqi.seat],
-          'seat':lstliqi.seat
-        },
-        'tiles':tiles,
-        'type':type
-      }  
-    });
+    ret.data.liqi={
+      'liqibang':liqibang,
+      'score':scores[lstliqi.seat],
+      'seat':lstliqi.seat
+    }
+    actions.push(ret);
   }
   lstliqi=0;
   calcxun(0);
@@ -893,6 +881,7 @@ function addAnGangAddGang(seat,tiles,type){
     }
   }
   else{
+    doracnt.lsttype=2;
     fulu[seat].push({'type':3,'tile':[tiles,tiles,tiles,tiles]});
     for(let j=1;j<=4;j++){
       for(let i=0;i<playertiles[seat].length;i++){
@@ -914,7 +903,6 @@ function addAnGangAddGang(seat,tiles,type){
       'type':type
     }
   });
-  if(type==3)doracnt.cnt++;
   calcxun(0);
 }
 function addBaBei(seat){
