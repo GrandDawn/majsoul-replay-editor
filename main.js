@@ -357,7 +357,8 @@ function tingpai(seat){
 function calcsudian(x){
   let val=0;
   for(let i=0;i<x.fans.length;i++)val=val+x.fans[i].val;
-  if(x.yiman==true)return 8000*val;
+  if(val==0)return -2000;
+  else if(x.yiman==true)return 8000*val;
   else if(val==5)return 2000;
   else if(val==6||val==7)return 3000;
   else if(val>=8&&val<=10)return 4000;
@@ -611,6 +612,7 @@ function calcfan(tls,seat,zimo){
         if(menqing)ans.fans.push({'val':6,'id':29});
         else ans.fans.push({'val':5,'id':29});
       }//清一色 
+      if(ans.fans.length==0)return ans; 
       if(alldoras[0]!=0)ans.fans.push({'val':alldoras[0],'id':31});//宝牌 
       if(alldoras[1]!=0)ans.fans.push({'val':alldoras[1],'id':32});//红宝牌 
       if(alldoras[2]!=0)ans.fans.push({'val':alldoras[2],'id':34});//北宝牌 
@@ -800,7 +802,6 @@ function addDealTile(left_tile_count,seat,tile){
   }
   actions.push(ret);
   lstliqi=0;
-  lstliqi=0;
   calcxun(0);
 }
 function addChiPengGang(froms,seat,tiles,type){
@@ -964,12 +965,11 @@ function hupai(seat){
 	else if(fulu[seat][i].type==2)ming.push("minggang("+tiles[0]+","+tiles[1]+","+tiles[2]+","+tiles[3]+")");
 	else if(fulu[seat][i].type==3)ming.push("angang("+tiles[0]+","+tiles[1]+","+tiles[2]+","+tiles[3]+")");
   }
-  let hand=[],hu_tile;
-  for(let i=0;i<playertiles[seat].length;i++)hand[i]=playertiles[seat][i];
+  let hand=[].concat(playertiles[seat]),hu_tile;
   hu_tile=hand[hand.length-1];
   hand.length--;
   hand.sort(cmp);
-  
+  //------------------------------
   let qinjia;
   if(seat==ju)qinjia=true;
   else qinjia=false;
@@ -988,6 +988,9 @@ function hupai(seat){
   if(points.yiman==true)title_id=val+4;
   //-------------------------------------------
   let sudian=calcsudian(points);
+  let zhahu=false;
+  if(calchupai(playertiles[seat])==0||sudian==-2000)zhahu=true;
+  //待更新振听诈和 
   let point_rong=0,point_sum=0,point_zimo_qin=0,point_zimo_xian=0;
   if(qinjia){
     point_rong=6*sudian;
@@ -1007,6 +1010,54 @@ function hupai(seat){
   point_sum=qieshang(point_sum);
   point_zimo_qin=qieshang(point_zimo_qin);
   point_zimo_xian=qieshang(point_zimo_xian);
+  if(zhahu){
+    if(qinjia){
+      point_rong=-6*sudian;
+      point_zimo_qin=-2*sudian;
+      point_zimo_xian=-2*sudian;
+      if(playercnt==3)point_sum=-4*sudian;
+      else point_sum=-6*sudian;
+    }
+    else{
+      point_rong=-4*sudian;
+      point_zimo_qin=-2*sudian;
+      point_zimo_xian=-sudian;
+      if(playercnt==3)point_sum=-3*sudian;
+      else point_sum=-4*sudian;
+    }
+    for(let i=0;i<playercnt;i++){
+      if(i==seat)continue;
+      if(i==ju||seat==ju){
+        delta_scores[i]-=qieshang(sudian*2);
+        delta_scores[seat]+=qieshang(sudian*2);
+      }
+      else{
+        delta_scores[i]-=qieshang(sudian);
+        delta_scores[seat]+=qieshang(sudian);
+      }
+    }
+    let ret={
+      count:val,
+      doras:doras0,
+      li_doras:li_doras0,
+      fans:points.fans,
+      fu:points.fu,
+      hand:hand,
+      hu_tile:hu_tile,
+      liqi:liqi,
+      ming:ming,
+      point_rong:point_rong,
+      point_sum:point_sum,
+      point_zimo_qin:point_zimo_qin,
+      point_zimo_xian:point_zimo_xian,
+      qinjia:qinjia,
+      seat:seat,
+      title_id:1,
+      yiman:points.yiman,
+      zimo:zimo,
+    }
+    return ret;
+  }
   if(baopai[seat]!=undefined){
     if(zimo){
       if(qinjia){
@@ -1153,8 +1204,8 @@ function qie(player,kind,is_liqi,var1){
   let is_wliqi=false;
   if(is_liqi==undefined)is_liqi=false;
   if(is_liqi&&liqiinfo[player].yifa!=0)is_wliqi=true;
-  if(is_wliqi)lstliqi={'seat':player,'type':2}
-  else if(is_liqi)lstliqi={'seat':player,'type':1}
+  if(is_wliqi)lstliqi={'seat':player,'type':2};
+  else if(is_liqi)lstliqi={'seat':player,'type':1};
   let flag=0,tile;
   function swap(x){
     playertiles[player][x]=playertiles[player][playertiles[player].length-1];
@@ -1186,8 +1237,10 @@ function qie(player,kind,is_liqi,var1){
       }
     }
   }
+  let lstactionname=actions[actions.length-1].name;
+  
   if(flag==0&&kind[0]>='0'&&kind[0]<='9'){
-    if(playertiles[player][playertiles[player].length-1]==kind)addDiscardTile(is_liqi,is_wliqi,true,player,kind);
+    if(playertiles[player][playertiles[player].length-1]==kind&&lstactionname!="RecordNewRound"&&lstactionname!="RecordChiPengGang")addDiscardTile(is_liqi,is_wliqi,true,player,kind);
     else addDiscardTile(is_liqi,is_wliqi,false,player,kind);
     return 1;
   }    
@@ -1195,7 +1248,7 @@ function qie(player,kind,is_liqi,var1){
     addDiscardTile(is_liqi,is_wliqi,false,player,playertiles[player][playertiles[player].length-1]);
     return 1;
   }
-  else if(flag==2){
+  else if(flag==2&&lstactionname!="RecordNewRound"&&lstactionname!="RecordChiPengGang"){
     addDiscardTile(is_liqi,is_wliqi,true,player,playertiles[player][playertiles[player].length-1]);
     return 1;
   } 
@@ -1361,11 +1414,11 @@ for(let i=69;i>=1;i--){
 }
 huangpailiuju();
 addedit();
-//第二局（每局的dora可能不一样哦）
+//第二局 
 tiles0=["1s","1s","1s","2s","3s","4s","0s","6s","7s","8s","9s","9s","9s","1p"];
 tiles1=["1p","1p","2p","3p","7m","7m","7m","8m","8m","8m","9m","9m","9m"];
 tiles2=["2s","2s","2s","3s","3s","3s","4s","4s","4s","5s","5s","6s","6s"];  
-tiles3=["2m","2m","2m","3m","3m","3m","4m","4m","4m","5m","5m","6m","6m"];
+tiles3=["2s","2s","2s","3s","3s","3s","4s","4s","4s","5s","5s","6s","6s"];
 paishan=randompaishan("");
 chang=0;ju=0;ben=1;
 addNewRound();
@@ -1378,7 +1431,7 @@ tiles2=["2s","3s","8s","5p","5p","1z","2z","5z","5z","6z","6z","7z","7z"];
 tiles3=["2s","2s","3s","4s","4s","6s","6s","8s","8s","3z","4z","5z","7z"];  
 tiles0=["3s","4s","6s","5p","9p","1z","1z","2z","2z","3z","3z","4z","4z"];
 paishan=randompaishan("3s");
-chang=0;ju=1;ben=1;
+chang=0;ju=1;ben=0;
 addNewRound();
 qie(1,"6z",true);
 mingpai(2,["6z","6z"]);
