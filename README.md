@@ -69,14 +69,14 @@ paishan=randompaishan("3s3s3s3s","1z");//以四个三索开头，东风为结尾
 
 ## 编辑每一局的过程
 
-1.摸牌：函数`mo(seat)`。
+1.摸牌：函数`mopai(seat)`。
 
 `seat`：`seat`号玩家摸牌。
 
-例子：`mo(1);`。
+例子：`mopai(1);`。
 
 
-2.出牌：`qie(seat,kind,is_liqi)`
+2.出牌：`qiepai(seat,kind,is_liqi)`
 
 `seat`：`seat`号玩家切牌。
 
@@ -88,7 +88,7 @@ paishan=randompaishan("3s3s3s3s","1z");//以四个三索开头，东风为结尾
 
 `is_liqi`：表示这次切牌是否立直（仅需第一次）。由系统判断是否是双立直。
 
-例子：`qie(0,"9m",true);`和`qie(3,"moqie",false);`。
+例子：`qiepai(0,"9m",true);`和`qiepai(3,"moqie",false);`。
 
 3.鸣牌：`mingpai(seat,tiles,type)`
 
@@ -108,7 +108,7 @@ paishan=randompaishan("3s3s3s3s","1z");//以四个三索开头，东风为结尾
 
 `type`：`2`表示加杠，`3`表示暗杠。
 
-例子：`mingpai(2,"4m",3);`和`mingpai(0,"7z",2);`。
+例子：`addAnGangAddGang(2,"4m",3);`和`addAnGangAddGang(0,"7z",2);`。
 
 5.拔北：`addBaBei(seat)`
 
@@ -120,11 +120,11 @@ paishan=randompaishan("3s3s3s3s","1z");//以四个三索开头，东风为结尾
 
 使用方法暂不明确。
 
-8.和牌：`endHule([hupai(seat1),hupai(seat2),...]);`
+8.和牌：`hupai([seat1,seat2,...]);`
 
 表示`seat1`,`seat2`,...的玩家和牌。
 
-例子：`endHule([hupai(0)]);`和`endHule([hupai(1),hupai(2),hupai(3)]);`。
+例子：`hupai([0]);`和`hupai([1,2,3]);`。
 
 ## 注意事项
 
