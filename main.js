@@ -1249,7 +1249,7 @@ function qiepai(player,kind,is_liqi,var1){
     else addDiscardTile(is_liqi,is_wliqi,false,player,kind);
     return 1;
   }    
-  if(flag==1){
+  if(flag==1||lstactionname=="RecordNewRound"||lstactionname=="RecordChiPengGang"){
     addDiscardTile(is_liqi,is_wliqi,false,player,playertiles[player][playertiles[player].length-1]);
     return 1;
   }
@@ -1325,7 +1325,7 @@ function huangpailiuju(){
       'delta_scores':[].concat(delta_scores),
       'doras':calcdoras(),
       'hand':[].concat(playertiles[seat]),
-      ming:ming,
+      'ming':ming,
       'old_scores':[].concat(scores),
       'score':score,
       'seat':seat
