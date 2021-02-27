@@ -721,6 +721,10 @@ function calcdoras(){
   return doras0;
 }
 function addNewRound(){
+  tiles0.sort(cmp);
+  tiles1.sort(cmp);
+  tiles2.sort(cmp);
+  tiles3.sort(cmp);
   init();
   benchangbang=ben;
   actions.push({
@@ -980,7 +984,7 @@ function hupaioneplayer(seat){
   let sudian=calcsudian(points);
   let zhahu=false;
   if(calchupai(playertiles[seat])==0||sudian==-2000)zhahu=true;
-  //待更新振听诈和 
+  if(calchupai(playertiles[seat])!=3&&lstaction.name=="RecordAnGangAddGang"&&lstaction.data.type==3)zhahu=true;
   let point_rong=0,point_sum=0,point_zimo_qin=0,point_zimo_xian=0;
   if(qinjia){
     point_rong=6*sudian;
@@ -1271,7 +1275,7 @@ function leimingpai(seat,tile,type){
   for(let i=0;i<fulu[seat].length;i++){
     if(equaltile(fulu[seat][i].tile[0],tile)&&fulu[seat][i].type==1)jiagangflag=true;
   }
-  if(tilecnt==4&&type==undefined||type=="angang")addAnGangAddGang(seat,tile,3);
+  if(tilecnt>=4&&type==undefined||type=="angang")addAnGangAddGang(seat,tile,3);
   if(jiagangflag&&tilecnt>=1&&type==undefined||type=="jiagang")addAnGangAddGang(seat,tile,2);
 }
 function huangpailiuju(){
@@ -1316,9 +1320,9 @@ function huangpailiuju(){
     for(let i=fulu[seat].length-1;i>=0;i--){
       let tiles=fulu[seat][i].tile;
       if(fulu[seat][i].type==0)ming.push("shunzi("+tiles[0]+","+tiles[1]+","+tiles[2]+")");
-	  else if(fulu[seat][i].type==1)ming.push("kezi("+tiles[0]+","+tiles[1]+","+tiles[2]+")");
-	  else if(fulu[seat][i].type==2)ming.push("minggang("+tiles[0]+","+tiles[1]+","+tiles[2]+","+tiles[3]+")");
-	  else if(fulu[seat][i].type==3)ming.push("angang("+tiles[0]+","+tiles[1]+","+tiles[2]+","+tiles[3]+")");
+      else if(fulu[seat][i].type==1)ming.push("kezi("+tiles[0]+","+tiles[1]+","+tiles[2]+")");
+      else if(fulu[seat][i].type==2)ming.push("minggang("+tiles[0]+","+tiles[1]+","+tiles[2]+","+tiles[3]+")");
+      else if(fulu[seat][i].type==3)ming.push("angang("+tiles[0]+","+tiles[1]+","+tiles[2]+","+tiles[3]+")");
     }
 	ret2.push({
       'delta_scores':[].concat(delta_scores),
@@ -1356,7 +1360,7 @@ function liuju(){
     for(let i=0;i<=36;i++)cnt[i]=0;
     for(let i=0;i<playertiles[seat].length;i++){
       cnt[tiletoint(playertiles[seat][i])]++;
-	}
+    }
 	if(cnt[1]>=1)yaojiutype++;if(cnt[9]>=1)yaojiutype++;
 	if(cnt[10]>=1)yaojiutype++;if(cnt[18]>=1)yaojiutype++;
 	if(cnt[19]>=1)yaojiutype++;if(cnt[27]>=1)yaojiutype++;
@@ -1365,13 +1369,13 @@ function liuju(){
 	if(cnt[32]>=1)yaojiutype++;if(cnt[33]>=1)yaojiutype++;
 	if(cnt[34]>=1)yaojiutype++;
 	if(yaojiutype>=9&&liqiinfo[seat].liqi==0&&liqiinfo[seat].yifa==1&&playertiles[seat].length==14){
-	  let lsttile=playertiles[seat][playertiles[seat].length-1];
-	  playertiles[seat].length=playertiles[seat].length-1;
-	  playertiles[seat].sort(cmp);
-	  playertiles[seat].push(lsttile);
-	  endLiuJu(1,seat,[].concat(playertiles[seat]));
-	  return;
-	}
+      let lsttile=playertiles[seat][playertiles[seat].length-1];
+      playertiles[seat].length=playertiles[seat].length-1;
+      playertiles[seat].sort(cmp);
+      playertiles[seat].push(lsttile);
+      endLiuJu(1,seat,[].concat(playertiles[seat]));
+      return;
+    }
   }
   if(playercnt==4&&paihe[0].tiles.length==1&&paihe[1].tiles.length==1&&paihe[2].tiles.length==1&&paihe[3].tiles.length==1&&paihe[0].tiles[0]==paihe[1].tiles[0]&&paihe[1].tiles[0]==paihe[2].tiles[0]&&paihe[2].tiles[0]==paihe[3].tiles[0]&&tiletoint(paihe[0].tiles[0])>=28&&tiletoint(paihe[0].tiles[0])<=31){
     actions.push({
@@ -1396,21 +1400,26 @@ function liuju(){
         name:"RecordLiuJu",
         data:{
           'type':4,
-		  'liqi':{
+          'liqi':{
             'liqibang':liqibang,
             'score':scores[lstliqi.seat],
             'seat':lstliqi.seat
           },
           'tiles':[{'hand':[].concat(playertiles[0])},
-		           {'hand':[].concat(playertiles[1])},
-				   {'hand':[].concat(playertiles[2])},
-		           {'hand':[].concat(playertiles[3])}]
+                   {'hand':[].concat(playertiles[1])},
+                   {'hand':[].concat(playertiles[2])},
+                   {'hand':[].concat(playertiles[3])}]
         }
       });
       return;
-	} 
+    } 
   }
-  if(doracnt.cnt==5){//粗略的判断一下 
+  let havegang=[0,0,0,0],havegangcnt;
+  for(let seat=0;seat<playercnt;seat++){
+    for(let i=0;i<fulu[seat].length-1;i++)if(fulu[seat][i].type==2||fulu[seat][i].type==3)havegang[seat]=1;
+    havegangcnt+=havegang[seat];
+  }
+  if(doracnt.cnt==5&&havegangcnt>=2){
     actions.push({
       name:"RecordLiuJu",
       data:{
@@ -1452,7 +1461,7 @@ function gameend(){
   }
   window.recordedit.data.players=players;
 }
-function randompaishan(paishan){
+function randompaishan(paishan,paishanback){
   function randomcmp(x,y){
     return Math.random()-0.5;
   }
@@ -1465,6 +1474,7 @@ function randompaishan(paishan){
   for(let i=0;i<tiles2.length;i++)cnt[tiletoint(tiles2[i],1)]--;
   for(let i=0;i<tiles3.length;i++)cnt[tiletoint(tiles3[i],1)]--;
   for(let i=0;i<paishan.length;i+=2)cnt[tiletoint(paishan[i]+paishan[i+1],1)]--;
+  if(paishanback!=undefined)for(let i=0;i<paishanback.length;i+=2)cnt[tiletoint(paishanback[i]+paishanback[i+1],1)]--;
   for(let i=1;i<=37;i++){
     for(let j=1;j<=cnt[i];j++)tls.push(inttotile(i));
     if((i==5||i==14||i==23)&&cnt[i]>=1){
@@ -1475,6 +1485,7 @@ function randompaishan(paishan){
   }
   tls.sort(randomcmp);
   for(let i=0;i<tls.length;i++)paishan+=tls[i];
+  if(paishanback!=undefined)paishan+=paishanback;
   return paishan;
 }
 window.recordedit=new RecordEdit();
@@ -1490,7 +1501,7 @@ tiles3=["2s","2s","2s","3s","3s","3s","4s","4s","4s","5s","5s","6s","6s"];
 paishan="1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m";
 chang=0;ju=0;ben=0;
 addNewRound();
-qiepai(0,"moqie");
+qiepai(0,"1m");
 for(let i=69;i>=1;i--){
   mopai((70-i)%4);
   qiepai((70-i)%4,"moqie");
