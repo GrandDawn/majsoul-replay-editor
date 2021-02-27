@@ -616,7 +616,7 @@ function calcfan(tls,seat,zimo){
       if(alldoras[0]!=0)ans.fans.push({'val':alldoras[0],'id':31});//宝牌 
       if(alldoras[1]!=0)ans.fans.push({'val':alldoras[1],'id':32});//红宝牌 
       if(alldoras[2]!=0)ans.fans.push({'val':alldoras[2],'id':34});//北宝牌 
-      if(alldoras[3]!=0)ans.fans.push({'val':alldoras[3],'id':33});//里宝牌 
+      if(liqiinfo[seat].liqi!=0)ans.fans.push({'val':alldoras[3],'id':33});//里宝牌 
       //--------------------------------------------------
       if(duizi==7){
         ans.fu=25;
