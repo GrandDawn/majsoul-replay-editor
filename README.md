@@ -141,4 +141,4 @@ paishan=randompaishan("3s3s3s3s","1z");//以四个三索开头，东风为结尾
 
 2.recordedit部分参考了B站[一般通过彳亍人](https://space.bilibili.com/23019265)的[BV1HE411Q7JM](https://www.bilibili.com/video/BV1HE411Q7JM)。
 
-3.其他部分均由本人编写。可以用于个人使用，请勿用于商业用途，谢谢配合。
+3.其他部分均由本人编写。可以用于个人使用，请勿用于商业用途，谢谢配合。请不要将示例代码进行录制并宣传，谢谢。
