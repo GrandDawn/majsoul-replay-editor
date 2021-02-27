@@ -85,7 +85,7 @@ paishan=randompaishan("3s3s3s3s","1z");//以四个三索开头，东风为结尾
 
 `is_liqi`：表示这次切牌是否立直（仅需第一次）。由系统判断是否是双立直。没有此参数时默认不立直。
 
-例子：`qiepai(0,"9m",true);`和`qiepai(3,"moqie");`。
+例子：`qiepai(0,"0m",true);`和`qiepai(3,"moqie");`。
 
 3.鸣牌：`mingpai(seat,tiles)`
 
@@ -97,9 +97,9 @@ paishan=randompaishan("3s3s3s3s","1z");//以四个三索开头，东风为结尾
 
 4.暗杠/加杠/拔北：`leimingpai(seat,tiles,type)`
 
-`seat`：`seat`号玩家暗杠/加杠。
+`seat`：`seat`号玩家暗杠/加杠/拔北。
 
-`tiles`：要暗杠/加杠的牌。
+`tiles`：要暗杠/加杠/拔北的牌。
 
 `type`：`babei`，`minggang`或`angang`。没有此参数时默认按照拔北、暗杠、加杠的顺序判断。
 
@@ -121,6 +121,8 @@ paishan=randompaishan("3s3s3s3s","1z");//以四个三索开头，东风为结尾
 
 2.对于不符合要求的填写，可能出现页面崩溃的问题。
 
+3.本代码基本完成，之后将不会进行大幅度改动。
+
 ## 已知BUG
 
 1.天听不显示听牌。
@@ -129,7 +131,7 @@ paishan=randompaishan("3s3s3s3s","1z");//以四个三索开头，东风为结尾
 
 3.荒牌流局时如果有人没听牌会有BUG。
 
-4.四家立直时不显示每个人的手牌
+4.四家立直时不显示每个人的手牌。
 
 如果发现如何解决BUG，欢迎提 issue 和 pull request。（对于1和4，只需要提供一个牌谱就行了）
 
