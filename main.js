@@ -1440,7 +1440,7 @@ function gameend(){
     if(y.part_point_1>x.part_point_1)return 1;
     if(y.part_point_1<x.part_point_1)return -1;
     if(y.seat<x.seat)return 1;
-    is(y.seat>x.seat)return -1;
+    if(y.seat>x.seat)return -1;
   }
   players=[];
   for(let i=0;i<playercnt;i++)players.push({
