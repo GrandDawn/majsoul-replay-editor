@@ -9,7 +9,7 @@
 2.编辑将每个人的初始分数。
 常用：
 + ```scores=[25000,25000,25000,25000];```
-+ ```scores=[35000,35000,35000,0];```
++ ```scores=[35000,35000,35000];```
 
 3.编辑一位必要点数。一般为不需要更改。
 
@@ -75,7 +75,6 @@ paishan=randompaishan("3s3s3s3s","1z");//以四个三索开头，东风为结尾
 
 例子：`mopai(1);`。
 
-
 2.出牌：`qiepai(seat,kind,is_liqi)`
 
 `seat`：`seat`号玩家切牌。
@@ -84,43 +83,35 @@ paishan=randompaishan("3s3s3s3s","1z");//以四个三索开头，东风为结尾
 
 + 如果`kind`等于`"moqie"`，那么为自动摸切。
 
-+ 否则表示切牌`kind`。
++ 否则表示切牌`kind`。（请注意红宝牌的影响）
 
-`is_liqi`：表示这次切牌是否立直（仅需第一次）。由系统判断是否是双立直。
+`is_liqi`：表示这次切牌是否立直（仅需第一次）。由系统判断是否是双立直。没有此参数时默认不立直。
 
-例子：`qiepai(0,"9m",true);`和`qiepai(3,"moqie",false);`。
+例子：`qiepai(0,"9m",true);`和`qiepai(3,"moqie");`。
 
-3.鸣牌：`mingpai(seat,tiles,type)`
+3.鸣牌：`mingpai(seat,tiles)`
 
 `seat`：`seat`号玩家鸣牌。
 
 `tiles`：从手里拿出的牌。
 
-`type`：`0`表示吃，`1`表示碰，`2`表示大明杠。
+例子：`mingpai(3,["4m","6m"]);`和`mingpai(1,["0s","5s","5s"]);`。
 
-例子：`mingpai(3,["4m","6m"],0);`和`mingpai(1,["0s","5s","5s"],2);`。
-
-4.暗杠/加杠：`addAnGangAddGang(seat,tiles,type)`
+4.暗杠/加杠/拔北：`leimingpai(seat,tiles,type)`
 
 `seat`：`seat`号玩家暗杠/加杠。
 
 `tiles`：要暗杠/加杠的牌。
 
-`type`：`2`表示加杠，`3`表示暗杠。
+`type`：`babei`，`minggang`或`angang`。没有此参数时默认按照拔北、暗杠、加杠的顺序判断。
 
-例子：`addAnGangAddGang(2,"4m",3);`和`addAnGangAddGang(0,"7z",2);`。
+例子：`leimingpai(0,"1m");`和`leimingpai(2,"4z","angang");`。
 
-5.拔北：`addBaBei(seat)`
+5.荒牌流局：`huangpailiuju()`
 
-`seat`：`seat`号玩家拔北。
+6.流局：`liuju()`
 
-6.荒牌流局：`huangpailiuju()`
-
-7.流局：`endLiuJu(seat,tiles,type)`
-
-使用方法暂不明确。
-
-8.和牌：`hupai([seat1,seat2,...]);`
+7.和牌：`hupai([seat1,seat2,...])`
 
 表示`seat1`,`seat2`,...的玩家和牌。
 
@@ -140,7 +131,9 @@ paishan=randompaishan("3s3s3s3s","1z");//以四个三索开头，东风为结尾
 
 3.荒牌流局时如果有人没听牌会有BUG。
 
-如果发现如何解决BUG，欢迎提 issue 和 pull request。（对于1，只需要提供一个牌谱就行了）
+4.四家立直时不显示每个人的手牌
+
+如果发现如何解决BUG，欢迎提 issue 和 pull request。（对于1和4，只需要提供一个牌谱就行了）
 
 ## 版权声明
 
