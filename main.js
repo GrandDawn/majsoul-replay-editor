@@ -903,7 +903,7 @@ function addAnGangAddGang(seat,tiles,type){
 }
 function addBaBei(seat){
   let moqie;
-  if(playertiles[player][playertiles[player].length-1]=="4z")moqie=true;
+  if(playertiles[seat][playertiles[seat].length-1]=="4z")moqie=true;
   else moqie=false;
   if(doracnt.lsttype==1){
     doracnt.lsttype=0;
@@ -928,16 +928,6 @@ function addBaBei(seat){
     }
   });
   calcxun(0);
-}
-function endLiuJu(seat,tiles,type){
-  actions.push({
-    name:"RecordLiuJu",
-    data:{
-      'seat':seat,
-      'tiles':tiles,
-      'type':type
-    }
-  });
 }
 function cmp(x,y){
   return tiletoint(x)-tiletoint(y);
@@ -1243,7 +1233,6 @@ function qiepai(player,kind,is_liqi,var1){
     }
   }
   let lstactionname=actions[actions.length-1].name;
-  
   if(flag==0&&kind[0]>='0'&&kind[0]<='9'){
     if(playertiles[player][playertiles[player].length-1]==kind&&lstactionname!="RecordNewRound"&&lstactionname!="RecordChiPengGang")addDiscardTile(is_liqi,is_wliqi,true,player,kind);
     else addDiscardTile(is_liqi,is_wliqi,false,player,kind);
@@ -1273,6 +1262,18 @@ function mingpai(seat,tiles){
     if(lstseat==(seat+1)%4)addChiPengGang([seat,seat,lstseat],seat,[tiles[0],tiles[1],lsttile],1);
   }
 } 
+function leimingpai(seat,tile,type){
+  if(playercnt==3&&tile=="4z"&&type==undefined||type=="babei")addBaBei(seat); 
+  let tilecnt=0,jiagangflag=false;
+  for(let i=0;i<playertiles[seat].length;i++){
+    if(equaltile(tile,playertiles[seat][i]))tilecnt++;
+  }
+  for(let i=0;i<fulu[seat].length;i++){
+    if(equaltile(fulu[seat][i].tile[0],tile)&&fulu[seat][i].type==1)jiagangflag=true;
+  }
+  if(tilecnt==4&&type==undefined||type=="angang")addAnGangAddGang(seat,tile,3);
+  if(jiagangflag&&tilecnt>=1&&type==undefined||type=="jiagang")addAnGangAddGang(seat,tile,2);
+}
 function huangpailiuju(){
   let tingcnt=0;
   let liujumanguan=false;
@@ -1294,9 +1295,7 @@ function huangpailiuju(){
   }
   let ret2=[];
   for(let seat=0;seat<playercnt;seat++){
-    console.log(seat);console.log(paihe[seat].liujumanguan);
     if(!paihe[seat].liujumanguan)continue;
-    console.log(seat);
     liujumanguan=true;
     let score=0;
     playertiles[seat].sort(cmp);
@@ -1351,6 +1350,76 @@ function huangpailiuju(){
   for(let seat=0;seat<playercnt;seat++)scores[seat]=scores[seat]+delta_scores[seat];
   endNoTile(false,ret,ret2);
 }
+function liuju(){
+  for(let seat=0;seat<playercnt;seat++){
+    let cnt=[],yaojiutype=0;
+    for(let i=0;i<=36;i++)cnt[i]=0;
+    for(let i=0;i<playertiles[seat].length;i++){
+      cnt[tiletoint(playertiles[seat][i])]++;
+	}
+	if(cnt[1]>=1)yaojiutype++;if(cnt[9]>=1)yaojiutype++;
+	if(cnt[10]>=1)yaojiutype++;if(cnt[18]>=1)yaojiutype++;
+	if(cnt[19]>=1)yaojiutype++;if(cnt[27]>=1)yaojiutype++;
+	if(cnt[28]>=1)yaojiutype++;if(cnt[29]>=1)yaojiutype++;
+	if(cnt[30]>=1)yaojiutype++;if(cnt[31]>=1)yaojiutype++;
+	if(cnt[32]>=1)yaojiutype++;if(cnt[33]>=1)yaojiutype++;
+	if(cnt[34]>=1)yaojiutype++;
+	if(yaojiutype>=9&&liqiinfo[seat].liqi==0&&liqiinfo[seat].yifa==1&&playertiles[seat].length==14){
+	  let lsttile=playertiles[seat][playertiles[seat].length-1];
+	  playertiles[seat].length=playertiles[seat].length-1;
+	  playertiles[seat].sort(cmp);
+	  playertiles[seat].push(lsttile);
+	  endLiuJu(1,seat,[].concat(playertiles[seat]));
+	  return;
+	}
+  }
+  if(playercnt==4&&paihe[0].tiles.length==1&&paihe[1].tiles.length==1&&paihe[2].tiles.length==1&&paihe[3].tiles.length==1&&paihe[0].tiles[0]==paihe[1].tiles[0]&&paihe[1].tiles[0]==paihe[2].tiles[0]&&paihe[2].tiles[0]==paihe[3].tiles[0]&&tiletoint(paihe[0].tiles[0])>=28&&tiletoint(paihe[0].tiles[0])<=31){
+    actions.push({
+      name:"RecordLiuJu",
+      data:{
+        'type':2
+      }
+    });
+    return;
+  }
+  if(playercnt==4){
+    let liqiplayercnt=0;
+	if(liqiinfo[0].liqi!=0)liqiplayercnt++;
+	if(liqiinfo[1].liqi!=0)liqiplayercnt++;
+	if(liqiinfo[2].liqi!=0)liqiplayercnt++;
+	if(liqiinfo[3].liqi!=0)liqiplayercnt++;
+    if(liqiplayercnt==3&&lstliqi!=0){
+      liqibang=liqibang+1;
+      scores[lstliqi.seat]=scores[lstliqi.seat]-1000;
+      liqiinfo[lstliqi.seat]={'liqi':lstliqi.type,'yifa':1};
+      actions.push({
+        name:"RecordLiuJu",
+        data:{
+          'type':4,
+		  'liqi':{
+            'liqibang':liqibang,
+            'score':scores[lstliqi.seat],
+            'seat':lstliqi.seat
+          },
+          'tiles':[{'hand':[].concat(playertiles[0])},
+		           {'hand':[].concat(playertiles[1])},
+				   {'hand':[].concat(playertiles[2])},
+		           {'hand':[].concat(playertiles[3])}]
+        }
+      });
+      return;
+	} 
+  }
+  if(doracnt.cnt==5){//粗略的判断一下 
+    actions.push({
+      name:"RecordLiuJu",
+      data:{
+        'type':3
+      }
+    });
+    return;
+  }
+}
 function addedit(){
   window.recordedit.data.rounds.push({
     actions:[].concat(actions), 
@@ -1358,7 +1427,6 @@ function addedit(){
   });
 }
 function gameend(){
-  scores[ju]+=liqibang;
   function cmp2(x,y){
     return y.part_point_1-x.part_point_1;
   }
@@ -1372,6 +1440,7 @@ function gameend(){
     total_point:0,
   });
   players.sort(cmp2);
+  players[0].part_point_1+=liqibang*1000;
   let madian=[[15,5,-5,-15],[10,0,-10]];
   if(playercnt==3){
     for(let i=1;i<3;i++)players[i].total_point=players[i].part_point_1-firstneededscores+madian[1][i]*1000;
