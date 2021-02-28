@@ -721,6 +721,7 @@ function calcdoras(){
   return doras0;
 }
 function addNewRound(){
+  if(window.recordedit.data.rounds.length==0)firstneededscores=scores[0];
   tiles0.sort(cmp);
   tiles1.sort(cmp);
   tiles2.sort(cmp);
@@ -1455,11 +1456,11 @@ function gameend(){
   players[0].part_point_1+=liqibang*1000;
   let madian=[[15,5,-5,-15],[10,0,-10]];
   if(playercnt==3){
-    for(let i=1;i<3;i++)players[i].total_point=players[i].part_point_1-scores[0]+madian[1][i]*1000;
+    for(let i=1;i<3;i++)players[i].total_point=players[i].part_point_1-firstneededscores+madian[1][i]*1000;
     players[0].total_point=-players[1].total_point-players[2].total_point;
   }
   else{
-    for(let i=1;i<4;i++)players[i].total_point=players[i].part_point_1-scores[0]+madian[0][i]*1000;
+    for(let i=1;i<4;i++)players[i].total_point=players[i].part_point_1-firstneededscores+madian[0][i]*1000;
     players[0].total_point=-players[1].total_point-players[2].total_point-players[3].total_point;
   }
   window.recordedit.data.players=players;
@@ -1480,11 +1481,6 @@ function randompaishan(paishan,paishanback){
   if(paishanback!=undefined)for(let i=0;i<paishanback.length;i+=2)cnt[tiletoint(paishanback[i]+paishanback[i+1],1)]--;
   for(let i=1;i<=37;i++){
     for(let j=1;j<=cnt[i];j++)tls.push(inttotile(i));
-    if((i==5||i==14||i==23)&&cnt[i]>=1){
-      let tmp=inttotile(i);
-      tls.length=tls.length-1;
-      tls.push('0'+tmp[1]);
-    }
   }
   tls.sort(randomcmp);
   for(let i=0;i<tls.length;i++)paishan+=tls[i];
@@ -1535,7 +1531,7 @@ addedit();
 tiles1=["3m","4m","5m","3p","4p","5p","4s","7s","1z","1z","1z","5z","5z","5z"];
 tiles2=["3s","1m","1m","1m","2m","3m","4m","0m","6m","7m","8m","9m","9m"];
 tiles3=["3s","3s","6z","6z","4s","4s","6s","6s","6s","8s","8s","8s","2s"];  
-tiles0=["1p","1p","1p","2p","3p","4p","5p","6p","7p","8p","9p","9p","9p"];
+tiles0=["1p","1p","1p","2p","3p","4p","0p","6p","7p","8p","9p","9p","9p"];
 paishan=randompaishan("9m9s1z9s3s","1s1s1s1s7s7s7s5s");
 chang=0;ju=1;ben=0;
 addNewRound();
