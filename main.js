@@ -494,7 +494,7 @@ function calcfan(tls,seat,zimo){
       for(let i=1;i<=34;i++){
         if(typecnt[i][1]==2)pinghu=false;
         if(typecnt[i][0]==7){
-          if(tiletoint(((seat-chang+playercnt)%playercnt+1).toString()+"z")==i)pinghu=false;
+          if(tiletoint(((seat-ju+playercnt)%playercnt+1).toString()+"z")==i)pinghu=false;
           if(tiletoint((chang+1).toString()+"z")==i)pinghu=false;
           if(i==32||i==33||i==34)pinghu=false;
         }
@@ -638,7 +638,7 @@ function calcfan(tls,seat,zimo){
           if(typecnt[i][0]==6)ans.fu+=4;
         }
         if(typecnt[i][0]==7){
-          if(i==tiletoint(((seat-chang+playercnt)%playercnt+1).toString()+"z"))ans.fu+=2;
+          if(i==tiletoint(((seat-ju+playercnt)%playercnt+1).toString()+"z"))ans.fu+=2;
           if(i==tiletoint((chang+1).toString()+"z"))ans.fu+=2;
           if(i==32||i==33||i==34)ans.fu+=2;
         }
