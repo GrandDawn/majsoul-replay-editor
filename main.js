@@ -415,7 +415,7 @@ function calcfan(tls,seat,zimo){
       else if(partitiontmp[i].type==7)cnt2[tiletoint(tiles[0])]+=2;
     }
     function calc0(tingpaifu){
-      let tianhe=false; 
+      let tianhu=false; 
       let ans={'yiman':true,'fans':[],'fu':0};
       //---------------------------------------------- 
       let typecnt=[];
@@ -466,7 +466,7 @@ function calcfan(tls,seat,zimo){
           break;
         }
       }
-      for(let i=partitiontmp.length-1;i>=0;i--)if(partitiontmp[i].type==3)jiulian=false;
+      for(let i=partitiontmp.length-1;i>=0;i--)if(partitiontmp[i].type==3)jiulian=[0,""];
       for(let k=0;k<=3;k++){
         hunyise=true;qingyise=true;
         for(let i=1;i<=34;i++){
@@ -526,7 +526,7 @@ function calcfan(tls,seat,zimo){
         for(let j=0;j<fulu[seat][i].tile.length;j++)if(fulu[seat][i].tile[j][0]=='0')alldoras[1]++;
       }
       //------------------------------------
-      if(liqiinfo[seat].yifa!=0&&liqiinfo[seat].liqi==0&&seat==ju&&zimo){ans.fans.push({'val':1,id:35});tianhe=true;}//天和 
+      if(liqiinfo[seat].yifa!=0&&liqiinfo[seat].liqi==0&&seat==ju&&zimo){ans.fans.push({'val':1,id:35});tianhu=true;}//天和 
       if(liqiinfo[seat].yifa!=0&&liqiinfo[seat].liqi==0&&seat!=ju&&zimo)ans.fans.push({'val':1,id:36});//地和 
       if(typecnt[32][1]+typecnt[33][1]+typecnt[34][1]==6){
         ans.fans.push({'val':1,'id':37});//大三元
@@ -539,17 +539,17 @@ function calcfan(tls,seat,zimo){
           }
         }
       }
-      if(menqing&&anke==4&&typecnt[tiletoint(lsttile)][1]==2&&!tianhe)ans.fans.push({'val':1,'id':38});//四暗刻 
+      if(menqing&&anke==4&&typecnt[tiletoint(lsttile)][1]==2&&!tianhu)ans.fans.push({'val':1,'id':38});//四暗刻 
       if(flag[0]==true)ans.fans.push({'val':1,'id':39});//字一色 
       if(flag[1]==true)ans.fans.push({'val':1,'id':40});//绿一色 
       if(flag[2]==true)ans.fans.push({'val':1,'id':41});//清老头 
-      if(menqing&&guoshi==1&&cnt2[tiletoint(lsttile)]==1&&!tianhe)ans.fans.push({'val':1,'id':42});//国士无双 
+      if(menqing&&guoshi==1&&cnt2[tiletoint(lsttile)]==1&&!tianhu)ans.fans.push({'val':1,'id':42});//国士无双 
       if(typecnt[28][1]+typecnt[29][1]+typecnt[30][1]+typecnt[31][1]==7)ans.fans.push({'val':1,'id':43});//小四喜 
       if(gangzi==4)ans.fans.push({'val':1,'id':44});//四杠子
-      if(menqing&&jiulian[0]==1&&!equaltile(lsttile,jiulian[1])&&!tianhe)ans.fans.push({'val':1,'id':45});//九莲宝灯 
-      if(menqing&&jiulian[0]==1&&(equaltile(lsttile,jiulian[1])||tianhe))ans.fans.push({'val':2,'id':47});//纯正九莲宝灯
-      if(menqing&&anke==4&&(typecnt[tiletoint(lsttile)][0]==7||tianhe))ans.fans.push({'val':2,'id':48});//四暗刻单骑 
-      if(menqing&&guoshi==1&&(cnt2[tiletoint(lsttile)]==2||tianhe))ans.fans.push({'val':2,'id':49});//国士无双十三面 
+      if(menqing&&jiulian[0]==1&&!equaltile(lsttile,jiulian[1])&&!tianhu)ans.fans.push({'val':1,'id':45});//九莲宝灯 
+      if(menqing&&jiulian[0]==1&&(equaltile(lsttile,jiulian[1])||tianhu))ans.fans.push({'val':2,'id':47});//纯正九莲宝灯
+      if(menqing&&anke==4&&(typecnt[tiletoint(lsttile)][0]==7||tianhu))ans.fans.push({'val':2,'id':48});//四暗刻单骑 
+      if(menqing&&guoshi==1&&(cnt2[tiletoint(lsttile)]==2||tianhu))ans.fans.push({'val':2,'id':49});//国士无双十三面 
       if(typecnt[28][1]+typecnt[29][1]+typecnt[30][1]+typecnt[31][1]==8){
         ans.fans.push({'val':2,'id':50});//大四喜 
         let fulucnt=0;
@@ -906,10 +906,11 @@ function addAnGangAddGang(seat,tiles,type){
   });
   calcxun(0);
 }
-function addBaBei(seat){
-  let moqie;
-  if(playertiles[seat][playertiles[seat].length-1]=="4z")moqie=true;
-  else moqie=false;
+function addBaBei(seat,moqie){
+  if(moqie==undefined){
+    if(playertiles[seat][playertiles[seat].length-1]=="4z")moqie=true;
+    else moqie=false;
+  }
   if(doracnt.lsttype==1){
     doracnt.lsttype=0;
     doracnt.cnt++;
