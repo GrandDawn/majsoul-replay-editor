@@ -212,9 +212,9 @@ class RecordEdit{
   }
   edit(){
     let UI_Replay=uiscript.UI_Replay.Inst;
-    UI_Replay.rounds=this.data.rounds;
-    UI_Replay.gameResult.result.players=this.data.players;
-    UI_Replay.gameResult.accounts=[];
+    if(this.isEdit)UI_Replay.rounds=this.data.rounds;
+    if(this.isEdit)UI_Replay.gameResult.result.players=this.data.players;
+    if(this.isEdit)UI_Replay.gameResult.accounts=[];
   }
   init(){
     const _this=this;
@@ -1405,6 +1405,14 @@ function liuju(){
       liqibang=liqibang+1;
       scores[lstliqi.seat]=scores[lstliqi.seat]-1000;
       liqiinfo[lstliqi.seat]={'liqi':lstliqi.type,'yifa':1};
+      let allplayertiles=["","","",""];
+      for(let seat=0;seat<playercnt;seat++){
+        playertiles[seat].sort(cmp);
+        for(let i=0;i<playertiles[seat].length;i++){
+          allplayertiles[seat]+=playertiles[seat][i];
+          if(i!=playertiles[seat].length-1)allplayertiles[seat]+="|";
+		}
+	  }
       actions.push({
         name:"RecordLiuJu",
         data:{
@@ -1414,10 +1422,7 @@ function liuju(){
             'score':scores[lstliqi.seat],
             'seat':lstliqi.seat
           },
-          'allplayertiles':[[].concat(playertiles[0]),
-                            [].concat(playertiles[1]),
-                            [].concat(playertiles[2]),
-                            [].concat(playertiles[3])]
+          'allplayertiles':allplayertiles
         }
       });
       return;
