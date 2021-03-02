@@ -1375,7 +1375,14 @@ function liuju(){
       playertiles[seat].length=playertiles[seat].length-1;
       playertiles[seat].sort(cmp);
       playertiles[seat].push(lsttile);
-      endLiuJu(1,seat,[].concat(playertiles[seat]));
+      actions.push({
+        name:"RecordLiuJu",
+        data:{
+          'seat':seat,
+          'tiles':[].concat(playertiles[seat]),
+          'type':1
+        }
+      });
       return;
     }
   }
@@ -1407,10 +1414,10 @@ function liuju(){
             'score':scores[lstliqi.seat],
             'seat':lstliqi.seat
           },
-          'tiles':[{'hand':[].concat(playertiles[0])},
-                   {'hand':[].concat(playertiles[1])},
-                   {'hand':[].concat(playertiles[2])},
-                   {'hand':[].concat(playertiles[3])}]
+          'allplayertiles':[[].concat(playertiles[0]),
+                            [].concat(playertiles[1]),
+                            [].concat(playertiles[2]),
+                            [].concat(playertiles[3])]
         }
       });
       return;
