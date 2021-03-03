@@ -212,9 +212,17 @@ class RecordEdit{
   }
   edit(){
     let UI_Replay=uiscript.UI_Replay.Inst;
-    if(this.isEdit)UI_Replay.rounds=this.data.rounds;
-    if(this.isEdit)UI_Replay.gameResult.result.players=this.data.players;
-    if(this.isEdit)UI_Replay.gameResult.accounts=[];
+    let accounts=UI_Replay.data.record.accounts;
+    UI_Replay.rounds=this.data.rounds;
+    UI_Replay.gameResult.result.players=this.data.players;
+    if(accounts!=undefined&&accounts[0]!=undefined)UI_Replay.data.record.accounts[0].nickname="电脑(简单)"; 
+    if(accounts!=undefined&&accounts[0]!=undefined)UI_Replay.data.record.accounts[0].avatar_id=400101; 
+    if(accounts!=undefined&&accounts[1]!=undefined)UI_Replay.data.record.accounts[1].nickname="电脑(简单)"; 
+    if(accounts!=undefined&&accounts[1]!=undefined)UI_Replay.data.record.accounts[1].avatar_id=400101;
+    if(accounts!=undefined&&accounts[2]!=undefined)UI_Replay.data.record.accounts[2].nickname="电脑(简单)"; 
+    if(accounts!=undefined&&accounts[2]!=undefined)UI_Replay.data.record.accounts[2].avatar_id=400101;
+    if(accounts!=undefined&&accounts[3]!=undefined)UI_Replay.data.record.accounts[3].nickname="电脑(简单)"; 
+    if(accounts!=undefined&&accounts[3]!=undefined)UI_Replay.data.record.accounts[3].avatar_id=400101;
   }
   init(){
     const _this=this;
@@ -1411,8 +1419,8 @@ function liuju(){
         for(let i=0;i<playertiles[seat].length;i++){
           allplayertiles[seat]+=playertiles[seat][i];
           if(i!=playertiles[seat].length-1)allplayertiles[seat]+="|";
-		}
-	  }
+        }
+      }
       actions.push({
         name:"RecordLiuJu",
         data:{
