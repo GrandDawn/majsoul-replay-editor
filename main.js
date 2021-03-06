@@ -207,7 +207,10 @@ class RecordEdit{
     this.isEdit=false;
     this.data={
         'rounds':[],
-        'players':null
+        'players':null,
+        'config':null,
+        'nickname':[],
+        'avatar_id':[],
     };
   }
   edit(){
@@ -215,14 +218,16 @@ class RecordEdit{
     let accounts=UI_Replay.data.record.accounts;
     UI_Replay.rounds=this.data.rounds;
     UI_Replay.gameResult.result.players=this.data.players;
-    if(accounts!=undefined&&accounts[0]!=undefined)UI_Replay.data.record.accounts[0].nickname="电脑(简单)"; 
-    if(accounts!=undefined&&accounts[0]!=undefined)UI_Replay.data.record.accounts[0].avatar_id=400101; 
-    if(accounts!=undefined&&accounts[1]!=undefined)UI_Replay.data.record.accounts[1].nickname="电脑(简单)"; 
-    if(accounts!=undefined&&accounts[1]!=undefined)UI_Replay.data.record.accounts[1].avatar_id=400101;
-    if(accounts!=undefined&&accounts[2]!=undefined)UI_Replay.data.record.accounts[2].nickname="电脑(简单)"; 
-    if(accounts!=undefined&&accounts[2]!=undefined)UI_Replay.data.record.accounts[2].avatar_id=400101;
-    if(accounts!=undefined&&accounts[3]!=undefined)UI_Replay.data.record.accounts[3].nickname="电脑(简单)"; 
-    if(accounts!=undefined&&accounts[3]!=undefined)UI_Replay.data.record.accounts[3].avatar_id=400101;
+    for(let seat=0;seat<4;seat++){
+      if(accounts!=undefined&&accounts[seat]!=undefined){
+        UI_Replay.data.record.accounts[seat].nickname=this.data.nickname[seat]; 
+        UI_Replay.data.record.accounts[seat].avatar_id=this.data.avatar_id[seat];
+        UI_Replay.data.record.accounts[seat].character.is_upgraded=true;
+        UI_Replay.data.record.accounts[seat].character.skin=this.data.avatar_id[seat];
+        UI_Replay.data.record.accounts[seat].character.charid=200000+Math.floor(this.data.avatar_id[seat]/100)%100;
+	  } 
+	}
+    //if(UI_Replay.data.record.config!=undefined)UI_Replay.data.record.config=this.data.config;
   }
   init(){
     const _this=this;
@@ -238,12 +243,15 @@ var scores,paishan,tiles0,tiles1,tiles2,tiles3,firstneededscores;
 var baopai,liqibang=0,lstliqi,doracnt,playertiles,fulu,paihe;
 var liqiinfo,drawtype,lstdrawtype,doras,li_doras,delta_scores;
 var chang,ju,ben,playercnt,actions,xun,players,benchangbang;
+var mode,hules_history,hupaied;
 function init(){
   xun=[];
   baopai=[];
   actions=[];
   lstliqi=0;
   doracnt={'cnt':1,'lsttype':0};
+  hupaied=[false,false,false,false];
+  hules_history=[];
   playertiles=[[],[],[],[]];
   fulu=[[],[],[],[]];
   paihe=[{'liujumanguan':true,'tiles':[]},{'liujumanguan':true,'tiles':[]},
@@ -543,7 +551,7 @@ function calcfan(tls,seat,zimo){
           let type=fulu[seat][i].type,tile=tiletoint(fulu[seat][i].tile[0]);
           if((type==1||type==2)&&(tile==32||tile==33||tile==34)){
             fulucnt++;
-            if(fulucnt==3)baopai[seat]={'seat':fulu[seat][i].from,'val':1};
+            if(fulucnt==3&&mode!=1)baopai[seat]={'seat':fulu[seat][i].from,'val':1};
           }
         }
       }
@@ -565,7 +573,7 @@ function calcfan(tls,seat,zimo){
           let type=fulu[seat][i].type,tile=tiletoint(fulu[seat][i].tile[0]);
           if((type==1||type==2)&&(tile==28||tile==29||tile==30||tile==31)){
             fulucnt++;
-            if(fulucnt==4)baopai[seat]={'seat':fulu[seat][i].from,'val':2};
+            if(fulucnt==4&&mode!=1)baopai[seat]={'seat':fulu[seat][i].from,'val':2};
           }
         }
       }
@@ -652,7 +660,7 @@ function calcfan(tls,seat,zimo){
         }
       }//刻子符 
       if(zimo&&!pinghu)ans.fu+=2;//自摸符 
-      if(!zimo&&menqing)ans.fu+=10;//门前请荣和符 
+      if(!zimo&&menqing)ans.fu+=10;//门前清荣和符 
       ans.fu=Math.ceil(ans.fu/10)*10;
       if(ans.fan==1&&ans.fu==20)ans.fu=30;
       //--------------------------------------------------
@@ -721,7 +729,7 @@ function calcfan(tls,seat,zimo){
   return ret;
 }
 function calcxun(x){
-  if(playertiles[x].length%3==2)xun.push(actions.length-1);
+  if(playertiles[x].length%3==2&&!hupaied[x])xun.push(actions.length-1);
 }
 function calcdoras(){
   let doras0=[];
@@ -729,20 +737,30 @@ function calcdoras(){
   return doras0;
 }
 function addNewRound(){
-  if(window.recordedit.data.rounds.length==0)firstneededscores=scores[0];
+  if(window.recordedit.data.rounds.length==0){
+    firstneededscores=scores[0];
+    if(mode==undefined)mode=0;
+    if(mode==1)window.recordedit.data.config={
+      'category':2,
+	  'mode':{
+	    'mode':1,
+	    'detail_rule':{'huansanzhang':1,'xuezhandaodi':1}
+	  },
+	  'meta':{'mode_id':40}
+	} 
+  }
   tiles0.sort(cmp);
   tiles1.sort(cmp);
   tiles2.sort(cmp);
   tiles3.sort(cmp);
   init();
   benchangbang=ben;
-  actions.push({
+  let ret={
     name:"RecordNewRound",
     data:{
       'chang':chang,
       'ju':ju,
       'ben':ben,
-      'dora':doras[0],
       'left_tile_count':paishan.length/2-14,
       'liqibang':liqibang,
       'md5':md5(paishan),
@@ -753,7 +771,42 @@ function addNewRound(){
       'tiles2':[].concat(tiles2),
       'tiles3':[].concat(tiles3)
     }
-  });
+  };
+  if(mode!=1)ret.data.dora=doras[0];
+  if(mode==1)ret.data.operations=[{
+    'operation_list':[{
+      'change_tile_states':[0,0,0],
+      'change_tiles':[tiles0[0],tiles0[1],tiles0[2]]
+	}],
+	'seat':0,
+	'time_add':20000,
+	'time_fixed':5000
+  },{
+    'operation_list':[{
+      'change_tile_states':[0,0,0],
+      'change_tiles':[tiles1[0],tiles1[1],tiles1[2]]
+	}],
+	'seat':1,
+	'time_add':20000,
+	'time_fixed':5000
+  },{
+    'operation_list':[{
+      'change_tile_states':[0,0,0],
+      'change_tiles':[tiles2[0],tiles2[1],tiles2[2]]
+	}],
+	'seat':2,
+	'time_add':20000,
+	'time_fixed':5000
+  },{
+    'operation_list':[{
+      'change_tile_states':[0,0,0],
+      'change_tiles':[tiles3[0],tiles3[1],tiles3[2]]
+	}],
+	'seat':3,
+	'time_add':20000,
+	'time_fixed':5000
+  }]
+  actions.push(ret);
   calcxun(0);
 }
 function addDiscardTile(is_liqi,is_wliqi,moqie,seat,tile){ 
@@ -951,7 +1004,7 @@ function hupaioneplayer(seat){
     return Math.ceil(x/100)*100;
   }
   let lstaction=actions[actions.length-1],zimo=false;
-  if(lstaction.name=="RecordDealTile"||lstaction.name=="RecordNewRound")zimo=true;
+  if(lstaction.name=="RecordDealTile"||lstaction.name=="RecordNewRound"||lstaction.name=="RecordChangeTile")zimo=true;
   else if(lstaction.name=="RecordDiscardTile")playertiles[seat].push(lstaction.data.tile);
   else if(lstaction.name=="RecordAnGangAddGang")playertiles[seat].push(lstaction.data.tiles);
   else if(lstaction.name=="RecordBaBei")playertiles[seat].push("4z");
@@ -1030,7 +1083,7 @@ function hupaioneplayer(seat){
       else point_sum=8000;
     }
     for(let i=0;i<playercnt;i++){
-      if(i==seat)continue;
+      if(i==seat||hupaied[i])continue;
       if(i==ju||seat==ju){
         delta_scores[i]-=qieshang(-4000);
         delta_scores[seat]+=qieshang(-4000);
@@ -1073,7 +1126,7 @@ function hupaioneplayer(seat){
         delta_scores[seat]+=baopai[seat].val*32000;
       }
       for(let i=0;i<playercnt;i++){
-        if(i==seat)continue;
+        if(i==seat||hupaied[i])continue;
         if(i==ju||seat==ju){
           delta_scores[i]-=(val-baopai[seat].val)*16000;
           delta_scores[seat]+=(val-baopai[seat].val)*16000;
@@ -1102,7 +1155,7 @@ function hupaioneplayer(seat){
   else{
     if(zimo){
       for(let i=0;i<playercnt;i++){
-        if(i==seat)continue;
+        if(i==seat||hupaied[i])continue;
         if(i==ju||seat==ju){
           delta_scores[i]-=qieshang(sudian*2);
           delta_scores[seat]+=qieshang(sudian*2);
@@ -1124,9 +1177,10 @@ function hupaioneplayer(seat){
       }
     }
   }
+  let dadian=Math.max(delta_scores[seat],-delta_scores[seat]);
   if(zimo){
     for(let i=0;i<playercnt;i++){
-      if(i==seat)continue;
+      if(i==seat||hupaied[i])continue;
       delta_scores[i]-=100*benchangbang;
       delta_scores[seat]+=100*benchangbang;
     }
@@ -1141,6 +1195,7 @@ function hupaioneplayer(seat){
   //---------------------------------------------------
   let ret={
     count:val,
+    dadian:dadian,
     doras:doras0,
     li_doras:li_doras0,
     fans:points.fans,
@@ -1171,18 +1226,108 @@ function endHule(HuleInfo){
       'delta_scores':[].concat(delta_scores),
       'hules':HuleInfo,
       'old_scores':[].concat(old_scores),
-      'scores':[].concat(scores),
-      'wait_timeout':wait_timeout
+      'scores':[].concat(scores)
     }
   });
 }
-function hupai(x){
+function addHuleXueZhanMid(HuleInfo){
+  for(let seat=0;seat<4;seat++)liqiinfo[seat].yifa=0;//?????
+  let wait_timeout=3;
+  let old_scores=[].concat(scores);
+  for(let i=0;i<playercnt;i++)scores[i]=scores[i]+delta_scores[i];
+  actions.push({
+    name:"RecordHuleXueZhanMid",
+    data:{
+      'delta_scores':[].concat(delta_scores),
+      'hules':HuleInfo,
+      'old_scores':[].concat(old_scores),
+      'scores':[].concat(scores)
+    }
+  });
+}
+function addHuleXueZhanEnd(HuleInfo){
+  let wait_timeout=3;
+  let old_scores=[].concat(scores);
+  for(let i=0;i<playercnt;i++)scores[i]=scores[i]+delta_scores[i];
+  actions.push({
+    name:"RecordHuleXueZhanEnd",
+    data:{
+      'delta_scores':[].concat(delta_scores),
+      'hules':HuleInfo,
+      'hules_history':hules_history,
+      'old_scores':[].concat(old_scores),
+      'scores':[].concat(scores)
+    }
+  });
+}
+function hupai(x,type){
+  if(mode==0){
+    let ret=[];
+    for(let i=0;i<x.length;i++)ret.push(hupaioneplayer(x[i]));
+    endHule(ret);
+    delta_scores=[0,0,0,0];
+  }
+  else if(mode==1&&(type==undefined||type==0)){
+  	let ret=[];
+    for(let i=0;i<x.length;i++){
+      let whatever=hupaioneplayer(x[i]);
+	  ret.push(whatever);
+      hules_history.push(whatever);
+    }
+    for(let i=0;i<x.length;i++)hupaied[x[i]]=true;
+    addHuleXueZhanMid(ret);
+    delta_scores=[0,0,0,0];
+  } 
+  else if(mode==1&&type!=undefined&&type!=0){
+  	let ret=[];
+    for(let i=0;i<x.length;i++){
+      let whatever=hupaioneplayer(x[i]);
+	  ret.push(whatever);
+      hules_history.push(whatever);
+    }
+    addHuleXueZhanEnd(ret);
+    delta_scores=[0,0,0,0];
+  }
+}
+function addChangeTile(change_tile_infos,change_type){
+  for(let seat=0;seat<4;seat++){
+    for(let j=0;j<3;j++){
+      for(let i=0;i<playertiles[seat].length;i++){
+        if(playertiles[seat][i]==change_tile_infos[seat].out_tiles[j]){
+          playertiles[seat][i]=playertiles[seat][playertiles[seat].length-1];
+          playertiles[seat].length--;
+          break;
+        }
+      }
+    }
+    for(let j=0;j<3;j++){
+      playertiles[seat].push(change_tile_infos[seat].in_tiles[j]);
+    }
+  }
+  actions.push({
+    name:"RecordChangeTile",
+    data:{
+      'change_tile_infos':change_tile_infos,
+      'change_type':change_type,
+      'doras':calcdoras(),
+    }
+  });
+}
+//0:逆时针  1:对家   2:顺时针 
+function huansanzhang(tiles,type){
   let ret=[];
-  for(let i=0;i<x.length;i++)ret.push(hupaioneplayer(x[i]));
-  endHule(ret);
+  for(let seat=0;seat<4;seat++){
+    ret.push({
+      'out_tiles':tiles[seat],
+      'in_tile_states':[0,0,0],
+      'in_tiles':tiles[(seat-type-1+8)%4],
+      'out_tile_states':[0,0,0],
+	})
+  }
+  addChangeTile(ret,type);
 }
 function endNoTile(liujumanguan,players,scores){
-  actions.push({
+  let ret={
     name:"RecordNoTile",
     data:{
       'gameend':false,
@@ -1190,7 +1335,9 @@ function endNoTile(liujumanguan,players,scores){
       'players':players,
       'scores':scores
     }
-  });
+  };
+  if(hules_history.length!=0)ret.data.hules_history=hules_history;
+  actions.push(ret);
 }
 function mopai(player){
   let drawcard;
@@ -1289,6 +1436,8 @@ function leimingpai(seat,tile,type){
   if(jiagangflag&&tilecnt>=1&&type==undefined||type=="jiagang")addAnGangAddGang(seat,tile,2);
 }
 function huangpailiuju(){
+  let playerleft=0;
+  for(let seat=0;seat<playercnt;seat++)if(!hupaied[seat])playerleft++;
   let tingcnt=0;
   let liujumanguan=false;
   let ret=[];
@@ -1314,7 +1463,7 @@ function huangpailiuju(){
     let score=0;
     playertiles[seat].sort(cmp);
     for(let i=0;i<playercnt;i++){
-      if(seat==i)continue;
+      if(seat==i||hupaied[i])continue;
       if(seat==ju||i==ju){
         delta_scores[i]-=4000;
         delta_scores[seat]+=4000;
@@ -1355,8 +1504,9 @@ function huangpailiuju(){
   ret2=[{'delta_scores':[],'old_scores':[]}];
   if(liujumanguan==false&&tingcnt!=0&&tingcnt!=playercnt){
     for(let seat=0;seat<playercnt;seat++){
-      if(ret[seat].tingpai==true)delta_scores[seat]+=(playercnt-1)*1000/tingcnt;
-      else delta_scores[seat]-=(playercnt-1)*1000/(playercnt-tingcnt);
+      if(hupaied[seat])continue;
+      if(ret[seat].tingpai==true)delta_scores[seat]+=(playerleft-1)*1000/tingcnt;
+      else delta_scores[seat]-=(playerleft-1)*1000/(playerleft-tingcnt);
     }
   }
   ret2[0].old_scores=[].concat(scores);
@@ -1365,6 +1515,7 @@ function huangpailiuju(){
   endNoTile(false,ret,ret2);
 }
 function liuju(){
+  let ret;
   for(let seat=0;seat<playercnt;seat++){
     let cnt=[],yaojiutype=0;
     for(let i=0;i<=36;i++)cnt[i]=0;
@@ -1383,25 +1534,23 @@ function liuju(){
       playertiles[seat].length=playertiles[seat].length-1;
       playertiles[seat].sort(cmp);
       playertiles[seat].push(lsttile);
-      actions.push({
+      if(ret==undefined)ret={
         name:"RecordLiuJu",
         data:{
           'seat':seat,
           'tiles':[].concat(playertiles[seat]),
           'type':1
         }
-      });
-      return;
+      };
     }
   }
   if(playercnt==4&&paihe[0].tiles.length==1&&paihe[1].tiles.length==1&&paihe[2].tiles.length==1&&paihe[3].tiles.length==1&&paihe[0].tiles[0]==paihe[1].tiles[0]&&paihe[1].tiles[0]==paihe[2].tiles[0]&&paihe[2].tiles[0]==paihe[3].tiles[0]&&tiletoint(paihe[0].tiles[0])>=28&&tiletoint(paihe[0].tiles[0])<=31){
-    actions.push({
+    if(ret==undefined)ret={
       name:"RecordLiuJu",
       data:{
         'type':2
       }
-    });
-    return;
+    };
   }
   if(playercnt==4){
     let liqiplayercnt=0;
@@ -1421,7 +1570,7 @@ function liuju(){
           if(i!=playertiles[seat].length-1)allplayertiles[seat]+="|";
         }
       }
-      actions.push({
+      if(ret==undefined)ret={
         name:"RecordLiuJu",
         data:{
           'type':4,
@@ -1432,8 +1581,7 @@ function liuju(){
           },
           'allplayertiles':allplayertiles
         }
-      });
-      return;
+      };
     } 
   }
   let havegang=[0,0,0,0],havegangcnt;
@@ -1442,14 +1590,15 @@ function liuju(){
     havegangcnt+=havegang[seat];
   }
   if(doracnt.cnt==5&&havegangcnt>=2){
-    actions.push({
+    if(ret==undefined)ret={
       name:"RecordLiuJu",
       data:{
         'type':3
       }
-    });
-    return;
+    };
   }
+  if(hules_history.length!=0)ret.data.hules_history=hules_history;
+  actions.push(ret);
 }
 function addedit(){
   window.recordedit.data.rounds.push({
@@ -1510,6 +1659,8 @@ function randompaishan(paishan,paishanback){
 }
 window.recordedit=new RecordEdit();
 window.recordedit.isEdit=true;
+window.recordedit.data.nickname=["电脑(简单)","电脑(简单)","电脑(简单)","电脑(简单)"];
+window.recordedit.data.avatar_id=[400101,400101,400101,400101];
 //该部分朝下 
 scores=[25000,25000,25000,25000];
 //第一局（流局满贯，作弊） 
