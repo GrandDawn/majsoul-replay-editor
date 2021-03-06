@@ -55,18 +55,18 @@ function md5(string){
     var lMessageLength=string.length;
     var lNumberOfWords_temp1=lMessageLength+8;
     var lNumberOfWords_temp2=(lNumberOfWords_temp1-(lNumberOfWords_temp1%64))/64;
-    var lNumberOfWords=(lNumberOfWords_temp2+1) * 16;
+    var lNumberOfWords=(lNumberOfWords_temp2+1)*16;
     var lWordArray=Array(lNumberOfWords-1);
     var lBytePosition=0;
     var lByteCount=0;
     while(lByteCount<lMessageLength){
       lWordCount=(lByteCount-(lByteCount%4))/4;
-      lBytePosition=(lByteCount%4) * 8;
+      lBytePosition=(lByteCount%4)*8;
       lWordArray[lWordCount]=(lWordArray[lWordCount]|(string.charCodeAt(lByteCount)<<lBytePosition));
       lByteCount++;
     }
     lWordCount=(lByteCount-(lByteCount%4))/4;
-    lBytePosition=(lByteCount%4) * 8;
+    lBytePosition=(lByteCount%4)*8;
     lWordArray[lWordCount]=lWordArray[lWordCount]|(0x80<<lBytePosition);
     lWordArray[lNumberOfWords-2]=lMessageLength<<3;
     lWordArray[lNumberOfWords-1]=lMessageLength>>>29;
@@ -77,7 +77,7 @@ function md5(string){
     WordToHexValue_temp="",
     lByte,lCount;
     for(lCount=0;lCount<=3;lCount++){
-      lByte=(lValue>>>(lCount * 8))&255;
+      lByte=(lValue>>>(lCount*8))&255;
       WordToHexValue_temp="0"+lByte.toString(16);
       WordToHexValue=WordToHexValue+WordToHexValue_temp.substr(WordToHexValue_temp.length-2,2);
     }
@@ -805,7 +805,16 @@ function addNewRound(){
 	'seat':3,
 	'time_add':20000,
 	'time_fixed':5000
-  }]
+  }];
+  let lsttile=playertiles[ju][playertiles[ju].length-1];
+  playertiles[ju].length--;
+  let tingpais=[];
+  for(let i=0;i<playercnt;i++){
+    let tingpaitmp=tingpai(i);
+    if(tingpaitmp.length!=0)tingpais.push({'seat':i,'tingpais1':tingpaitmp});
+  }
+  if(tingpais.length!=0)ret.data.tingpai=tingpais;
+  playertiles[ju].push(lsttile);
   actions.push(ret);
   calcxun(0);
 }
