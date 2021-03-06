@@ -778,33 +778,25 @@ function addNewRound(){
       'change_tile_states':[0,0,0],
       'change_tiles':[tiles0[0],tiles0[1],tiles0[2]]
 	}],
-	'seat':0,
-	'time_add':20000,
-	'time_fixed':5000
+	'seat':0
   },{
     'operation_list':[{
       'change_tile_states':[0,0,0],
       'change_tiles':[tiles1[0],tiles1[1],tiles1[2]]
 	}],
-	'seat':1,
-	'time_add':20000,
-	'time_fixed':5000
+	'seat':1
   },{
     'operation_list':[{
       'change_tile_states':[0,0,0],
       'change_tiles':[tiles2[0],tiles2[1],tiles2[2]]
 	}],
-	'seat':2,
-	'time_add':20000,
-	'time_fixed':5000
+	'seat':2
   },{
     'operation_list':[{
       'change_tile_states':[0,0,0],
       'change_tiles':[tiles3[0],tiles3[1],tiles3[2]]
 	}],
-	'seat':3,
-	'time_add':20000,
-	'time_fixed':5000
+	'seat':3
   }];
   let lsttile=playertiles[ju][playertiles[ju].length-1];
   playertiles[ju].length--;
@@ -1226,7 +1218,6 @@ function hupaioneplayer(seat){
   return ret;
 }
 function endHule(HuleInfo){
-  let wait_timeout=3;
   let old_scores=[].concat(scores);
   for(let i=0;i<playercnt;i++)scores[i]=scores[i]+delta_scores[i];
   actions.push({
@@ -1241,7 +1232,6 @@ function endHule(HuleInfo){
 }
 function addHuleXueZhanMid(HuleInfo){
   for(let seat=0;seat<4;seat++)liqiinfo[seat].yifa=0;//?????
-  let wait_timeout=3;
   let old_scores=[].concat(scores);
   for(let i=0;i<playercnt;i++)scores[i]=scores[i]+delta_scores[i];
   actions.push({
@@ -1255,7 +1245,6 @@ function addHuleXueZhanMid(HuleInfo){
   });
 }
 function addHuleXueZhanEnd(HuleInfo){
-  let wait_timeout=3;
   let old_scores=[].concat(scores);
   for(let i=0;i<playercnt;i++)scores[i]=scores[i]+delta_scores[i];
   actions.push({
@@ -1313,14 +1302,24 @@ function addChangeTile(change_tile_infos,change_type){
       playertiles[seat].push(change_tile_infos[seat].in_tiles[j]);
     }
   }
-  actions.push({
+  let ret={
     name:"RecordChangeTile",
     data:{
       'change_tile_infos':change_tile_infos,
       'change_type':change_type,
       'doras':calcdoras(),
     }
-  });
+  };
+  let lsttile=playertiles[ju][playertiles[ju].length-1];
+  playertiles[ju].length--;
+  let tingpais=[];
+  for(let i=0;i<playercnt;i++){
+    let tingpaitmp=tingpai(i);
+    if(tingpaitmp.length!=0)tingpais.push({'seat':i,'tingpais1':tingpaitmp});
+  }
+  if(tingpais.length!=0)ret.data.tingpai=tingpais;
+  playertiles[ju].push(lsttile);
+  actions.push(ret);
 }
 //0:逆时针  1:对家   2:顺时针 
 function huansanzhang(tiles,type){
