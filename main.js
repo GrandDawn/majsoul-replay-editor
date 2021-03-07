@@ -206,17 +206,28 @@ class RecordEdit{
     this.init();
     this.isEdit=false;
     this.data={
-        'rounds':[],
-        'players':null,
-        'config':null,
-        'nickname':[],
-        'avatar_id':[],
+      'actions':[],
+      'xun':[],
+      'players':null,
+      'config':null,
+      'nickname':[],
+      'avatar_id':[],
     };
   }
   edit(){
     let UI_Replay=uiscript.UI_Replay.Inst;
     let accounts=UI_Replay.data.record.accounts;
-    UI_Replay.rounds=this.data.rounds;
+    let rounds=[];
+    for(let i=0;i<this.data.actions.length;i++){
+      let whatever={
+        'actions':this.data.actions[i],
+        'xun':[]
+      }
+      if(view.DesktopMgr.Inst.seat)whatever.xun=this.data.xun[i][view.DesktopMgr.Inst.seat];
+      else whatever.xun=this.data.xun[i][0];
+      rounds.push(whatever);
+    }
+    UI_Replay.rounds=rounds;
     UI_Replay.gameResult.result.players=this.data.players;
     for(let seat=0;seat<4;seat++){
       if(accounts!=undefined&&accounts[seat]!=undefined){
@@ -245,7 +256,7 @@ var liqiinfo,drawtype,lstdrawtype,doras,li_doras,delta_scores;
 var chang,ju,ben,playercnt,actions,xun,players,benchangbang;
 var mode,hules_history,hupaied;
 function init(){
-  xun=[];
+  xun=[[],[],[],[]];
   baopai=[];
   actions=[];
   lstliqi=0;
@@ -431,6 +442,15 @@ function calcfan(tls,seat,zimo){
       else if(partitiontmp[i].type==7)cnt2[tiletoint(tiles[0])]+=2;
     }
     function calc0(tingpaifu){
+      function deletefan(ans,x){
+        let flag=false;
+        for(let i=0;i<ans.fans.length;i++){
+          if(flag)ans.fans[i-1]=ans.fans[i];
+          if(ans.fans[i].id==x)flag=true;
+        }
+        ans.fans.length=ans.fans.length-1;
+        return ans;
+      }
       let tianhu=false; 
       let ans={'yiman':true,'fans':[],'fu':0};
       //---------------------------------------------- 
@@ -443,13 +463,17 @@ function calcfan(tls,seat,zimo){
         if(type==7)typecnt[tiletoint(partitiontmp[i].tile[0])][1]=1;
         if(type==0||type==5)typecnt[(tiletoint(partitiontmp[i].tile[0])+tiletoint(partitiontmp[i].tile[1])+tiletoint(partitiontmp[i].tile[2]))/3][2]++;
       } 
-      let anke=0,gangzi=0,beikou=0,kezi=0,duizi=0;
+      let anke=0,gangzi=0,beikou=0,kezi=0,duizi=0,santongshun=false,sanlianke=false;
       for(let i=1;i<=34;i++){
         if(typecnt[i][0]==3||typecnt[i][0]==6)anke++;
         if(typecnt[i][0]==3||typecnt[i][0]==2)gangzi++;
         if(typecnt[i][1]==2)kezi++;
+        if(i>=2&&i<=8||i>=11&&i<=17||i>=20&&i<=26){
+          if(typecnt[i][1]==2&&typecnt[i-1][1]==2&&typecnt[i+1][1]==2)sanlianke=true;
+        }
         if(typecnt[i][0]==7)duizi++;
         beikou+=Math.floor(typecnt[i][2]/2);
+        if(Math.floor(typecnt[i][2]/3)>0)santongshun=true;
       }
       //--------------------------- 
       let flag=[true,true,true,true,true];
@@ -466,6 +490,18 @@ function calcfan(tls,seat,zimo){
         if(i==1||i==9||i==10||i==18||i==19||i>=27&&i<=34){if(cnt2[i]==0)guoshi=0;}
         else if(cnt2[i]!=0)guoshi=0;
       }
+      //---------------------------------
+      let fulucnt=0;
+      for(let i=0;i<fulu[seat].length;i++){
+        let type=fulu[seat][i].type;
+        if(type==0||type==1||type==2)fulucnt++;
+      } 
+      let wumenqi=true;
+      if(cnt2[1]+cnt2[2]+cnt2[3]+cnt2[4]+cnt2[5]+cnt2[6]+cnt2[7]+cnt2[8]+cnt2[9]==0)wumenqi=false; 
+      if(cnt2[10]+cnt2[11]+cnt2[12]+cnt2[13]+cnt2[14]+cnt2[15]+cnt2[16]+cnt2[17]+cnt2[18]==0)wumenqi=false; 
+      if(cnt2[19]+cnt2[20]+cnt2[21]+cnt2[22]+cnt2[23]+cnt2[24]+cnt2[25]+cnt2[26]+cnt2[27]==0)wumenqi=false;
+      if(cnt2[28]+cnt2[29]+cnt2[30]+cnt2[31]==0)wumenqi=false;
+      if(cnt2[32]+cnt2[33]+cnt2[34]==0)wumenqi=false;
       //--------------------------------- 
       let jiulian=[0,""],yiqi=false,hunyise=false,qingyise=false;
       let jlbd=[0,3,1,1,1,1,1,1,1,3];
@@ -541,17 +577,19 @@ function calcfan(tls,seat,zimo){
       for(let i=0;i<fulu[seat].length;i++){
         for(let j=0;j<fulu[seat][i].tile.length;j++)if(fulu[seat][i].tile[j][0]=='0')alldoras[1]++;
       }
+      let lstaction=actions[actions.length-1];
       //------------------------------------
       if(liqiinfo[seat].yifa!=0&&liqiinfo[seat].liqi==0&&seat==ju&&zimo){ans.fans.push({'val':1,id:35});tianhu=true;}//天和 
       if(liqiinfo[seat].yifa!=0&&liqiinfo[seat].liqi==0&&seat!=ju&&zimo)ans.fans.push({'val':1,id:36});//地和 
+      if(liqiinfo[seat].yifa!=0&&liqiinfo[seat].liqi==0&&seat!=ju&&!zimo&&mode==2)ans.fans.push({'val':1,id:59});//人和 
       if(typecnt[32][1]+typecnt[33][1]+typecnt[34][1]==6){
         ans.fans.push({'val':1,'id':37});//大三元
-        let fulucnt=0;
+        let fulusanyuancnt=0;
         for(let i=0;i<fulu[seat].length;i++){
           let type=fulu[seat][i].type,tile=tiletoint(fulu[seat][i].tile[0]);
           if((type==1||type==2)&&(tile==32||tile==33||tile==34)){
-            fulucnt++;
-            if(fulucnt==3&&mode!=1)baopai[seat]={'seat':fulu[seat][i].from,'val':1};
+            fulusanyuancnt++;
+            if(fulusanyuancnt==3&&mode!=1)baopai[seat]={'seat':fulu[seat][i].from,'val':1};
           }
         }
       }
@@ -568,14 +606,26 @@ function calcfan(tls,seat,zimo){
       if(menqing&&guoshi==1&&(cnt2[tiletoint(lsttile)]==2||tianhu))ans.fans.push({'val':2,'id':49});//国士无双十三面 
       if(typecnt[28][1]+typecnt[29][1]+typecnt[30][1]+typecnt[31][1]==8){
         ans.fans.push({'val':2,'id':50});//大四喜 
-        let fulucnt=0;
+        let fulusixicnt=0;
         for(let i=0;i<fulu[seat].length;i++){
           let type=fulu[seat][i].type,tile=tiletoint(fulu[seat][i].tile[0]);
           if((type==1||type==2)&&(tile==28||tile==29||tile==30||tile==31)){
-            fulucnt++;
-            if(fulucnt==4&&mode!=1)baopai[seat]={'seat':fulu[seat][i].from,'val':2};
+            fulusixicnt++;
+            if(fulusixicnt==4&&mode!=1)baopai[seat]={'seat':fulu[seat][i].from,'val':2};
           }
         }
+      }
+      if(mode==2){
+        if(qingyise&&duizi==7&&flag[3]){
+          if(cnt2[2]>0)ans.fans.push({'val':1,'id':62});//大数邻
+          if(cnt2[11]>0)ans.fans.push({'val':1,'id':60});//大车轮 
+          if(cnt2[20]>0)ans.fans.push({'val':1,'id':61});//大竹林 
+        }
+        if(liqiinfo[seat].liqi==2&&(zimo&&paishan.length/2-14==0&&lstdrawtype==1||!zimo&&paishan.length/2-14==0))ans.fans.push({'val':1,'id':63});//石上三年 
+        if(flag[0]==true&&duizi==7){
+          ans=deletefan(ans,39);
+          ans.fans.push({'val':2,'id':64});
+        }//大七星 
       }
       if(ans.fans.length!=0)return ans; 
       //------------------------------------
@@ -583,8 +633,13 @@ function calcfan(tls,seat,zimo){
       if(liqiinfo[seat].liqi==2)ans.fans.push({'val':2,'id':18});//双立直
       if(liqiinfo[seat].liqi==1)ans.fans.push({'val':1,'id':2});//立直
       if(liqiinfo[seat].liqi!=0&&liqiinfo[seat].yifa!=0)ans.fans.push({'val':1,'id':30});//一发 
-      if(menqing&&zimo)ans.fans.push({'val':1,'id':1});//门前请自摸和 
-      if(actions[actions.length-1].name=="RecordAnGangAddGang")ans.fans.push({'val':1,'id':3});//抢杠 
+      if(mode==2){
+        if(lstaction.name=="RecordDiscardTile"&&lstaction.data.is_liqi)ans.fans.push({'val':1,'id':51});//燕返 
+        if(!zimo&&lstdrawtype==0)ans.fans.push({'val':1,'id':52});//杠振 
+        if(fulucnt==4)ans.fans.push({'val':1,'id':53});//十二落抬 
+      }
+      if(menqing&&zimo)ans.fans.push({'val':1,'id':1});//门前清自摸和 
+      if(lstaction.name=="RecordAnGangAddGang")ans.fans.push({'val':1,'id':3});//抢杠 
       if(zimo&&lstdrawtype==0)ans.fans.push({'val':1,'id':4});//岭上开花 
       if(zimo&&paishan.length/2-14==0&&lstdrawtype==1)ans.fans.push({'val':1,'id':5});//海底捞月 
       if(!zimo&&paishan.length/2-14==0)ans.fans.push({'val':1,'id':6});//河底捞鱼
@@ -595,7 +650,7 @@ function calcfan(tls,seat,zimo){
       if(typecnt[tiletoint((chang+1).toString()+"z")][1]==2)ans.fans.push({'val':1,'id':11});//场风 
       if(flag[3]==true)ans.fans.push({'val':1,'id':12});//断幺九 
       if(beikou==1&&menqing)ans.fans.push({'val':1,'id':13});//一杯口
-      if(pinghu&&menqing)ans.fans.push({'val':1,'id':14});
+      if(pinghu&&menqing)ans.fans.push({'val':1,'id':14});//平和 
       if(hunquandai&&!chunquandai&&!flag[4]){
         if(menqing)ans.fans.push({'val':2,'id':15});
         else ans.fans.push({'val':1,'id':15});
@@ -615,6 +670,8 @@ function calcfan(tls,seat,zimo){
       if(typecnt[32][1]+typecnt[33][1]+typecnt[34][1]==5)ans.fans.push({'val':2,'id':23});//小三元 
       if(flag[4]==true)ans.fans.push({'val':2,'id':24});//混老头 
       if(duizi==7)ans.fans.push({'val':2,'id':25});//七对子 
+      if(mode==2&&wumenqi)ans.fans.push({'val':2,'id':54});//五门齐 
+      if(mode==2&&sanlianke)ans.fans.push({'val':2,'id':55});//三连刻 
       if(chunquandai){
         if(menqing)ans.fans.push({'val':3,'id':26});
         else ans.fans.push({'val':2,'id':26});
@@ -623,11 +680,26 @@ function calcfan(tls,seat,zimo){
         if(menqing)ans.fans.push({'val':3,'id':27});
         else ans.fans.push({'val':2,'id':27});
       }//混一色 
+      if(mode==2&&santongshun){
+        ans=deletefan(ans,13);
+        if(menqing)ans.fans.push({'val':3,'id':56});
+        else ans.fans.push({'val':2,'id':56});
+      }//一色三同顺 
       if(beikou==2&&menqing)ans.fans.push({'val':3,'id':28});//两杯口
       if(qingyise){
         if(menqing)ans.fans.push({'val':6,'id':29});
         else ans.fans.push({'val':5,'id':29});
       }//清一色 
+      if(mode==2){
+        if(zimo&&paishan.length/2-14==0&&lstdrawtype==1&&lsttile=="1p"){
+          ans=deletefan(ans,5);
+          ans.fans.push({'val':5,'id':57});//一筒摸月 
+        }
+        if(!zimo&&paishan.length/2-14==0&&lsttile=="9p"){
+          ans=deletefan(ans,6);
+          ans.fans.push({'val':5,'id':58});//九筒捞鱼 
+        }
+      }
       if(ans.fans.length==0)return ans; 
       if(alldoras[0]!=0)ans.fans.push({'val':alldoras[0],'id':31});//宝牌 
       if(alldoras[1]!=0)ans.fans.push({'val':alldoras[1],'id':32});//红宝牌 
@@ -729,7 +801,9 @@ function calcfan(tls,seat,zimo){
   return ret;
 }
 function calcxun(x){
-  if(playertiles[x].length%3==2&&!hupaied[x])xun.push(actions.length-1);
+  for(let x=0;x<playercnt;x++){
+    if(playertiles[x].length%3==2&&!hupaied[x])xun[x].push(actions.length-1);
+  }
 }
 function calcdoras(){
   let doras0=[];
@@ -739,6 +813,7 @@ function calcdoras(){
 function gamebegin(){
   firstneededscores=scores[0];
   if(mode==undefined)mode=0;
+  if(mode==2&&playercnt==3)mode=0;
   if(mode==1)window.recordedit.data.config={
     'category':2,
     'mode':{
@@ -808,16 +883,12 @@ function addNewRound(chang,ju,ben,left_tile_count,liqibang,md5,paishan,scores,ti
   if(tingpais.length!=0)ret.data.tingpai=tingpais;
   playertiles[ju].push(lsttile);
   actions.push(ret);
-  calcxun(0);
+  calcxun();
 }
 function roundbegin(){
   addNewRound(chang,ju,ben,paishan.length/2-14,liqibang,md5(paishan),paishan,[].concat(scores),[].concat(tiles0),[].concat(tiles1),[].concat(tiles2),[].concat(tiles3));
 }
 function addDiscardTile(is_liqi,is_wliqi,doras,moqie,seat,tile){ 
-  if(doracnt.lsttype==1){
-    doracnt.lsttype=0;
-    doracnt.cnt++;
-  }
   paihe[seat].tiles.push(tile);
   let abc=tiletoint(tile);
   if(abc!=1&&abc!=9&&abc!=10&&abc!=18&&abc!=19&&abc!=27&&abc<=27)paihe[seat].liujumanguan=false;
@@ -842,13 +913,9 @@ function addDiscardTile(is_liqi,is_wliqi,doras,moqie,seat,tile){
   },tingpais=tingpai(seat);
   if(tingpais.length!=0)ret.data.tingpais=tingpais;
   actions.push(ret);
-  calcxun(0);
+  calcxun();
 }
 function addDealTile(doras,left_tile_count,seat,tile){
-  if(doracnt.lsttype==2){
-    doracnt.lsttype=0;
-    doracnt.cnt++;
-  }
   for(let i=0;i<playercnt;i++)if(liqiinfo[i].yifa==2)liqiinfo[i].yifa=0;
   playertiles[seat].push(tile);
   let ret={
@@ -872,7 +939,7 @@ function addDealTile(doras,left_tile_count,seat,tile){
   }
   actions.push(ret);
   lstliqi=0;
-  calcxun(0);
+  calcxun();
 }
 function addChiPengGang(froms,seat,tiles,type){
   for(let i=0;i<playercnt;i++)liqiinfo[i].yifa=0;
@@ -921,13 +988,9 @@ function addChiPengGang(froms,seat,tiles,type){
   }
   actions.push(ret);
   lstliqi=0;
-  calcxun(0);
+  calcxun();
 }
 function addAnGangAddGang(doras,seat,tiles,type){
-  if(doracnt.lsttype==1){
-    doracnt.lsttype=0;
-    doracnt.cnt++;
-  }
   for(let i=0;i<playercnt;i++)if(liqiinfo[i].yifa==1)liqiinfo[i].yifa=2;
   if(type!=3){
     doracnt.lsttype=1;
@@ -969,16 +1032,12 @@ function addAnGangAddGang(doras,seat,tiles,type){
       'type':type
     }
   });
-  calcxun(0);
+  calcxun();
 }
 function addBaBei(seat,moqie){
   if(moqie==undefined){
     if(playertiles[seat][playertiles[seat].length-1]=="4z")moqie=true;
     else moqie=false;
-  }
-  if(doracnt.lsttype==1){
-    doracnt.lsttype=0;
-    doracnt.cnt++;
   }
   for(let i=0;i<playercnt;i++)if(liqiinfo[i].yifa==1)liqiinfo[i].yifa=2;
   fulu[seat].push({'type':4,'tile':["4z"]});
@@ -998,7 +1057,7 @@ function addBaBei(seat,moqie){
       'seat':seat
     }
   });
-  calcxun(0);
+  calcxun();
 }
 function cmp(x,y){
   return tiletoint(x)-tiletoint(y);
@@ -1256,7 +1315,7 @@ function addHuleXueZhanEnd(HuleInfo,old_scores,delta_scores,scores){
   });
 }
 function hupai(x,type){
-  if(mode==0){
+  if(mode!=1){
     let ret=[];
     for(let i=0;i<x.length;i++)ret.push(hupaioneplayer(x[i]));
     let old_scores=[].concat(scores);
@@ -1351,6 +1410,10 @@ function endNoTile(liujumanguan,players,scores){
   actions.push(ret);
 }
 function mopai(player){
+  if(doracnt.lsttype==2){
+    doracnt.lsttype=0;
+    doracnt.cnt++;
+  }
   let drawcard;
   if(drawtype==1){
     addDealTile(calcdoras(),paishan.length/2-15,player,paishan.substring(0,2));
@@ -1368,6 +1431,10 @@ function mopai(player){
   return drawcard;
 }
 function qiepai(player,kind,is_liqi,var1){
+  if(doracnt.lsttype==1){
+    doracnt.lsttype=0;
+    doracnt.cnt++;
+  }
   let is_wliqi=false;
   if(is_liqi==undefined)is_liqi=false;
   if(is_liqi&&liqiinfo[player].yifa!=0)is_wliqi=true;
@@ -1435,6 +1502,10 @@ function mingpai(seat,tiles){
   }
 } 
 function leimingpai(seat,tile,type){
+  if(doracnt.lsttype==1){
+    doracnt.lsttype=0;
+    doracnt.cnt++;
+  }
   if(playercnt==3&&tile=="4z"&&type==undefined||type=="babei")addBaBei(seat); 
   let tilecnt=0,jiagangflag=false;
   for(let i=0;i<playertiles[seat].length;i++){
@@ -1616,10 +1687,8 @@ function liuju(){
   actions.push(ret);
 }
 function roundend(){
-  window.recordedit.data.rounds.push({
-    actions:[].concat(actions), 
-    xun:[].concat(xun)
-  });
+  window.recordedit.data.actions.push([].concat(actions));
+  window.recordedit.data.xun.push([].concat(xun));
 }
 function gameend(){
   function cmp2(x,y){
@@ -1677,6 +1746,7 @@ window.recordedit.isEdit=true;
 window.recordedit.data.nickname=["电脑(简单)","电脑(简单)","电脑(简单)","电脑(简单)"];
 window.recordedit.data.avatar_id=[400101,400101,400101,400101];
 //该部分朝下 
+mode=0;
 scores=[25000,25000,25000,25000];
 gamebegin();
 //第一局（流局满贯，作弊） 
