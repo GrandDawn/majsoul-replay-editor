@@ -236,6 +236,7 @@ class RecordEdit{
         UI_Replay.data.record.accounts[seat].character.is_upgraded=true;
         UI_Replay.data.record.accounts[seat].character.skin=this.data.avatar_id[seat];
         UI_Replay.data.record.accounts[seat].character.charid=200000+Math.floor(this.data.avatar_id[seat]/100)%100;
+        UI_Replay.data.record.accounts[seat].views=[];
       } 
     }
     //if(UI_Replay.data.record.config!=undefined)UI_Replay.data.record.config=this.data.config;
@@ -1810,7 +1811,23 @@ mopai(3);
 leimingpai(3,"3s");
 hupai([1]);
 roundend();
-//第五局 
+//第五局
+tiles1=["1m","1m","1m","2m","3m","4m","0m","6m","7m","8m","9m","9m","9m","1z"];
+tiles2=["1p","1p","1p","2p","3p","4p","0p","6p","7p","8p","9p","9p","9p"];
+tiles3=["1s","1s","1s","2s","3s","4s","0s","6s","7s","8s","9s","9s","9s"];  
+tiles0=["2p","2s","3p","3s","4p","4s","5m","6p","7p","8p","6s","7s","8s"];
+paishan=randompaishan("1z1z1z");
+roundbegin();
+qiepai(1,"1z",true);
+mopai(2);
+qiepai(2,"moqie",true);
+mopai(3);
+qiepai(3,"moqie",true);
+mopai(0);
+qiepai(0,"moqie",true);
+liuju();
+roundend();
+//第六局
 tiles1=["1m","1m","1m","2m","3m","4m","0m","6m","7m","8m","9m","9m","9m","6z"];
 tiles2=["2s","3s","8s","5p","5p","1z","2z","5z","5z","6z","6z","7z","7z"];
 tiles3=["2s","2s","3s","4s","4s","6s","6s","8s","8s","3z","4z","5z","7z"];  
@@ -1847,6 +1864,6 @@ mopai(1);
 qiepai(1,"3s");
 hupai([2,3,0]);
 roundend();
-//第六局
+//第七局
 //... 
 gameend();
