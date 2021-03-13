@@ -1259,7 +1259,6 @@ function hupaioneplayer(seat){
   //---------------------------------------------------
   let ret={
     count:val,
-    dadian:dadian,
     doras:doras0,
     li_doras:li_doras0,
     fans:points.fans,
@@ -1278,6 +1277,7 @@ function hupaioneplayer(seat){
     yiman:points.yiman,
     zimo:zimo,
   }
+  if(mode==1)ret.dadian=dadian;
   return ret;
 }
 function endHule(HuleInfo,old_scores,delta_scores,scores){
