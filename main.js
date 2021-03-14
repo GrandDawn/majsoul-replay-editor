@@ -216,7 +216,6 @@ class RecordEdit{
   }
   edit(){
     let UI_Replay=uiscript.UI_Replay.Inst;
-    let accounts=UI_Replay.data.record.accounts;
     let rounds=[];
     for(let i=0;i<this.data.actions.length;i++){
       let whatever={
@@ -230,13 +229,14 @@ class RecordEdit{
     UI_Replay.rounds=rounds;
     UI_Replay.gameResult.result.players=this.data.players;
     for(let seat=0;seat<4;seat++){
-      if(accounts!=undefined&&accounts[seat]!=undefined){
-        UI_Replay.data.record.accounts[seat].nickname=this.data.nickname[seat]; 
-        UI_Replay.data.record.accounts[seat].avatar_id=this.data.avatar_id[seat];
-        UI_Replay.data.record.accounts[seat].character.is_upgraded=true;
-        UI_Replay.data.record.accounts[seat].character.skin=this.data.avatar_id[seat];
-        UI_Replay.data.record.accounts[seat].character.charid=200000+Math.floor(this.data.avatar_id[seat]/100)%100;
-        UI_Replay.data.record.accounts[seat].views=[];
+      if(view.DesktopMgr.Inst.player_datas!=undefined&&view.DesktopMgr.Inst.player_datas[seat]!=undefined){
+        view.DesktopMgr.Inst.player_datas[seat].nickname=this.data.nickname[seat]; 
+        view.DesktopMgr.Inst.player_datas[seat].avatar_id=this.data.avatar_id[seat];
+        view.DesktopMgr.Inst.player_datas[seat].character.is_upgraded=true;
+        view.DesktopMgr.Inst.player_datas[seat].character.level=5;
+        view.DesktopMgr.Inst.player_datas[seat].character.skin=this.data.avatar_id[seat];
+        view.DesktopMgr.Inst.player_datas[seat].character.charid=200000+Math.floor(this.data.avatar_id[seat]/100)%100;
+        view.DesktopMgr.Inst.player_datas[seat].views=[];
       } 
     }
     //if(UI_Replay.data.record.config!=undefined)UI_Replay.data.record.config=this.data.config;
@@ -1639,7 +1639,7 @@ function liuju(){
       }
     };
   }
-  if(playercnt==4){
+  if(playercnt==4&&ret==undefined){
     let liqiplayercnt=0;
     if(liqiinfo[0].liqi!=0)liqiplayercnt++;
     if(liqiinfo[1].liqi!=0)liqiplayercnt++;
