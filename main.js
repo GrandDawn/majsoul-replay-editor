@@ -254,7 +254,7 @@ class RecordEdit{
 var scores,paishan,tiles0,tiles1,tiles2,tiles3,firstneededscores; 
 var baopai,liqibang=0,lstliqi,doracnt,playertiles,fulu,paihe;
 var liqiinfo,drawtype,lstdrawtype,doras,li_doras,delta_scores;
-var chang,ju,ben,playercnt,actions,xun,players,benchangbang;
+var chang=0,ju=0,ben=0,playercnt,actions,xun,players,benchangbang;
 var mode,hules_history,hupaied;
 function init(){
   xun=[[],[],[],[]];
@@ -928,7 +928,7 @@ function addDealTile(doras,left_tile_count,seat,tile){
       'tile':tile,
     }
   };
-  if(lstliqi!=0){
+  if(lstliqi!=0&&scores[lstliqi.seat]>=1000){
     liqibang=liqibang+1;
     scores[lstliqi.seat]=scores[lstliqi.seat]-1000;
     liqiinfo[lstliqi.seat]={'liqi':lstliqi.type,'yifa':1};
@@ -977,7 +977,7 @@ function addChiPengGang(froms,seat,tiles,type){
       'type':type
     }  
   };
-  if(lstliqi!=0){
+  if(lstliqi!=0&&scores[lstliqi.seat]>=1000){
     liqibang=liqibang+1;
     scores[lstliqi.seat]=scores[lstliqi.seat]-1000;
     liqiinfo[lstliqi.seat]={'liqi':lstliqi.type,'yifa':1};
@@ -1592,8 +1592,14 @@ function notileliuju(){
   if(liujumanguan==false&&tingcnt!=0&&tingcnt!=playercnt){
     for(let seat=0;seat<playercnt;seat++){
       if(hupaied[seat])continue;
-      if(ret[seat].tingpai==true)delta_scores[seat]+=(playerleft-1)*1000/tingcnt;
-      else delta_scores[seat]-=(playerleft-1)*1000/(playerleft-tingcnt);
+      if(mode!=1){
+        if(ret[seat].tingpai==true)delta_scores[seat]+=(playerleft-1)*1000/tingcnt;
+        else delta_scores[seat]-=(playerleft-1)*1000/(playerleft-tingcnt);
+      }
+      else{
+        if(ret[seat].tingpai==true)delta_scores[seat]+=(playerleft-tingcnt)*1000;
+        else delta_scores[seat]-=tingcnt*1000;
+      }
     }
   }
   ret2[0].old_scores=[].concat(scores);
@@ -1645,7 +1651,7 @@ function liuju(){
     if(liqiinfo[1].liqi!=0)liqiplayercnt++;
     if(liqiinfo[2].liqi!=0)liqiplayercnt++;
     if(liqiinfo[3].liqi!=0)liqiplayercnt++;
-    if(liqiplayercnt==3&&lstliqi!=0){
+    if(liqiplayercnt==3&&lstliqi!=0&&scores[lstliqi.seat]>=1000){
       liqibang=liqibang+1;
       scores[lstliqi.seat]=scores[lstliqi.seat]-1000;
       liqiinfo[lstliqi.seat]={'liqi':lstliqi.type,'yifa':1};
