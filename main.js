@@ -1319,10 +1319,16 @@ function hupai(x,type){
   if(mode!=1){
     let ret=[];
     for(let i=0;i<x.length;i++)ret.push(hupaioneplayer(x[i]));
+    for(let i=0;i<x.length;i++)hupaied[x[i]]=true;
     let old_scores=[].concat(scores);
     for(let i=0;i<playercnt;i++)scores[i]=scores[i]+delta_scores[i];
     endHule(ret,[].concat(old_scores),[].concat(delta_scores),[].concat(scores));
     delta_scores=[0,0,0,0];
+    if(hupaied[ju])ben++;
+    else{
+      ju++;
+      ben=0;
+    }
   }
   else if(mode==1&&(type==undefined||type==0)){
     let ret=[];
@@ -1344,6 +1350,7 @@ function hupai(x,type){
       ret.push(whatever);
       hules_history.push(whatever);
     }
+    for(let i=0;i<x.length;i++)hupaied[x[i]]=true;
     let old_scores=[].concat(scores);
     for(let i=0;i<playercnt;i++)scores[i]=scores[i]+delta_scores[i];
     addHuleXueZhanEnd(ret,[].concat(old_scores),[].concat(delta_scores),[].concat(scores));
@@ -1586,6 +1593,8 @@ function notileliuju(){
   }
   if(liujumanguan){
     endNoTile(true,ret,ret2);
+    if(mode!=1)ben++;
+    if(ret[ju].tingpai==false)ju++;
     return;
   }
   ret2=[{'delta_scores':[],'old_scores':[]}];
@@ -1606,6 +1615,8 @@ function notileliuju(){
   ret2[0].delta_scores=[].concat(delta_scores);
   for(let seat=0;seat<playercnt;seat++)scores[seat]=scores[seat]+delta_scores[seat];
   endNoTile(false,ret,ret2);
+  if(mode!=1)ben++;
+  if(ret[ju].tingpai==false)ju++;
 }
 function liuju(){
   let ret;
@@ -1692,6 +1703,7 @@ function liuju(){
   }
   if(hules_history.length!=0)ret.data.hules_history=hules_history;
   actions.push(ret);
+  if(mode!=1)ben++;
 }
 function roundend(){
   window.recordedit.data.actions.push([].concat(actions));
@@ -1762,7 +1774,6 @@ tiles1=["2s","2s","2s","3s","3s","3s","4s","4s","4s","5s","5s","6s","6s"];
 tiles2=["2s","2s","2s","3s","3s","3s","4s","4s","4s","5s","5s","6s","6s"];  
 tiles3=["2s","2s","2s","3s","3s","3s","4s","4s","4s","5s","5s","6s","6s"];
 paishan="1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m1m";
-chang=0;ju=0;ben=0;
 roundbegin();
 qiepai(0,"1m");
 for(let i=69;i>=1;i--){
@@ -1777,7 +1788,6 @@ tiles1=["1p","1p","2p","3p","7m","7m","7m","8m","8m","8m","9m","9m","9m"];
 tiles2=["2s","2s","2s","3s","3s","3s","4s","4s","4s","5s","5s","6s","6s"];  
 tiles3=["2m","2m","2m","3m","3m","3m","4m","4m","4m","5m","5m","6m","6m"];
 paishan=randompaishan("");
-chang=0;ju=0;ben=1;
 roundbegin();
 qiepai(0,"1p",true);
 hupai([1]);
@@ -1788,7 +1798,6 @@ tiles2=["2s","3s","8s","5p","5p","1z","2z","5z","5z","6z","6z","7z","7z"];
 tiles3=["2s","2s","3s","4s","4s","6s","6s","8s","8s","3z","4z","5z","7z"];  
 tiles0=["3s","4s","6s","5p","9p","1z","1z","2z","2z","3z","3z","4z","4z"];
 paishan=randompaishan("3s");
-chang=0;ju=1;ben=0;
 roundbegin();
 hupai([1]);
 roundend();
@@ -1798,7 +1807,6 @@ tiles2=["3s","1m","1m","1m","2m","3m","4m","0m","6m","7m","8m","9m","9m"];
 tiles3=["3s","3s","6z","6z","4s","4s","6s","6s","6s","8s","8s","8s","2s"];  
 tiles0=["1p","1p","1p","2p","3p","4p","0p","6p","7p","8p","9p","9p","9p"];
 paishan=randompaishan("9m9s1z9s3s","1s1s1s1s7s7s7s5s");
-chang=0;ju=1;ben=0;
 roundbegin();
 qiepai(1,"7s");
 mopai(2);
@@ -1839,7 +1847,6 @@ tiles2=["2s","3s","8s","5p","5p","1z","2z","5z","5z","6z","6z","7z","7z"];
 tiles3=["2s","2s","3s","4s","4s","6s","6s","8s","8s","3z","4z","5z","7z"];  
 tiles0=["3s","4s","6s","5p","9p","1z","1z","2z","2z","3z","3z","4z","4z"];
 paishan=randompaishan("3s");
-chang=0;ju=1;ben=1;
 roundbegin();
 qiepai(1,"6z",true);
 mingpai(2,["6z","6z"]);
