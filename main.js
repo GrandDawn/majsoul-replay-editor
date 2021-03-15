@@ -1324,7 +1324,7 @@ function hupai(x,type){
     for(let i=0;i<playercnt;i++)scores[i]=scores[i]+delta_scores[i];
     endHule(ret,[].concat(old_scores),[].concat(delta_scores),[].concat(scores));
     delta_scores=[0,0,0,0];
-    if(hupaied[ju])ben++;
+    if(hupaied[ju]){if(mode!=1)ben++;}
     else{
       ju++;
       ben=0;
