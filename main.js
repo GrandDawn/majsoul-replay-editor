@@ -1594,7 +1594,7 @@ function notileliuju(){
   if(liujumanguan){
     endNoTile(true,ret,ret2);
     if(mode!=1)ben++;
-    if(ret[ju].tingpai==false)ju++;
+    if(ret[ju].tingpai==false||mode==1)ju++;
     return;
   }
   ret2=[{'delta_scores':[],'old_scores':[]}];
@@ -1616,7 +1616,7 @@ function notileliuju(){
   for(let seat=0;seat<playercnt;seat++)scores[seat]=scores[seat]+delta_scores[seat];
   endNoTile(false,ret,ret2);
   if(mode!=1)ben++;
-  if(ret[ju].tingpai==false)ju++;
+  if(ret[ju].tingpai==false||mode==1)ju++;
 }
 function liuju(){
   let ret;
