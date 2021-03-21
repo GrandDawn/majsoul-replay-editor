@@ -1229,7 +1229,7 @@ function hupai(x,type){
       x=[];
       for(let i=ju;i<playercnt+ju;i++){
         seat=i%playercnt;
-        if(seat==actions[actions.length-1].data.seat)continue;
+        if(seat==actions[actions.length-1].data.seat||hupaied[seat])continue;
         if(lstaction.name=="RecordDiscardTile")playertiles[seat].push(lstaction.data.tile);
         else if(lstaction.name=="RecordAnGangAddGang")playertiles[seat].push(lstaction.data.tiles);
         else if(lstaction.name=="RecordBaBei")playertiles[seat].push("4z");
