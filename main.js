@@ -248,7 +248,7 @@ var scores,paishan,tiles0,tiles1,tiles2,tiles3,firstneededscores;
 var baopai,liqibang=0,lstliqi,doracnt,playertiles,fulu,paihe;
 var liqiinfo,drawtype,lstdrawtype,doras,li_doras,delta_scores;
 var chang=0,ju=0,ben=0,playercnt,actions,xun,players,benchangbang;
-var mode,hules_history,hupaied;
+var mode,hules_history,hupaied,discardtiles=["","","",""];
 function init(){
   xun=[[],[],[],[]];
   baopai=[];
@@ -1388,7 +1388,13 @@ function qiepai(seat,kind,is_liqi,var1){
     if(lstaction.name=="RecordNewRound"||lstaction.name=="RecordChangeTile")seat=ju;
     else seat=lstaction.data.seat;
   }
-  if(kind==undefined)kind="moqie";
+  if(kind==undefined){
+    if(discardtiles[seat].length!=0){
+      kind=discardtiles[seat].substring(0,2);
+      discardtiles[seat]=discardtiles[seat].substring(2);
+    }
+    else kind="moqie";
+  }
   let is_wliqi=false;
   if(is_liqi==undefined)is_liqi=false;
   if(is_liqi&&liqiinfo[seat].yifa!=0)is_wliqi=true;
@@ -1729,8 +1735,11 @@ function liuju(){
   if(mode!=1)ben++;
 }
 function roundend(){
+  discardtiles=["","","",""];
   window.recordedit.data.actions.push([].concat(actions));
   window.recordedit.data.xun.push([].concat(xun));
+  xun=[[],[],[],[]];
+  actions=[];
 }
 function gameend(){
   function cmp2(x,y){
@@ -1837,18 +1846,19 @@ tiles2=["3s","1m","1m","1m","2m","3m","4m","0m","6m","7m","8m","9m","9m"];
 tiles3=["3s","3s","6z","6z","4s","4s","6s","6s","6s","8s","8s","8s","2s"];  
 tiles0=["1p","1p","1p","2p","3p","4p","0p","6p","7p","8p","9p","9p","9p"];
 paishan=randompaishan("9m9s1z9s3s","1s1s1s1s7s7s7s5s");
+discardtiles=["","7s5z","3s","2s"];
 roundbegin();
-qiepai("7s");
+qiepai();
 mopai();
-qiepai("3s",true);
+qiepai(true);
 mingpai(["3s","3s"]);
-qiepai("2s");
+qiepai();
 mopai();
 qiepai(true);
 mopai();
 leimingpai("1z");
 mopai();
-qiepai("5z",true);
+qiepai(true);
 mopai();
 qiepai();
 mopai();
