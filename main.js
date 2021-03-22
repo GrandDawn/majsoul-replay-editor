@@ -244,11 +244,11 @@ class RecordEdit{
     }
   }
 }
-var scores,paishan,tiles0,tiles1,tiles2,tiles3,firstneededscores; 
+var scores=[25000,25000,25000,25000],tiles0,tiles1,tiles2,tiles3,firstneededscores; 
 var baopai,liqibang=0,lstliqi,doracnt,playertiles,fulu,paihe;
 var liqiinfo,drawtype,lstdrawtype,doras,li_doras,delta_scores;
 var chang=0,ju=0,ben=0,playercnt,actions,xun,players,benchangbang;
-var mode,hules_history,hupaied,discardtiles=["","","",""];
+var mode,hules_history,hupaied,paishan,discardtiles=["","","",""];
 function init(){
   xun=[[],[],[],[]];
   baopai=[];
@@ -826,6 +826,7 @@ function addNewRound(chang,ju,ben,doras,left_tile_count,liqibang,md5,paishan,sco
     'seat':3
   }];
   if(tingpai!=undefined&&tingpai!=[])ret.data.tingpai=tingpai;
+  if(mode!=1)ret.data.dora=doras;
   actions.push(ret);
   calcxun();
 }
@@ -1808,10 +1809,10 @@ mode=0;
 scores=[25000,25000,25000,25000];
 gamebegin();
 //第一局（流局满贯，作弊） 
-tiles0=["2s","2s","2s","3s","3s","3s","4s","4s","4s","5s","5s","6s","6s","5z"];
-tiles1=["2s","2s","2s","3s","3s","3s","4s","4s","4s","5s","5s","6s","6s"];
-tiles2=["2s","2s","2s","3s","3s","3s","4s","4s","4s","5s","5s","6s","6s"];  
-tiles3=["2s","2s","2s","3s","3s","3s","4s","4s","4s","5s","5s","6s","6s"];
+tiles0=["1m","1m","1m","2m","3m","4m","0m","6m","7m","8m","9m","9m","9m","5z"];
+tiles1=["1p","1p","1p","2p","3p","4p","0p","6p","7p","8p","9p","9p","9p"];
+tiles2=["1s","1s","1s","2s","3s","4s","0s","6s","7s","8s","9s","9s","9s"];  
+tiles3=["1z","1z","1z","2z","2z","2z","3z","3z","3z","4z","4z","4z","7z"];
 paishan="5z5z5z5z5z5z5z5z5z5z5z5z5z5z5z5z5z5z5z5z5z5z5z5z5z5z5z5z5z5z5z5z5z5z5z5z5z5z5z5z5z5z5z5z5z5z5z5z5z5z5z5z5z5z5z5z5z5z5z5z5z5z5z5z5z5z5z5z5z5z5z5z5z5z5z5z5z5z5z5z5z5z5z";
 roundbegin();
 qiepai("5z");
