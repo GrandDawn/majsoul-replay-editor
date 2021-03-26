@@ -831,6 +831,8 @@ function addNewRound(chang,ju,ben,doras,left_tile_count,liqibang,md5,paishan,sco
   calcxun();
 }
 function roundbegin(){
+  if(ju==playercnt){chang++;ju=0;}
+  if(chang==playercnt)chang=0;
   tiles0.sort(cmp);
   tiles1.sort(cmp);
   tiles2.sort(cmp);
@@ -1393,6 +1395,7 @@ function qiepai(seat,kind,is_liqi,var1){
     if(discardtiles[seat].length!=0){
       kind=discardtiles[seat].substring(0,2);
       discardtiles[seat]=discardtiles[seat].substring(2);
+      if(kind=="..")kind="moqie"
     }
     else kind="moqie";
   }
@@ -1583,7 +1586,8 @@ function notileliuju(){
     }
   }
   let ret2=[];
-  for(let seat=0;seat<playercnt;seat++){
+  for(let i=ju;i<playercnt+ju;i++){
+    seat=i%playercnt;
     if(!paihe[seat].liujumanguan||hupaied[seat])continue;
     liujumanguan=true;
     let score=0;
@@ -1827,7 +1831,7 @@ tiles0=["1s","1s","1s","2s","3s","4s","0s","6s","7s","8s","9s","9s","9s","1p"];
 tiles1=["1p","1p","2p","3p","7m","7m","7m","8m","8m","8m","9m","9m","9m"];
 tiles2=["2s","2s","2s","3s","3s","3s","4s","4s","4s","5s","5s","6s","6s"];  
 tiles3=["2m","2m","2m","3m","3m","3m","4m","4m","4m","5m","5m","6m","6m"];
-paishan=randompaishan("");
+paishan=randompaishan("4p");
 roundbegin();
 qiepai("1p",true);
 hupai();
