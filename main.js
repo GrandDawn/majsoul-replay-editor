@@ -1395,7 +1395,7 @@ function qiepai(seat,kind,is_liqi,var1){
     if(discardtiles[seat].length!=0){
       kind=discardtiles[seat].substring(0,2);
       discardtiles[seat]=discardtiles[seat].substring(2);
-      if(kind=="..")kind="moqie"
+      if(kind==".."||kind=="  ")kind="moqie"
     }
     else kind="moqie";
   }
@@ -1724,7 +1724,7 @@ function liuju(){
   }
   let havegang=[0,0,0,0],havegangcnt;
   for(let seat=0;seat<playercnt;seat++){
-    for(let i=0;i<fulu[seat].length-1;i++)if(fulu[seat][i].type==2||fulu[seat][i].type==3)havegang[seat]=1;
+    for(let i=0;i<fulu[seat].length;i++)if(fulu[seat][i].type==2||fulu[seat][i].type==3)havegang[seat]=1;
     havegangcnt+=havegang[seat];
   }
   if(doracnt.cnt==5&&havegangcnt>=2){
@@ -1871,6 +1871,18 @@ leimingpai("3s");
 hupai();
 roundend();
 //第五局
+tiles1=["2s","2s","4s","4s","8s","8s","1z","1z","2z","2z","3z","3z","4z","7z"];
+tiles2=["1m","1m","1m","2m","3m","4m","0m","6m","7m","8m","9m","9m","9m"];
+tiles3=["1p","1p","1p","2p","3p","4p","0p","6p","7p","8p","9p","9p","9p"];  
+tiles0=["1s","1s","1s","2s","3s","4s","0s","6s","7s","8s","9s","9s","9s"];
+paishan=randompaishan("4z","5z5z5z5z6z6z6z6z");
+roundbegin();
+qiepai("7z",true);
+mopai();
+qiepai("4z",true);
+hupai();
+roundend();
+//第六局
 tiles1=["1m","1m","1m","2m","3m","4m","0m","6m","7m","8m","9m","9m","9m","1z"];
 tiles2=["1p","1p","1p","2p","3p","4p","0p","6p","7p","8p","9p","9p","9p"];
 tiles3=["1s","1s","1s","2s","3s","4s","0s","6s","7s","8s","9s","9s","9s"];  
@@ -1886,7 +1898,7 @@ mopai();
 qiepai(true);
 liuju();
 roundend();
-//第六局
+//第七局
 tiles1=["1m","1m","1m","2m","3m","4m","0m","6m","7m","8m","9m","9m","9m","6z"];
 tiles2=["2s","3s","8s","5p","5p","1z","2z","5z","5z","6z","6z","7z","7z"];
 tiles3=["2s","2s","3s","4s","4s","6s","6s","8s","8s","3z","4z","5z","7z"];  
@@ -1922,6 +1934,6 @@ mopai();
 qiepai();
 hupai();
 roundend();
-//第七局
+//第八局
 //... 
 gameend();
