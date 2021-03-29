@@ -207,7 +207,7 @@ class RecordEdit{
       'avatar_id':[],
     };
   }
-  edit(){
+  editgame(){
     let UI_Replay=uiscript.UI_Replay.Inst;
     let rounds=[];
     for(let i=0;i<this.data.actions.length;i++){
@@ -221,16 +221,18 @@ class RecordEdit{
     }
     UI_Replay.rounds=rounds;
     UI_Replay.gameResult.result.players=this.data.players;
+  }
+  editsettings(){
+    //view.DesktopMgr.Inst.game_config=this.data.config;
     for(let seat=0;seat<4;seat++){
-      if(view.DesktopMgr.Inst.player_datas!=undefined&&view.DesktopMgr.Inst.player_datas[seat]!=undefined){
-        view.DesktopMgr.Inst.player_datas[seat].nickname=this.data.nickname[seat]; 
-        view.DesktopMgr.Inst.player_datas[seat].avatar_id=this.data.avatar_id[seat];
-        view.DesktopMgr.Inst.player_datas[seat].character.is_upgraded=true;
-        view.DesktopMgr.Inst.player_datas[seat].character.level=5;
-        view.DesktopMgr.Inst.player_datas[seat].character.skin=this.data.avatar_id[seat];
-        view.DesktopMgr.Inst.player_datas[seat].character.charid=200000+Math.floor(this.data.avatar_id[seat]/100)%100;
-        view.DesktopMgr.Inst.player_datas[seat].views=[];
-      } 
+      view.DesktopMgr.Inst.player_datas[seat].nickname=this.data.nickname[seat]; 
+      view.DesktopMgr.Inst.player_datas[seat].avatar_id=this.data.avatar_id[seat];
+      view.DesktopMgr.Inst.player_datas[seat].character.is_upgraded=true;
+      view.DesktopMgr.Inst.player_datas[seat].character.level=5;
+      view.DesktopMgr.Inst.player_datas[seat].character.skin=this.data.avatar_id[seat];
+      view.DesktopMgr.Inst.player_datas[seat].character.charid=200000+Math.floor(this.data.avatar_id[seat]/100)%100;
+      view.DesktopMgr.Inst.player_datas[seat].views=[];
+      view.DesktopMgr.Inst.player_effects[seat]={'0':0,'1':0,'2':0,'3':309997,'4':0,'5':305501,'6':305044,'7':305045,'8':307001};
     }
     //if(UI_Replay.data.record.config!=undefined)UI_Replay.data.record.config=this.data.config;
   }
@@ -239,7 +241,13 @@ class RecordEdit{
     const initData=uiscript.UI_Replay.prototype.initData;
     uiscript.UI_Replay.prototype.initData=function(t){
       let _=initData.call(this,t);
-      if(_this.isEdit)_this.edit(this);
+      if(_this.isEdit)_this.editgame(this);
+      return _;
+    }
+    const initRoom=view.DesktopMgr.prototype.initRoom;
+    view.DesktopMgr.prototype.initRoom=function(e,a,s,o,l){
+      let _=initRoom.call(this,e,a,s,o,l);
+      if(_this.isEdit)_this.editsettings(this);
       return _;
     }
   }
@@ -1347,7 +1355,7 @@ function mopai(seat){
   if(lstaction.name=="RecordChiPengGang"||lstaction.name=="RecordBaBei"||lstaction.name=="RecordAnGangAddGang")seat=lstaction.data.seat;
   if(lstaction.name=="RecordDiscardTile"||lstaction.name=="RecordHuleXueZhanMid"){
     if(lstaction.name=="RecordDiscardTile")seat=(lstaction.data.seat+1)%playercnt;
-    else seat=(lstaction.data.hules[0].seat+1)%playercnt;
+    else seat=(lstaction.data.hules[lstaction.data.hules.length-1].seat+1)%playercnt;
     while(hupaied[seat])seat=(seat+1)%playercnt;
   }
   if(doracnt.lsttype==2){
@@ -1395,7 +1403,7 @@ function qiepai(seat,kind,is_liqi,var1){
     if(discardtiles[seat].length!=0){
       kind=discardtiles[seat].substring(0,2);
       discardtiles[seat]=discardtiles[seat].substring(2);
-      if(kind==".."||kind=="  ")kind="moqie"
+      if(kind==".."||kind=="  ")kind="moqie";
     }
     else kind="moqie";
   }
@@ -1520,8 +1528,15 @@ function mingpai(seat,tiles){
   }
 } 
 function leimingpai(seat,tile,type){
+  if(seat=="babei"||seat=="angang"||seat=="jiagang"){tile=seat;seat=undefined;}
   if(tile=="babei"||tile=="angang"||tile=="jiagang"){type=tile;tile=undefined;}
   if(seat!=0&&seat!=1&&seat!=2&&seat!=playercnt-1){tile=seat;seat=undefined;}
+  if(tile==undefined){
+    if(leimingpai("4z","babei"))return true;
+    for(let i=1;i<=34;i++)if(leimingpai(inttotile(i),"angang"))return true;
+    for(let i=1;i<=34;i++)if(leimingpai(inttotile(i),"jiagang"))return true;
+    return false;
+  }
   if(seat==undefined){
     let lstaction=actions[actions.length-1];
     if(lstaction.name=="RecordNewRound"||lstaction.name=="RecordChangeTile")seat=ju;
@@ -1531,23 +1546,25 @@ function leimingpai(seat,tile,type){
     doracnt.lsttype=0;
     doracnt.cnt++;
   }
-  if(playercnt==3&&tile=="4z"&&type==undefined||type=="babei"){
+  if(playercnt==3&&tile=="4z"&&(type==undefined||type=="babei")){
     for(let i=0;i<playercnt;i++)if(liqiinfo[i].yifa==1)liqiinfo[i].yifa=2;
     fulu[seat].push({'type':4,'tile':["4z"]});
     drawtype=0;
     addBaBei(calcdoras(),seat);
+    return true;
   }
   let tilecnt=0,jiagangflag=false;
   for(let i=0;i<playertiles[seat].length;i++)if(equaltile(tile,playertiles[seat][i]))tilecnt++;
   for(let i=0;i<fulu[seat].length;i++)if(equaltile(fulu[seat][i].tile[0],tile)&&fulu[seat][i].type==1)jiagangflag=true;
-  if(tilecnt>=4&&type==undefined||type=="angang"){
+  if(tilecnt>=4&&(type==undefined||type=="angang")){
     for(let i=0;i<playercnt;i++)if(liqiinfo[i].yifa==1)liqiinfo[i].yifa=2;
     doracnt.lsttype=2;
     fulu[seat].push({'type':3,'tile':[tile,tile,tile,tile]});
     drawtype=0;
     addAnGangAddGang(calcdoras(),seat,tile,3);
+    return true;
   }
-  if(jiagangflag&&tilecnt>=1&&type==undefined||type=="jiagang"){
+  if(jiagangflag&&tilecnt>=1&&(type==undefined||type=="jiagang")){
     for(let i=0;i<playercnt;i++)if(liqiinfo[i].yifa==1)liqiinfo[i].yifa=2;
     doracnt.lsttype=1;
     for(let i=0;i<fulu[seat].length;i++){
@@ -1558,7 +1575,9 @@ function leimingpai(seat,tile,type){
     }
     drawtype=0;
     addAnGangAddGang(calcdoras(),seat,tile,2);
+    return true;
   }
+  return false;
 }
 function notileliuju(){
   let playerleft=0;
