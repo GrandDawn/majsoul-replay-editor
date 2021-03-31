@@ -1579,15 +1579,15 @@ function leimingpai(seat,tile,type){
     doracnt.lsttype=0;
     doracnt.cnt++;
   }
-  if(playercnt==3&&tile=="4z"&&(type==undefined||type=="babei")){
+  let tilecnt=0,jiagangflag=false;
+  for(let i=0;i<playertiles[seat].length;i++)if(equaltile(tile,playertiles[seat][i]))tilecnt++;
+  if(playercnt==3&&tile=="4z"&&tilecnt>=1&&(type==undefined||type=="babei")){
     for(let i=0;i<playercnt;i++)if(liqiinfo[i].yifa==1)liqiinfo[i].yifa=2;
     fulu[seat].push({'type':4,'tile':["4z"]});
     drawtype=0;
     addBaBei(calcdoras(),seat);
     return true;
   }
-  let tilecnt=0,jiagangflag=false;
-  for(let i=0;i<playertiles[seat].length;i++)if(equaltile(tile,playertiles[seat][i]))tilecnt++;
   for(let i=0;i<fulu[seat].length;i++)if(equaltile(fulu[seat][i].tile[0],tile)&&fulu[seat][i].type==1)jiagangflag=true;
   if(tilecnt>=4&&(type==undefined||type=="angang")){
     for(let i=0;i<playercnt;i++)if(liqiinfo[i].yifa==1)liqiinfo[i].yifa=2;
@@ -1877,7 +1877,6 @@ config={
   'mode':{
     'mode':1,//1表示4人，11表示3人
     'detail_rule':{
-      'begin_open_mode':0,
       'dora_count':3,
       'fanfu':1,
       'guyi_mode':0,
@@ -2013,4 +2012,5 @@ hupai();
 roundend();
 //第八局
 //... 
+gameend();
 gameend();
