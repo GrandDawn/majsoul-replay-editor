@@ -210,22 +210,29 @@ function editgame(){
   UI_Replay.rounds=rounds;
   UI_Replay.gameResult.result.players=editdata.players;
 }
-function player_datas(){
+function player_datas(a){
   let ret=[];
   for(let seat=0;seat<4;seat++){
     ret[seat]={
       'nickname':editdata.nickname[seat],
       'avatar_id':editdata.avatar_id[seat],
+      //'avatar_frame':305501,
+      //'title':600001,
+      //'verified':0,
+      //'account_id':a[seat].account_id,
       'character':{
         'is_upgraded':true,
         'level':5,
         'charid':cfg.item_definition.skin.map_[editdata.avatar_id[seat]].character_id,
         'skin':editdata.avatar_id[seat],
       },
+      'level':{'id':10101},
+      'level3':{'id':10101},
       'charid':cfg.item_definition.skin.map_[editdata.avatar_id[seat]].character_id,
       'seat':seat,
       'views':[]
     }
+    if(a[seat].account_id!=undefined)ret[seat].account_id=a[seat].account_id;
   }
   return ret;
 }
@@ -239,7 +246,7 @@ function edit(){
     return _;
   }
   view.DesktopMgr.prototype.initRoom=function(e,a,s,o,l){
-    return initRoom.call(this,game_config(),player_datas(),s,o,l);
+    return initRoom.call(this,game_config(),player_datas(a),s,o,l);
     //else return initRoom.call(this,e,a,s,o,l);
   }
 }
