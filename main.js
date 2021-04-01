@@ -219,10 +219,10 @@ function player_datas(){
       'character':{
         'is_upgraded':true,
         'level':5,
-        'charid':200000+Math.floor(editdata.avatar_id[seat]/100)%100,
+        'charid':cfg.item_definition.skin.map_[editdata.avatar_id[seat]].character_id,
         'skin':editdata.avatar_id[seat],
       },
-      'charid':200000+Math.floor(editdata.avatar_id[seat]/100)%100,
+      'charid':cfg.item_definition.skin.map_[editdata.avatar_id[seat]].character_id,
       'seat':seat,
       'views':[]
     }
@@ -328,12 +328,12 @@ function fanfu(){
   return 1;
 }
 function separatetile(x){
-	let ret=[];
-	while(x.length>0){
-		ret.push(x.substring(0,2));
-		x=x.substring(2);
-	}
-	return ret;
+  let ret=[];
+  while(x.length>0){
+    ret.push(x.substring(0,2));
+    x=x.substring(2);
+  }
+  return ret;
 }
 var nxt2=[0,2,3,4,5,6,7,8,9,35,11,12,13,14,15,16,17,18,35,20,21,22,23,24,25,26,27,35,35,35,35,35,35,35,35,36,0,0,0,0];
 var doranxt=[0,2,3,4,5,6,7,8,9, 1,11,12,13,14,15,16,17,18,10,20,21,22,23,24,25,26,27,19,29,30,31,28,33,34,32];
@@ -821,9 +821,9 @@ function calcdoras(){
 function gamebegin(){
   config=editdata.config;
   if(is_guyi()&&config.mode.mode==11){
-  	config.mode.detail_rule.guyi_mode=0;
-  	config.mode.detail_rule.xuezhandaodi=0;
-  	config.mode.detail_rule.huansanzhang=0;
+    config.mode.detail_rule.guyi_mode=0;
+    config.mode.detail_rule.xuezhandaodi=0;
+    config.mode.detail_rule.huansanzhang=0;
   }
   if(config.mode.mode==11){
     if(config&&config.mode&&config.mode.detail_rule&&config.mode.detail_rule.init_point)scores=[config.mode.detail_rule.init_point,config.mode.detail_rule.init_point,config.mode.detail_rule.init_point];
@@ -1532,23 +1532,23 @@ function qiepai(seat,kind,is_liqi,var1){
 }
 function mingpai(seat,tiles){
   function changedora(x){
-  	if(x[0]=='0')return "5"+x[1];
-  	if(x[0]=='5'&&x[1]!='z')return "0"+x[1];
-  	return x;
+    if(x[0]=='0')return "5"+x[1];
+    if(x[0]=='5'&&x[1]!='z')return "0"+x[1];
+    return x;
   }
   function intiles(x,y){
-	let cnt=[],cnt2=[];
-	for(let i=1;i<=37;i++)cnt[i]=cnt2[i]=0;
-	for(let i=0;i<x.length;i++)cnt[tiletoint(x[i],1)]++;
-	for(let i=0;i<y.length;i++)cnt2[tiletoint(y[i],1)]++;
-	for(let i=1;i<=37;i++)if(cnt[i]>cnt2[i])return false;
-	return true;
+    let cnt=[],cnt2=[];
+    for(let i=1;i<=37;i++)cnt[i]=cnt2[i]=0;
+    for(let i=0;i<x.length;i++)cnt[tiletoint(x[i],1)]++;
+    for(let i=0;i<y.length;i++)cnt2[tiletoint(y[i],1)]++;
+    for(let i=1;i<=37;i++)if(cnt[i]>cnt2[i])return false;
+    return true;
   }
   function trying(x,seat){
     for(let seat2=0;seat2<playercnt;seat2++){
       if((seat==seat2||seat==undefined)&&intiles(x,playertiles[seat2])){
-   	    mingpai(seat2,x);
-      	return true;
+        mingpai(seat2,x);
+        return true;
       }
     }
     return false;
@@ -1569,16 +1569,16 @@ function mingpai(seat,tiles){
   }
   if(typeof(tiles)=="string")tiles=separatetile(tiles);
   if(tiles==undefined){
-  	let lsttile=actions[actions.length-1].data.tile;
-  	lsttile=inttotile(tiletoint(lsttile));
-  	if(trying([lsttile,lsttile,lsttile],seat))return;
+    let lsttile=actions[actions.length-1].data.tile;
+    lsttile=inttotile(tiletoint(lsttile));
+    if(trying([lsttile,lsttile,lsttile],seat))return;
     if(lsttile[0]=='5'&&lsttile[1]!='z'){
-  	  if(trying(["0"+lsttile[1],lsttile,lsttile],seat))return;
+      if(trying(["0"+lsttile[1],lsttile,lsttile],seat))return;
       if(trying(["0"+lsttile[1],"0"+lsttile[1],lsttile],seat))return;
     }
     if(trying([lsttile,lsttile],seat))return;
     if(lsttile[0]=='5'&&lsttile[1]!='z'){
-  	  if(trying(["0"+lsttile[1],lsttile],seat))return;
+      if(trying(["0"+lsttile[1],lsttile],seat))return;
       if(trying(["0"+lsttile[1],"0"+lsttile[1]],seat))return;
     }
     seat=(actions[actions.length-1].data.seat+1)%playercnt;
