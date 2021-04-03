@@ -1573,8 +1573,8 @@ function mingpai(seat,tiles){
   }
   if(seat!=0&&seat!=1&&seat!=2&&seat!=playercnt-1){tiles=seat;seat=undefined;}
   if(seat==undefined){
-    if(!equaltile(tiles[0],actions[actions.length-1].data.tile))seat=(actions[actions.length-1].data.seat+1)%playercnt;
-    else {
+    if(tiles!=undefined&&!equaltile(tiles[0],actions[actions.length-1].data.tile))seat=(actions[actions.length-1].data.seat+1)%playercnt;
+    else if(tiles!=undefined){
       for(let seat2=0;seat2<playercnt;seat2++){
         if(seat2==actions[actions.length-1].data.seat)continue;
         let cnt=[];
@@ -2027,18 +2027,18 @@ roundbegin();
 qiepai();
 mopai();
 qiepai(true);
-mingpai(["3s","3s"]);
+mingpai();
 qiepai();
 mopai();
 qiepai(true);
 mopai();
-leimingpai("1z");
+leimingpai();
 mopai();
 qiepai(true);
 mopai();
 qiepai();
 mopai();
-leimingpai("3s");
+leimingpai();
 hupai();
 roundend();
 //第五局
