@@ -227,17 +227,19 @@ function player_datas(a){
   let ret=[];
   for(let seat=0;seat<4;seat++){
     ret[seat]={
-      'nickname':editdata.nickname[seat],
-      'avatar_id':editdata.avatar_id[seat],
+      'nickname':editdata.player_datas[seat].nickname,
+      'avatar_id':editdata.player_datas[seat].avatar_id,
+      'avatar_frame':editdata.player_datas[seat].avatar_frame,
       'character':{
         'is_upgraded':true,
         'level':5,
-        'charid':cfg.item_definition.skin.map_[editdata.avatar_id[seat]].character_id,
-        'skin':editdata.avatar_id[seat],
+        'charid':cfg.item_definition.skin.map_[editdata.player_datas[seat].avatar_id].character_id,
+        'skin':editdata.player_datas[seat].avatar_id,
       },
-      'charid':cfg.item_definition.skin.map_[editdata.avatar_id[seat]].character_id,
+      'charid':cfg.item_definition.skin.map_[editdata.player_datas[seat].avatar_id].character_id,
       'seat':seat,
-      'views':[]
+      'views':editdata.player_datas[seat].views,
+      'title':editdata.player_datas[seat].title,
     }
     if(a[seat].account_id!=undefined)ret[seat].account_id=a[seat].account_id;
   }
@@ -276,8 +278,10 @@ var editdata={
   'xun':[],
   'players':null,
   'config':null,
-  'nickname':[],
-  'avatar_id':[],
+  'player_datas':[{'avatar_frame':0,'avatar_id':400101,'nickname':"电脑(简单)",'title':600001,'views':[]},
+                  {'avatar_frame':0,'avatar_id':400101,'nickname':"电脑(简单)",'title':600001,'views':[]},
+                  {'avatar_frame':0,'avatar_id':400101,'nickname':"电脑(简单)",'title':600001,'views':[]},
+                  {'avatar_frame':0,'avatar_id':400101,'nickname':"电脑(简单)",'title':600001,'views':[]}]
 };
 function init(){
   xun=[[],[],[],[]];
@@ -834,11 +838,20 @@ function calcdoras(){
   return doras0;
 }
 function gamebegin(){
+  if(editdata.config==undefined)
+    editdata.config={
+      'category':2,
+      'meta':{'mode_id':5},
+      'mode':{
+        'mode':1,
+      }
+    }
+  if(editdata.player_datas==undefined)editdata.player_datas=[];
   config=editdata.config;
-  if(is_guyi()&&config.mode.mode==11){
-    config.mode.detail_rule.guyi_mode=0;
-    config.mode.detail_rule.xuezhandaodi=0;
-    config.mode.detail_rule.huansanzhang=0;
+  if(config.mode.mode==11){
+    if(config.mode.detail_rule.guyi_mode)config.mode.detail_rule.guyi_mode=0;
+    if(config.mode.detail_rule.xuezhandaodi)config.mode.detail_rule.xuezhandaodi=0;
+    if(config.mode.detail_rule.huansanzhang)config.mode.detail_rule.huansanzhang=0;
   }
   if(config.mode.mode==11){
     if(config&&config.mode&&config.mode.detail_rule&&config.mode.detail_rule.init_point)scores=[config.mode.detail_rule.init_point,config.mode.detail_rule.init_point,config.mode.detail_rule.init_point];
@@ -846,7 +859,7 @@ function gamebegin(){
   }
   else{
     if(config&&config.mode&&config.mode.detail_rule&&config.mode.detail_rule.init_point)scores=[config.mode.detail_rule.init_point,config.mode.detail_rule.init_point,config.mode.detail_rule.init_point,config.mode.detail_rule.init_point];
-    else scores=[25000,25000,25000];
+    else scores=[25000,25000,25000,25000];
   }
   firstneededscores=scores[0];
 }
@@ -1918,7 +1931,7 @@ function gameend(){
     players[0].total_point=-players[1].total_point-players[2].total_point-players[3].total_point;
   }
   editdata.players=players;
-  edit()
+  edit();
 }
 function randompaishan(paishan,paishanback,reddora){
   if(typeof(tiles0)=="string")tiles0=separatetile(tiles0);
@@ -1964,13 +1977,20 @@ function randompaishan(paishan,paishanback,reddora){
   return paishan;
 }
 //该部分朝下 
-editdata.nickname=["电脑(简单)","电脑(简单)","电脑(简单)","电脑(简单)"];
-editdata.avatar_id=[400101,400101,400101,400101];
+console.log(editdata.player_datas);
+editdata.player_datas[0].nickname="电脑(简单)";
+editdata.player_datas[1].nickname="电脑(简单)";
+editdata.player_datas[2].nickname="电脑(简单)";
+editdata.player_datas[3].nickname="电脑(简单)";
+editdata.player_datas[0].avatar_id=400101;
+editdata.player_datas[1].avatar_id=400101;
+editdata.player_datas[2].avatar_id=400101;
+editdata.player_datas[3].avatar_id=400101;
 editdata.config={
-  'category':2,//1表示友人房，2表示匹配房......
+  'category':2,
   'meta':{'mode_id':11},
   'mode':{
-    'mode':1,//1表示4人，11表示3人
+    'mode':1,
     'detail_rule':{
       'dora_count':3,
       'fanfu':1,
