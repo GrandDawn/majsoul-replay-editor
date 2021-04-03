@@ -194,6 +194,7 @@ function md5(string){
   }
   return(md5_WordToHex(a)+md5_WordToHex(b)+md5_WordToHex(c)+md5_WordToHex(d)).toLowerCase();
 }
+var initData,initRoom,openMJRoom;
 if(initData==undefined)initData=uiscript.UI_Replay.prototype.initData;
 if(initRoom==undefined)initRoom=view.DesktopMgr.prototype.initRoom;
 if(openMJRoom==undefined)openMJRoom=game.Scene_MJ.prototype.openMJRoom;
@@ -1801,14 +1802,8 @@ function notileliuju(){
   if(liujumanguan==false&&tingcnt!=0&&tingcnt!=playercnt){
     for(let seat=0;seat<playercnt;seat++){
       if(hupaied[seat])continue;
-      if(!is_xuezhandaodi()){
-        if(ret[seat].tingpai==true)delta_scores[seat]+=(playerleft-1)*1000/tingcnt;
-        else delta_scores[seat]-=(playerleft-1)*1000/(playerleft-tingcnt);
-      }
-      else{
-        if(ret[seat].tingpai==true)delta_scores[seat]+=(playerleft-tingcnt)*1000;
-        else delta_scores[seat]-=tingcnt*1000;
-      }
+      if(ret[seat].tingpai==true)delta_scores[seat]+=(playerleft-1)*1000/tingcnt;
+      else delta_scores[seat]-=(playerleft-1)*1000/(playerleft-tingcnt);
     }
   }
   ret2[0].old_scores=[].concat(scores);
