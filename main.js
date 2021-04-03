@@ -195,6 +195,19 @@ function md5(string){
   return(md5_WordToHex(a)+md5_WordToHex(b)+md5_WordToHex(c)+md5_WordToHex(d)).toLowerCase();
 }
 const initData=uiscript.UI_Replay.prototype.initData,initRoom=view.DesktopMgr.prototype.initRoom;
+const openMJRoom = game.Scene_MJ.prototype.openMJRoom;
+game.Scene_MJ.prototype.openMJRoom = function (...args) {
+  args[1].forEach(player => {
+    if(player.account_id==GameMgr.Inst.account_id){
+      player.character=uiscript.UI_Sushe.characters[uiscript.UI_Sushe.main_character_id-200001];
+      player.avatar_id=uiscript.UI_Sushe.main_chara_info.skin;
+      player.views=uiscript.UI_Sushe.commonViewList[uiscript.UI_Sushe.using_commonview_index];
+      player.avatar_frame=GameMgr.Inst.account_data.avatar_frame;
+      player.title=GameMgr.Inst.account_data.title;
+    }
+  });
+  return openMJRoom.call(this, ...args)
+}
 function editgame(){
   let UI_Replay=uiscript.UI_Replay.Inst;
   let rounds=[];
@@ -243,6 +256,7 @@ function edit(){
     if(o==1)return initRoom.call(this,game_config(),player_datas(a),s,o,l);
     else return initRoom.call(this,e,a,s,o,l);
   }
+  console.log("edit successfully");
 }
 function canceledit(){
   uiscript.UI_Replay.prototype.initData=function(t){
@@ -1145,13 +1159,16 @@ function hupaioneplayer(seat){
   }
   if(baopai[seat]!=undefined){
     if(zimo){
-      if(qinjia){
-        delta_scores[baopai[seat].seat]-=baopai[seat].val*48000;
-        delta_scores[seat]+=baopai[seat].val*48000;
-      }
-      else{
-        delta_scores[baopai[seat].seat]-=baopai[seat].val*32000;
-        delta_scores[seat]+=baopai[seat].val*32000;
+      for(let i=0;i<playercnt;i++){
+        if(i==seat||hupaied[i])continue;
+        if(i==ju||seat==ju){
+          delta_scores[baopai[seat].seat]-=baopai[seat].val*16000;
+          delta_scores[seat]+=baopai[seat].val*16000;
+        }
+        else{
+          delta_scores[baopai[seat].seat]-=baopai[seat].val*8000;
+          delta_scores[seat]+=baopai[seat].val*8000;
+        }
       }
       for(let i=0;i<playercnt;i++){
         if(i==seat||hupaied[i])continue;
