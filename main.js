@@ -334,6 +334,10 @@ function is_guyi(){
   if(config&&config.mode&&config.mode.detail_rule&&config.mode.detail_rule.guyi_mode)return true;
   return false;
 }
+function is_peipaimingpai(){
+  if(config&&config.mode&&config.mode.detail_rule&&config.mode.detail_rule.begin_open_mode)return true;
+  return false;
+}
 function is_shiduan(){
   if(!config)return true;
   if(!config.mode)return true;
@@ -866,6 +870,18 @@ function gamebegin(){
   firstneededscores=scores[0];
 }
 function addNewRound(chang,ju,ben,doras,left_tile_count,liqibang,md5,paishan,scores,tiles0,tiles1,tiles2,tiles3,tingpai){
+  function mingpai_data(tiles,seat){
+    let ret={'count':[],'seat':seat,'tiles':[]}
+    let cnt=[];
+    for(let i=1;i<=37;i++)cnt[i]=0;
+    for(let i=0;i<tiles.length;i++)cnt[tiletoint(tiles[i],1)]++;
+    for(let i=1;i<=37;i++){
+      if(cnt[i]==0)continue;
+      ret.tiles.push(inttotile(i));
+      ret.count.push(cnt[i]);
+    }
+    return ret;
+  }
   let ret={
     name:"RecordNewRound",
     data:{
@@ -908,6 +924,9 @@ function addNewRound(chang,ju,ben,doras,left_tile_count,liqibang,md5,paishan,sco
     }],
     'seat':3
   }];
+  if(is_peipaimingpai()){
+    ret.data.opens=[mingpai_data(tiles0,0),mingpai_data(tiles1,1),mingpai_data(tiles2,2),mingpai_data(tiles3,3)];
+  }
   if(tingpai!=undefined&&tingpai!=[])ret.data.tingpai=tingpai;
   if(!is_xuezhandaodi())ret.data.dora=doras;
   actions.push(ret);
@@ -1993,6 +2012,7 @@ editdata.config={
   'mode':{
     'mode':1,
     'detail_rule':{
+      'begin_open_mode':0,
       'dora_count':3,
       'fanfu':1,
       'guyi_mode':0,
