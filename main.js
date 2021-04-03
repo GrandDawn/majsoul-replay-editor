@@ -271,7 +271,7 @@ function canceledit(){
   }
 }
 var scores=[25000,25000,25000,25000],tiles0,tiles1,tiles2,tiles3,firstneededscores; 
-var baopai,liqibang=0,lstliqi,doracnt,playertiles,fulu,paihe;
+var baopai,liqibang=0,lstliqi,doracnt,playertiles,fulu,paihe,muyu;
 var liqiinfo,drawtype,lstdrawtype,doras,li_doras,delta_scores;
 var chang=0,ju=0,ben=0,playercnt,actions,xun,players,benchangbang;
 var config,hules_history,hupaied,paishan,discardtiles=["","","",""];
@@ -286,6 +286,7 @@ var editdata={
                   {'avatar_frame':0,'avatar_id':400101,'nickname':"电脑(简单)",'title':600001,'views':[]}]
 };
 function init(){
+  muyu=null;
   xun=[[],[],[],[]];
   baopai=[];
   actions=[];
@@ -336,6 +337,10 @@ function is_guyi(){
 }
 function is_peipaimingpai(){
   if(config&&config.mode&&config.mode.detail_rule&&config.mode.detail_rule.begin_open_mode)return true;
+  return false;
+}
+function is_dora3(){
+  if(config&&config.mode&&config.mode.detail_rule&&config.mode.detail_rule.dora3_mode)return true;
   return false;
 }
 function is_shiduan(){
@@ -839,6 +844,7 @@ function calcxun(){
   for(let x=0;x<playercnt;x++)if(playertiles[x].length%3==2&&!hupaied[x])xun[x].push(actions.length-1);
 }
 function calcdoras(){
+  doracnt.cnt=Math.min(doracnt.cnt,5);
   let doras0=[];
   for(let i=0;i<doracnt.cnt;i++)doras0[i]=doras[i];
   return doras0;
@@ -928,7 +934,10 @@ function addNewRound(chang,ju,ben,doras,left_tile_count,liqibang,md5,paishan,sco
     ret.data.opens=[mingpai_data(tiles0,0),mingpai_data(tiles1,1),mingpai_data(tiles2,2),mingpai_data(tiles3,3)];
   }
   if(tingpai!=undefined&&tingpai!=[])ret.data.tingpai=tingpai;
-  if(!is_xuezhandaodi())ret.data.dora=doras;
+  if(!is_xuezhandaodi()){
+    if(typeof(doras)=="string")ret.data.dora=doras;
+    else ret.data.doras=doras;
+  }
   actions.push(ret);
   calcxun();
 }
@@ -945,8 +954,6 @@ function roundbegin(){
   tiles3.sort(cmp);
   init();
   benchangbang=ben;
-  let dora;
-  if(!is_xuezhandaodi())dora=doras[0];
   let lsttile=playertiles[ju][playertiles[ju].length-1];
   playertiles[ju].length--;
   let tingpais=[];
@@ -955,7 +962,8 @@ function roundbegin(){
     if(tingpaitmp.length!=0)tingpais.push({'seat':i,'tingpais1':tingpaitmp});
   }
   playertiles[ju].push(lsttile);
-  addNewRound(chang,ju,ben,dora,paishan.length/2-14,liqibang,md5(paishan),paishan,[].concat(scores),[].concat(tiles0),[].concat(tiles1),[].concat(tiles2),[].concat(tiles3),tingpais);
+  if(is_dora3())doracnt.cnt=3;
+  addNewRound(chang,ju,ben,calcdoras(),paishan.length/2-14,liqibang,md5(paishan),paishan,[].concat(scores),[].concat(tiles0),[].concat(tiles1),[].concat(tiles2),[].concat(tiles3),tingpais);
 }
 function addDiscardTile(is_liqi,is_wliqi,doras,moqie,seat,tile,tingpais){ 
   for(let i=0;i<playertiles[seat].length;i++){
@@ -2013,6 +2021,7 @@ editdata.config={
     'mode':1,
     'detail_rule':{
       'begin_open_mode':0,
+      'dora3_mode':0,
       'dora_count':3,
       'fanfu':1,
       'guyi_mode':0,
