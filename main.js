@@ -194,10 +194,11 @@ function md5(string){
   }
   return(md5_WordToHex(a)+md5_WordToHex(b)+md5_WordToHex(c)+md5_WordToHex(d)).toLowerCase();
 }
-const initData=uiscript.UI_Replay.prototype.initData,initRoom=view.DesktopMgr.prototype.initRoom;
-const openMJRoom = game.Scene_MJ.prototype.openMJRoom;
-game.Scene_MJ.prototype.openMJRoom = function (...args) {
-  args[1].forEach(player => {
+if(initData==undefined)initData=uiscript.UI_Replay.prototype.initData;
+if(initRoom==undefined)initRoom=view.DesktopMgr.prototype.initRoom;
+if(openMJRoom==undefined)openMJRoom=game.Scene_MJ.prototype.openMJRoom;
+game.Scene_MJ.prototype.openMJRoom=function(...args){
+  args[1].forEach(player=>{
     if(player.account_id==GameMgr.Inst.account_id){
       player.character=uiscript.UI_Sushe.characters[uiscript.UI_Sushe.main_character_id-200001];
       player.avatar_id=uiscript.UI_Sushe.main_chara_info.skin;
@@ -206,7 +207,7 @@ game.Scene_MJ.prototype.openMJRoom = function (...args) {
       player.title=GameMgr.Inst.account_data.title;
     }
   });
-  return openMJRoom.call(this, ...args)
+  return openMJRoom.call(this,...args);
 }
 function editgame(){
   let UI_Replay=uiscript.UI_Replay.Inst;
@@ -321,29 +322,29 @@ function init(){
   for(let i=0;i<tiles3.length;i++)playertiles[3][i]=tiles3[i];
 }
 function is_xuezhandaodi(){
-  if(config&&config.mode&&config.mode.deatil_rule&&config.mode.deatil_rule.xuezhandaodi)return true;
+  if(config&&config.mode&&config.mode.detail_rule&&config.mode.detail_rule.xuezhandaodi)return true;
   return false;
 }
 function is_huansanzhang(){
-  if(config&&config.mode&&config.mode.deatil_rule&&config.mode.deatil_rule.huansanzhang)return true;
+  if(config&&config.mode&&config.mode.detail_rule&&config.mode.detail_rule.huansanzhang)return true;
   return false;
 }
 function is_guyi(){
-  if(config&&config.mode&&config.mode.deatil_rule&&config.mode.deatil_rule.guyi_mode)return true;
+  if(config&&config.mode&&config.mode.detail_rule&&config.mode.detail_rule.guyi_mode)return true;
   return false;
 }
 function is_shiduan(){
   if(!config)return true;
   if(!config.mode)return true;
-  if(!config.mode.deatil_rule)return true;
-  if(config.mode.deatil_rule.shiduan)return true;
+  if(!config.mode.detail_rule)return true;
+  if(config.mode.detail_rule.shiduan)return true;
   return false;
 }
 function fanfu(){
   if(!config)return 1;
   if(!config.mode)return 1;
-  if(!config.mode.deatil_rule)return 1;
-  if(config.mode.deatil_rule.fanfu)return config.mode.deatil_rule.fanfu;
+  if(!config.mode.detail_rule)return 1;
+  if(config.mode.detail_rule.fanfu)return config.mode.detail_rule.fanfu;
   return 1;
 }
 function separatetile(x){
@@ -849,9 +850,9 @@ function gamebegin(){
   if(editdata.player_datas==undefined)editdata.player_datas=[];
   config=editdata.config;
   if(config.mode.mode==11){
-    if(config.mode.detail_rule.guyi_mode)config.mode.detail_rule.guyi_mode=0;
-    if(config.mode.detail_rule.xuezhandaodi)config.mode.detail_rule.xuezhandaodi=0;
-    if(config.mode.detail_rule.huansanzhang)config.mode.detail_rule.huansanzhang=0;
+    if(is_guyi())config.mode.detail_rule.guyi_mode=0;
+    if(is_xuezhandaodi())config.mode.detail_rule.xuezhandaodi=0;
+    if(is_huansanzhang())config.mode.detail_rule.huansanzhang=0;
   }
   if(config.mode.mode==11){
     if(config&&config.mode&&config.mode.detail_rule&&config.mode.detail_rule.init_point)scores=[config.mode.detail_rule.init_point,config.mode.detail_rule.init_point,config.mode.detail_rule.init_point];
@@ -1237,10 +1238,16 @@ function hupaioneplayer(seat){
   }
   let dadian=Math.max(delta_scores[seat],-delta_scores[seat]);
   if(zimo){
-    for(let i=0;i<playercnt;i++){
-      if(i==seat||hupaied[i])continue;
-      delta_scores[i]-=100*benchangbang;
-      delta_scores[seat]+=100*benchangbang;
+    if(baopai[seat]!=undefined&&val==baopai[seat].val){
+      delta_scores[baopai[seat].seat]-=(playercnt-1)*100*benchangbang;
+      delta_scores[seat]+=(playercnt-1)*100*benchangbang;
+    }
+    else{
+      for(let i=0;i<playercnt;i++){
+        if(i==seat||hupaied[i])continue;
+        delta_scores[i]-=100*benchangbang;
+        delta_scores[seat]+=100*benchangbang;
+      }
     }
   }
   else{
@@ -1977,7 +1984,6 @@ function randompaishan(paishan,paishanback,reddora){
   return paishan;
 }
 //该部分朝下 
-console.log(editdata.player_datas);
 editdata.player_datas[0].nickname="电脑(简单)";
 editdata.player_datas[1].nickname="电脑(简单)";
 editdata.player_datas[2].nickname="电脑(简单)";
