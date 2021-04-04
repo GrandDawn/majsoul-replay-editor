@@ -474,8 +474,8 @@ function tingpai(seat){
 function calcsudian(x){
   let val=0;
   for(let i=0;i<x.fans.length;i++)val=val+x.fans[i].val;
-  if(val<fanfu())return -2000;
-  else if(x.yiman==true)return 8000*val;
+  if(x.yiman==true)return 8000*val;
+  else if(val<fanfu())return -2000;
   else if(val==5)return 2000;
   else if(val==6||val==7)return 3000;
   else if(val>=8&&val<=10)return 4000;
@@ -887,6 +887,8 @@ function gamebegin(){
     if(is_guyi())config.mode.detail_rule.guyi_mode=0;
     if(is_xuezhandaodi())config.mode.detail_rule.xuezhandaodi=0;
     if(is_huansanzhang())config.mode.detail_rule.huansanzhang=0;
+    if(is_muyu())config.mode.detail_rule.muyu_mode=0;
+    if(is_dora3())config.mode.detail_rule.dora3_mode=0;
   }
   if(config.mode.mode==11){
     if(config&&config.mode&&config.mode.detail_rule&&config.mode.detail_rule.init_point)scores=[config.mode.detail_rule.init_point,config.mode.detail_rule.init_point,config.mode.detail_rule.init_point];
@@ -2033,11 +2035,11 @@ function randompaishan(paishan,paishanback,reddora){
   if(typeof(paishanback)=="number"){reddora=paishanback;paishanback=undefined;}
   if(reddora==undefined){
     if(config.mode.mode==11){
-      if(config&&config.mode&&config.mode.detail_rule&&config.mode.detail_rule.dora_count)reddora=config.mode.detail_rule.dora_count;
+      if(config&&config.mode&&config.mode.detail_rule&&config.mode.detail_rule.dora_count!=undefined)reddora=config.mode.detail_rule.dora_count;
       else reddora=2;
     }
     else{
-      if(config&&config.mode&&config.mode.detail_rule&&config.mode.detail_rule.dora_count)reddora=config.mode.detail_rule.dora_count;
+      if(config&&config.mode&&config.mode.detail_rule&&config.mode.detail_rule.dora_count!=undefined)reddora=config.mode.detail_rule.dora_count;
       else reddora=3;
     }
   }
@@ -2131,6 +2133,22 @@ roundbegin();
 hupai();
 roundend();
 //第四局 
+tiles1=["4m","5m","6m","4p","5p","6p","2s","2s","6z","5s","5s","8s","8s","6z"];
+tiles2=["1z","1z","1z","2z","2z","2z","3z","3z","3z","4z","4z","4z","7z"];
+tiles3=["1p","1p","1p","2p","3p","4p","0p","6p","7p","8p","9p","9p","9p"];  
+tiles0=["1m","1m","1m","2m","3m","4m","0m","6m","7m","8m","9m","9m","9m"];
+paishan=randompaishan("8s2s","5z5z5z5z6z7z7z7z");
+roundbegin();
+qiepai("6z");
+mopai();
+qiepai();
+mingpai();
+qiepai("6z");
+mopai();
+qiepai();
+hupai();
+roundend();
+//第五局
 tiles1=["3m","4m","5m","3p","4p","5p","4s","7s","1z","1z","1z","5z","5z","5z"];
 tiles2=["3s","1m","1m","1m","2m","3m","4m","0m","6m","7m","8m","9m","9m"];
 tiles3=["3s","3s","6z","6z","4s","4s","6s","6s","6s","8s","8s","8s","2s"];  
@@ -2155,7 +2173,7 @@ mopai();
 leimingpai();
 hupai();
 roundend();
-//第五局
+//第六局
 tiles1=["2s","2s","4s","4s","8s","8s","1z","1z","2z","2z","3z","3z","4z","7z"];
 tiles2=["1m","1m","1m","2m","3m","4m","0m","6m","7m","8m","9m","9m","9m"];
 tiles3=["1p","1p","1p","2p","3p","4p","0p","6p","7p","8p","9p","9p","9p"];  
@@ -2167,7 +2185,7 @@ mopai();
 qiepai("4z",true);
 hupai();
 roundend();
-//第六局
+//第七局
 tiles1="1m1m1m2m3m4m0m6m7m8m9m9m9m1z";
 tiles2="1p1p1p2p3p4p0p6p7p8p9p9p9p";
 tiles3="1s1s1s2s3s4s0s6s7s8s9s9s9s";  
@@ -2183,7 +2201,7 @@ mopai();
 qiepai(true);
 liuju();
 roundend();
-//第七局
+//第八局
 tiles1=["1m","1m","1m","2m","3m","4m","0m","6m","7m","8m","9m","9m","9m","6z"];
 tiles2=["2s","3s","8s","5p","5p","1z","2z","5z","5z","6z","6z","7z","7z"];
 tiles3=["2s","2s","3s","4s","4s","6s","6s","8s","8s","3z","4z","5z","7z"];  
@@ -2219,6 +2237,6 @@ mopai();
 qiepai();
 hupai();
 roundend();
-//第八局
+//第九局
 //... 
 gameend();
