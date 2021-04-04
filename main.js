@@ -271,8 +271,8 @@ function canceledit(){
   }
 }
 var scores=[25000,25000,25000,25000],tiles0,tiles1,tiles2,tiles3,firstneededscores; 
-var baopai,liqibang=0,lstliqi,doracnt,playertiles,fulu,paihe,muyu;
-var liqiinfo,drawtype,lstdrawtype,doras,li_doras,delta_scores;
+var baopai,liqibang=0,lstliqi,doracnt,playertiles,fulu,paihe,muyu={'count':5,'seat':0,'id':0};
+var liqiinfo,drawtype,lstdrawtype,doras,li_doras,delta_scores,muyutimes,muyuseats;
 var chang=0,ju=0,ben=0,playercnt,actions,xun,players,benchangbang;
 var config,hules_history,hupaied,paishan,discardtiles=["","","",""];
 var editdata={
@@ -286,7 +286,7 @@ var editdata={
                   {'avatar_frame':0,'avatar_id':400101,'nickname':"电脑(简单)",'title':600001,'views':[]}]
 };
 function init(){
-  muyu=null;
+  muyutimes=[1,1,1,1];
   xun=[[],[],[],[]];
   baopai=[];
   actions=[];
@@ -343,6 +343,10 @@ function is_dora3(){
   if(config&&config.mode&&config.mode.detail_rule&&config.mode.detail_rule.dora3_mode)return true;
   return false;
 }
+function is_muyu(){
+  if(config&&config.mode&&config.mode.detail_rule&&config.mode.detail_rule.muyu_mode)return true;
+  return false;
+}
 function is_shiduan(){
   if(!config)return true;
   if(!config.mode)return true;
@@ -356,6 +360,25 @@ function fanfu(){
   if(!config.mode.detail_rule)return 1;
   if(config.mode.detail_rule.fanfu)return config.mode.detail_rule.fanfu;
   return 1;
+}
+function get_muyu(type){
+  if(type=="new"){
+    muyu.id++;
+    muyu.count=5;
+    if(muyuseats[0]){
+      muyu.seat=parseInt(muyuseats[0]);
+      muyuseats=muyuseats.substring(1);
+    }
+    else muyu.seat=Math.floor(Math.random()*4);
+  }
+  if(type=="countdown"){
+    muyu.count--;
+  }
+  return muyu;
+}
+function update_muyu(){
+  muyutimes=[1,1,1,1];
+  muyutimes[muyu.seat]++;
 }
 function separatetile(x){
   let ret=[];
@@ -938,6 +961,16 @@ function addNewRound(chang,ju,ben,doras,left_tile_count,liqibang,md5,paishan,sco
     if(typeof(doras)=="string")ret.data.dora=doras;
     else ret.data.doras=doras;
   }
+  if(is_muyu()){
+    get_muyu("new");
+    ret.data.muyu={
+      'count_max':5,
+      'count':muyu.count,
+      'id':muyu.id,
+      'seat':muyu.seat
+    }
+    update_muyu();
+  }
   actions.push(ret);
   calcxun();
 }
@@ -985,6 +1018,17 @@ function addDiscardTile(is_liqi,is_wliqi,doras,moqie,seat,tile,tingpais){
       'tingpais':tingpai(seat)
     }
   };
+  if(is_muyu()){
+    if(seat==muyu.seat)get_muyu("countdown");
+    ret.data.muyu={
+      'count_max':5,
+      'count':muyu.count,
+      'id':muyu.id,
+      'seat':muyu.seat
+    }
+    update_muyu();
+    if(muyu.count==0)get_muyu("new");
+  }
   actions.push(ret);
   calcxun();
 }
@@ -1000,6 +1044,15 @@ function addDealTile(doras,left_tile_count,seat,tile,liqi){
     }
   };
   if(liqi!=undefined&&liqi!=0)ret.data.liqi=liqi;
+  if(is_muyu()){
+    ret.data.muyu={
+      'count_max':5,
+      'count':muyu.count,
+      'id':muyu.id,
+      'seat':muyu.seat
+    }
+    update_muyu();
+  }
   actions.push(ret);
   calcxun();
 }
@@ -1023,6 +1076,15 @@ function addChiPengGang(froms,seat,tiles,type,liqi){
     }  
   };
   if(liqi!=undefined&&liqi!=0)ret.data.liqi=liqi;
+  if(is_muyu()){
+    ret.data.muyu={
+      'count_max':5,
+      'count':muyu.count,
+      'id':muyu.id,
+      'seat':muyu.seat
+    }
+    update_muyu();
+  }
   actions.push(ret);
   calcxun();
 }
@@ -1169,12 +1231,12 @@ function hupaioneplayer(seat){
     for(let i=0;i<playercnt;i++){
       if(i==seat||hupaied[i])continue;
       if(i==ju||seat==ju){
-        delta_scores[i]-=qieshang(-4000);
-        delta_scores[seat]+=qieshang(-4000);
+        delta_scores[i]-=qieshang(-4000)*muyutimes[i]*muyutimes[seat];
+        delta_scores[seat]+=qieshang(-4000)*muyutimes[i]*muyutimes[seat];
       }
       else{
-        delta_scores[i]-=qieshang(-2000);
-        delta_scores[seat]+=qieshang(-2000);
+        delta_scores[i]-=qieshang(-2000)*muyutimes[i]*muyutimes[seat];
+        delta_scores[seat]+=qieshang(-2000)*muyutimes[i]*muyutimes[seat];
       }
     }
     let ret={
@@ -1204,38 +1266,38 @@ function hupaioneplayer(seat){
       for(let i=0;i<playercnt;i++){
         if(i==seat||hupaied[i])continue;
         if(i==ju||seat==ju){
-          delta_scores[baopai[seat].seat]-=baopai[seat].val*16000;
-          delta_scores[seat]+=baopai[seat].val*16000;
+          delta_scores[baopai[seat].seat]-=baopai[seat].val*16000*muyutimes[i]*muyutimes[seat];
+          delta_scores[seat]+=baopai[seat].val*16000*muyutimes[i]*muyutimes[seat];
         }
         else{
-          delta_scores[baopai[seat].seat]-=baopai[seat].val*8000;
-          delta_scores[seat]+=baopai[seat].val*8000;
+          delta_scores[baopai[seat].seat]-=baopai[seat].val*8000*muyutimes[i]*muyutimes[seat];
+          delta_scores[seat]+=baopai[seat].val*8000*muyutimes[i]*muyutimes[seat];
         }
       }
       for(let i=0;i<playercnt;i++){
         if(i==seat||hupaied[i])continue;
         if(i==ju||seat==ju){
-          delta_scores[i]-=(val-baopai[seat].val)*16000;
-          delta_scores[seat]+=(val-baopai[seat].val)*16000;
+          delta_scores[i]-=(val-baopai[seat].val)*16000*muyutimes[i]*muyutimes[seat];
+          delta_scores[seat]+=(val-baopai[seat].val)*16000*muyutimes[i]*muyutimes[seat];
         }
         else{
-          delta_scores[i]-=(val-baopai[seat].val)*8000;
-          delta_scores[seat]+=(val-baopai[seat].val)*8000;
+          delta_scores[i]-=(val-baopai[seat].val)*8000*muyutimes[i]*muyutimes[seat];
+          delta_scores[seat]+=(val-baopai[seat].val)*8000*muyutimes[i]*muyutimes[seat];
         }
       }
     }
     else{
       if(qinjia){
-        delta_scores[baopai[seat].seat]-=baopai[seat].val*24000;
-        delta_scores[seat]+=baopai[seat].val*24000;
-        delta_scores[fangtong]-=val*48000-baopai[seat].val*24000;
-        delta_scores[seat]+=val*48000-baopai[seat].val*24000;
+        delta_scores[baopai[seat].seat]-=baopai[seat].val*24000*muyutimes[fangtong]*muyutimes[seat];
+        delta_scores[seat]+=baopai[seat].val*24000*muyutimes[fangtong]*muyutimes[seat];
+        delta_scores[fangtong]-=(val*48000-baopai[seat].val*24000)*muyutimes[fangtong]*muyutimes[seat];
+        delta_scores[seat]+=(val*48000-baopai[seat].val*24000)*muyutimes[fangtong]*muyutimes[seat];
       }
       else{
-        delta_scores[baopai[seat].seat]-=baopai[seat].val*16000;
-        delta_scores[seat]+=baopai[seat].val*16000;
-        delta_scores[fangtong]-=val*32000-baopai[seat].val*16000;
-        delta_scores[seat]+=val*32000-baopai[seat].val*16000;
+        delta_scores[baopai[seat].seat]-=baopai[seat].val*16000*muyutimes[fangtong]*muyutimes[seat];
+        delta_scores[seat]+=baopai[seat].val*16000*muyutimes[fangtong]*muyutimes[seat];
+        delta_scores[fangtong]-=(val*32000-baopai[seat].val*16000)*muyutimes[fangtong]*muyutimes[seat];
+        delta_scores[seat]+=(val*32000-baopai[seat].val*16000)*muyutimes[fangtong]*muyutimes[seat];
       }
     }
   }
@@ -1244,23 +1306,23 @@ function hupaioneplayer(seat){
       for(let i=0;i<playercnt;i++){
         if(i==seat||hupaied[i])continue;
         if(i==ju||seat==ju){
-          delta_scores[i]-=qieshang(sudian*2);
-          delta_scores[seat]+=qieshang(sudian*2);
+          delta_scores[i]-=qieshang(sudian*2)*muyutimes[i]*muyutimes[seat];
+          delta_scores[seat]+=qieshang(sudian*2)*muyutimes[i]*muyutimes[seat];
         }
         else{
-          delta_scores[i]-=qieshang(sudian);
-          delta_scores[seat]+=qieshang(sudian);
+          delta_scores[i]-=qieshang(sudian)*muyutimes[i]*muyutimes[seat];
+          delta_scores[seat]+=qieshang(sudian)*muyutimes[i]*muyutimes[seat];
         }
       }
     }
     else{
       if(qinjia){
-        delta_scores[fangtong]-=qieshang(6*sudian);
-        delta_scores[seat]+=qieshang(6*sudian);
+        delta_scores[fangtong]-=qieshang(6*sudian)*muyutimes[fangtong]*muyutimes[seat];
+        delta_scores[seat]+=qieshang(6*sudian)*muyutimes[fangtong]*muyutimes[seat];
       }
       else{
-        delta_scores[fangtong]-=qieshang(4*sudian);
-        delta_scores[seat]+=qieshang(4*sudian);
+        delta_scores[fangtong]-=qieshang(4*sudian)*muyutimes[fangtong]*muyutimes[seat];
+        delta_scores[seat]+=qieshang(4*sudian)*muyutimes[fangtong]*muyutimes[seat];
       }
     }
   }
@@ -1927,6 +1989,7 @@ function liuju(){
 }
 function roundend(){
   discardtiles=["","","",""];
+  muyuseats="";
   editdata.actions.push([].concat(actions));
   editdata.xun.push([].concat(xun));
   xun=[[],[],[],[]];
@@ -2027,6 +2090,7 @@ editdata.config={
       'guyi_mode':0,
       'huansanzhang':0,
       'init_point':25000,
+      'muyu_mode':0,
       'shiduan':1,
       'xuezhandaodi':0
     }
