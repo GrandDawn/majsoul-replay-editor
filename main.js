@@ -365,7 +365,7 @@ function get_muyu(type){
   if(type=="new"){
     muyu.id++;
     muyu.count=5;
-    if(muyuseats[0]){
+    if(muyuseats&&muyuseats[0]){
       muyu.seat=parseInt(muyuseats[0]);
       muyuseats=muyuseats.substring(1);
     }
@@ -606,8 +606,8 @@ function calcfan(tls,seat,zimo){
       let chunquandai=true,hunquandai=true;
       for(let i=1;i<=34;i++){
         if(i!=2&&i!=8&&i!=11&&i!=17&&i!=20&&i!=26&&typecnt[i][2]>0){chunquandai=false;hunquandai=false;}
-        if(i!=1&&i!=9&&i!=10&&i!=18&&i!=19&&i!=27&&typecnt[i][1]!=0){chunquandai=false;hunquandai=false;}
-        if(i>=28&&i<=34&&typecnt[i][1]!=0)hunquandai=false;
+        if(i!=1&&i!=9&&i!=10&&i!=18&&i!=19&&i!=27&&i<28&&typecnt[i][1]!=0){chunquandai=false;hunquandai=false;}
+        if(i>=28&&i<=34&&typecnt[i][1]!=0)chunquandai=false;
       }
       //------------------------------------
       let pinghu=true;
@@ -1047,7 +1047,7 @@ function addDealTile(doras,left_tile_count,seat,tile,liqi){
   };
   if(liqi!=undefined&&liqi!=0)ret.data.liqi=liqi;
   if(is_muyu()){
-    ret.data.muyu={
+    if(muyu.seat==seat)ret.data.muyu={
       'count_max':5,
       'count':muyu.count,
       'id':muyu.id,
@@ -1079,7 +1079,7 @@ function addChiPengGang(froms,seat,tiles,type,liqi){
   };
   if(liqi!=undefined&&liqi!=0)ret.data.liqi=liqi;
   if(is_muyu()){
-    ret.data.muyu={
+    if(muyu.seat==seat)ret.data.muyu={
       'count_max':5,
       'count':muyu.count,
       'id':muyu.id,
@@ -2092,7 +2092,7 @@ editdata.config={
       'guyi_mode':0,
       'huansanzhang':0,
       'init_point':25000,
-      'muyu_mode':0,
+      'muyu_mode':1,
       'shiduan':1,
       'xuezhandaodi':0
     }
