@@ -1940,6 +1940,19 @@ function liuju(){
       }
     };
   }
+  let havegang=[0,0,0,0],havegangcnt=0;
+  for(let seat=0;seat<playercnt;seat++){
+    for(let i=0;i<fulu[seat].length;i++)if(fulu[seat][i].type==2||fulu[seat][i].type==3)havegang[seat]=1;
+    havegangcnt+=havegang[seat];
+  }
+  if(doracnt.cnt==5&&havegangcnt>=2){
+    if(ret==undefined)ret={
+      name:"RecordLiuJu",
+      data:{
+        'type':3
+      }
+    };
+  }
   if(playercnt==4&&ret==undefined){
     let liqiplayercnt=0;
     if(liqiinfo[0].liqi!=0)liqiplayercnt++;
@@ -1971,19 +1984,6 @@ function liuju(){
         }
       };
     } 
-  }
-  let havegang=[0,0,0,0],havegangcnt=0;
-  for(let seat=0;seat<playercnt;seat++){
-    for(let i=0;i<fulu[seat].length;i++)if(fulu[seat][i].type==2||fulu[seat][i].type==3)havegang[seat]=1;
-    havegangcnt+=havegang[seat];
-  }
-  if(doracnt.cnt==5&&havegangcnt>=2){
-    if(ret==undefined)ret={
-      name:"RecordLiuJu",
-      data:{
-        'type':3
-      }
-    };
   }
   if(hules_history.length!=0)ret.data.hules_history=hules_history;
   actions.push(ret);
