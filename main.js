@@ -1409,7 +1409,7 @@ function addHuleXueZhanEnd(HuleInfo,old_scores,delta_scores,scores){
   });
 }
 function hupai(x,type){
-  if(x==true||x==false){type=x;x=undefined;}
+  if(typeof(x)=="boolean"){type=x;x=undefined;}
   if(typeof(x)=="number")x=[x];
   if(x==undefined){
     let lstaction=actions[actions.length-1];
@@ -1574,8 +1574,8 @@ function mopai(seat){
   return drawcard;
 }
 function qiepai(seat,kind,is_liqi,var1){
-  if(seat==true||seat==false){kind=seat;seat=undefined;}
-  if(kind==true||kind==false){is_liqi=kind;kind=undefined;}
+  if(typeof(seat)=="boolean"){kind=seat;seat=undefined;}
+  if(typeof(kind)=="boolean"){is_liqi=kind;kind=undefined;}
   if(seat!=0&&seat!=1&&seat!=2&&seat!=playercnt-1&&seat!=undefined){kind=seat;seat=undefined;}
   if(seat==undefined){
     let lstaction=actions[actions.length-1];
