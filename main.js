@@ -287,6 +287,7 @@ var editdata={
 };
 function init(){
   muyutimes=[1,1,1,1];
+  if(typeof(muyuseats)=="number")muyuseats=muyuseats.toString();
   xun=[[],[],[],[]];
   baopai=[];
   actions=[];
@@ -2092,7 +2093,7 @@ editdata.config={
       'guyi_mode':0,
       'huansanzhang':0,
       'init_point':25000,
-      'muyu_mode':1,
+      'muyu_mode':0,
       'shiduan':1,
       'xuezhandaodi':0
     }
