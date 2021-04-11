@@ -652,9 +652,9 @@ function calcfan(tls,seat,zimo){
         let fulusanyuancnt=0;
         for(let i=0;i<fulu[seat].length;i++){
           let type=fulu[seat][i].type,tile=tiletoint(fulu[seat][i].tile[0]);
-          if((type==1||type==2)&&(tile==32||tile==33||tile==34)){
+          if((type==1||type==2||type==3)&&(tile==32||tile==33||tile==34)){
             fulusanyuancnt++;
-            if(fulusanyuancnt==3&&!is_xuezhandaodi())baopai[seat]={'seat':fulu[seat][i].from,'val':1};
+            if(fulusanyuancnt==3&&!is_xuezhandaodi()&&fulu[seat][i].from)baopai[seat]={'seat':fulu[seat][i].from,'val':1};
           }
         }
       }
@@ -672,9 +672,9 @@ function calcfan(tls,seat,zimo){
         let fulusixicnt=0;
         for(let i=0;i<fulu[seat].length;i++){
           let type=fulu[seat][i].type,tile=tiletoint(fulu[seat][i].tile[0]);
-          if((type==1||type==2)&&(tile==28||tile==29||tile==30||tile==31)){
+          if((type==1||type==2||type==3)&&(tile==28||tile==29||tile==30||tile==31)){
             fulusixicnt++;
-            if(fulusixicnt==4&&!is_xuezhandaodi())baopai[seat]={'seat':fulu[seat][i].from,'val':2};
+            if(fulusixicnt==4&&!is_xuezhandaodi()&&fulu[seat][i].from)baopai[seat]={'seat':fulu[seat][i].from,'val':2};
           }
         }
       }
@@ -1331,7 +1331,7 @@ function hupaioneplayer(seat){
   }
   let dadian=Math.max(delta_scores[seat],-delta_scores[seat]);
   if(zimo){
-    if(baopai[seat]!=undefined&&val==baopai[seat].val){
+    if(baopai[seat]!=undefined){
       delta_scores[baopai[seat].seat]-=(playercnt-1)*100*benchangbang;
       delta_scores[seat]+=(playercnt-1)*100*benchangbang;
     }
