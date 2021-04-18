@@ -1186,7 +1186,7 @@ function hupaioneplayer(seat){
   let points=calcfan(playertiles[seat],seat,zimo);
   let val=0,title_id=0;
   for(let i=0;i<points.fans.length;i++)val=val+points.fans[i].val;
-  if(points.yiman==false&&val==5)title_id=1;
+  if(points.yiman==false&&val==5||calcsudian(points)==2000)title_id=1;
   if(points.yiman==false&&(val==6||val==7))title_id=2;
   if(points.yiman==false&&(val==8||val==9||val==10))title_id=3;
   if(points.yiman==false&&(val==11||val==12))title_id=4;
