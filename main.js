@@ -195,6 +195,7 @@ function md5(string){
   return(md5_WordToHex(a)+md5_WordToHex(b)+md5_WordToHex(c)+md5_WordToHex(d)).toLowerCase();
 }
 var initData,initRoom,openMJRoom;
+uiscript.UI_ScoreChange.prototype.setBaopai=function(){}
 if(initData==undefined)initData=uiscript.UI_Replay.prototype.initData;
 if(initRoom==undefined)initRoom=view.DesktopMgr.prototype.initRoom;
 if(openMJRoom==undefined)openMJRoom=game.Scene_MJ.prototype.openMJRoom;
@@ -273,8 +274,8 @@ function canceledit(){
 var scores=[25000,25000,25000,25000],tiles0,tiles1,tiles2,tiles3,firstneededscores; 
 var baopai,liqibang=0,lstliqi,doracnt,playertiles,fulu,paihe,muyu={'count':5,'seat':0,'id':0};
 var liqiinfo,drawtype,lstdrawtype,doras,li_doras,delta_scores,muyutimes,muyuseats;
-var chang=0,ju=0,ben=0,playercnt,actions,xun,players,benchangbang;
-var config,hules_history,hupaied,paishan,discardtiles=["","","",""];
+var chang=0,ju=0,ben=0,playercnt,actions,xun,players,benchangbang,chuanmagangs;
+var config,hules_history,hupaied,paishan,discardtiles=["","","",""],gaps=[];
 var editdata={
   'actions':[],
   'xun':[],
@@ -289,9 +290,11 @@ function init(){
   muyutimes=[1,1,1,1];
   if(typeof(muyuseats)=="number")muyuseats=muyuseats.toString();
   xun=[[],[],[],[]];
+  gaps=[];
   baopai=[];
   actions=[];
   lstliqi=0;
+  chuanmagangs={'over':[],'notover':[]};
   doracnt={'cnt':1,'lsttype':0};
   hupaied=[false,false,false,false];
   hules_history=[];
@@ -348,6 +351,10 @@ function is_muyu(){
   if(config&&config.mode&&config.mode.detail_rule&&config.mode.detail_rule.muyu_mode)return true;
   return false;
 }
+function is_chuanma(){
+  if(config&&config.mode&&config.mode.detail_rule&&config.mode.detail_rule.chuanma)return true;
+  return false;
+}
 function is_shiduan(){
   if(!config)return true;
   if(!config.mode)return true;
@@ -389,6 +396,15 @@ function separatetile(x){
   }
   return ret;
 }
+function getlstaction(x){
+  if(x==undefined)x=1;
+  let ret=actions.length;
+  for(let i=1;i<=x;i++){
+    ret--;
+    while(actions[ret].name=="RecordSelectGap"||actions[ret].name=="RecordGangResult")ret--;
+  }
+  return actions[ret];
+}
 var nxt2=[0,2,3,4,5,6,7,8,9,35,11,12,13,14,15,16,17,18,35,20,21,22,23,24,25,26,27,35,35,35,35,35,35,35,35,36,0,0,0,0];
 var doranxt=[0,2,3,4,5,6,7,8,9, 1,11,12,13,14,15,16,17,18,10,20,21,22,23,24,25,26,27,19,29,30,31,28,33,34,32];
 function equaltile(x,y){
@@ -418,6 +434,19 @@ function inttotile(x){
   if(x==36)return "0p";
   if(x==37)return "0s";
 }
+function huazhu(seat){
+  for(let i=0;i<playertiles[seat].length;i++){
+    if(Math.floor((tiletoint(playertiles[seat][i])-1)/9)==0&&gaps[seat]==1)return true;
+    if(Math.floor((tiletoint(playertiles[seat][i])-1)/9)==1&&gaps[seat]==0)return true;
+    if(Math.floor((tiletoint(playertiles[seat][i])-1)/9)==2&&gaps[seat]==2)return true;
+  }
+  for(let i=0;i<fulu[seat].length;i++){
+    if(Math.floor((tiletoint(fulu[seat][i].tile[0])-1)/9)==0&&gaps[seat]==1)return true;
+    if(Math.floor((tiletoint(fulu[seat][i].tile[0])-1)/9)==1&&gaps[seat]==0)return true;
+    if(Math.floor((tiletoint(fulu[seat][i].tile[0])-1)/9)==2&&gaps[seat]==2)return true;
+  }
+  return false;
+}
 function calchupai(tls){
   let cnt=[],tmp=[];
   for(let i=0;i<=36;i++){cnt[i]=0;tmp[i]=0;}
@@ -446,7 +475,10 @@ function calchupai(tls){
     }
   }
   let duizi=0;
-  for(let i=1;i<=34;i++)if(cnt[i]==2)duizi++;
+  for(let i=1;i<=34;i++){
+    if(cnt[i]==2)duizi++;
+    if(cnt[i]==4&&is_chuanma())duizi+=2;
+  }
   if(duizi==7)return 2;
   let guoshi=1;
   for(let i=1;i<=34;i++){
@@ -457,6 +489,7 @@ function calchupai(tls){
   return 0;
 }
 function tingpai(seat){
+  if(is_chuanma()&&huazhu(seat))return [];
   let tls=playertiles[seat];
   let cnt=[];
   for(let i=0;i<=36;i++)cnt[i]=0;
@@ -472,17 +505,24 @@ function tingpai(seat){
   }
   return res;
 }
-function calcsudian(x){
+function calcsudian_chuanma(x,type){
+  if(type==undefined)type=0;
+  let val=0;
+  for(let i=0;i<x.length;i++)val=val+x[i].val;
+  return Math.min(1000*Math.pow(2,val-1),32000)+type*val;
+}
+function calcsudian(x,type){
+  if(type==undefined)type=0;
   let val=0;
   for(let i=0;i<x.fans.length;i++)val=val+x.fans[i].val;
-  if(x.yiman==true)return 8000*val;
+  if(x.yiman==true)return 8000*val+type*val;
   else if(val<fanfu())return -2000;
-  else if(val==5)return 2000;
-  else if(val==6||val==7)return 3000;
-  else if(val>=8&&val<=10)return 4000;
-  else if(val==11||val==12)return 6000;
-  else if(val>=13)return 8000;
-  else return Math.min(Math.pow(2,val+2)*x.fu,2000);
+  else if(val==5)return 2000+type*val;
+  else if(val==6||val==7)return 3000+type*val;
+  else if(val>=8&&val<=10)return 4000+type*val;
+  else if(val==11||val==12)return 6000+type*val;
+  else if(val>=13)return 8000+type*val;
+  else return Math.min(Math.pow(2,val+2)*x.fu,2000)+type*val;
 }
 //0：副露的顺子   1：副露的刻子  2：明杠
 //3：暗杠         4：拔北宝牌    5：未副露的顺子 
@@ -496,6 +536,186 @@ function calcsudian(x){
 //清老头 国士   小四喜   四杠   九莲   八连庄 纯九   四单   十三面 带四喜
 //燕返   杠振   十二落抬 五门齐 三连刻 三同顺 1p摸月 9p捞鱼 人和   带车轮
 //大竹林 大数邻 石上     带七星
+function calcfan_chuanma(tls,seat,zimo,type){
+  if(tls.length%3==1){
+    let tingpais=tingpai(seat),ret=[];
+    for(let i=0;i<tingpais.length;i++){
+      tls.push(tingpais[i].tile);
+      let tmp=calcfan_chuanma([].concat(tls),seat,zimo,1);
+      if(calcsudian_chuanma(tmp,1)>calcsudian_chuanma(ret,1))ret=tmp;
+      tls.length--;
+    }
+    return ret;
+  }
+  let vals=[];
+  function tofan(x){
+    let ans=[];
+    if(x[1000])ans.push({'val':x[1000],'id':1000});
+    if(x[1001])ans.push({'val':x[1001],'id':1001});
+    if(x[1002])ans.push({'val':x[1002],'id':1002});
+    if(x[1004])ans.push({'val':x[1004],'id':1004});
+    if(x[1018])ans.push({'val':x[1018],'id':1018});
+    if(x[1019])ans.push({'val':x[1019],'id':1019});
+    for(let i=1020;i>=1005;i--){
+      if(i==1018||i==1019)continue;
+      if(x[i]){
+        ans.push({'val':x[i],'id':i});
+        break;
+      }
+      if(i==1005){ans.push({'val':x[1003],'id':1003});}
+    }
+    return ans;
+  }
+  let lsttile=tls[tls.length-1],fulucnt=0;
+  let ret=[];
+  let cnt=[];
+  for(let i=0;i<=36;i++){cnt[i]=0;}
+  for(let i=0;i<tls.length;i++)cnt[tiletoint(tls[i])]++;
+  let partition=[];
+  for(let i=0;i<fulu[seat].length;i++){
+    if(fulu[seat][i].type!=4)partition.push(fulu[seat][i]);
+    if(fulu[seat][i].type!=4&&fulu[seat][i].type!=3)fulucnt++;
+  }
+  function updateret(x){
+    x=tofan(x);
+    if(calcsudian_chuanma(x,1)>calcsudian_chuanma(ret,1))ret=x;
+  }
+  function calc(){
+    let cnt2=[];
+    for(let i=0;i<=36;i++)cnt2[i]=0;
+    let partitiontmp=[].concat(partition);
+    for(let i=partitiontmp.length-1;i>=0;i--){
+      let tiles=partitiontmp[i].tile;
+      if(partitiontmp[i].type==0||partitiontmp[i].type==5){
+        cnt2[tiletoint(tiles[0])]++;
+        cnt2[tiletoint(tiles[1])]++;
+        cnt2[tiletoint(tiles[2])]++;
+      }
+      else if(partitiontmp[i].type==1||partitiontmp[i].type==6)cnt2[tiletoint(tiles[0])]+=3;
+      else if(partitiontmp[i].type==2||partitiontmp[i].type==3)cnt2[tiletoint(tiles[0])]+=4;
+      else if(partitiontmp[i].type==7)cnt2[tiletoint(tiles[0])]+=2;
+    }
+    function calc0(){
+      console.log(partitiontmp);
+      let ans=[];
+      let typecnt=[];
+      for(let i=0;i<=34;i++)typecnt[i]=[0,0,0];
+      for(let i=0;i<partitiontmp.length;i++){
+        let type=partitiontmp[i].type;
+        if(type==1||type==2||type==3||type==6||type==7)typecnt[tiletoint(partitiontmp[i].tile[0])][0]=type;
+        if(type==1||type==2||type==3||type==6)typecnt[tiletoint(partitiontmp[i].tile[0])][1]=2;
+        if(type==7)typecnt[tiletoint(partitiontmp[i].tile[0])][1]=1;
+        if(type==0||type==5)typecnt[(tiletoint(partitiontmp[i].tile[0])+tiletoint(partitiontmp[i].tile[1])+tiletoint(partitiontmp[i].tile[2]))/3][2]++;
+      } 
+      //--------------------------
+      let quandai=true;
+      for(let i=1;i<=34;i++){
+        if(i!=2&&i!=8&&i!=11&&i!=17&&i!=20&&i!=26&&typecnt[i][2]>0)quandai=false;
+        if(i!=1&&i!=9&&i!=10&&i!=18&&i!=19&&i!=27&&i<28&&typecnt[i][1]!=0)quandai=false;
+      }
+      //--------------------------
+      let qingyise=false;
+      for(let k=0;k<=3;k++){
+        qingyise=true;
+        for(let i=1;i<=34;i++){
+          if(Math.floor((i-1)/9)!=k&&i<=27&&cnt2[i]>0)qingyise=false;
+        }
+        if(qingyise==true)break;
+      }
+      //--------------------------
+      let gangzi=0,kezi=0,duizi=0;
+      for(let i=1;i<=34;i++){
+        if(typecnt[i][0]==3||typecnt[i][0]==2)gangzi++;
+        if(typecnt[i][1]==2)kezi++;
+      }
+      if(partitiontmp.length==7)duizi=7;
+      //---------------------------
+      let jiangdui=true;
+      for(let i=1;i<=34;i++){
+        if(i!=2&&i!=5&&i!=8&&i!=11&&i!=14&&i!=17&&i!=20&&i!=23&&i!=26&&cnt2[i]>0)jiangdui=false;
+      }
+      //---------------------------
+      ans[1000]=0;
+      for(let i=1;i<=34;i++)if(cnt2[i]==4)ans[1000]++;
+      if(type!=1&&zimo&&(getlstaction(2).name=="RecordAnGangAddGang"||getlstaction(2).name=="RecordChiPengGang"))ans[1001]=1;
+      if(type!=1&&!zimo&&(getlstaction(3).name=="RecordAnGangAddGang"||getlstaction(3).name=="RecordChiPengGang"))ans[1002]=1;
+      ans[1003]=1;
+      if(type!=1&&getlstaction().name=="RecordAnGangAddGang")ans[1004]=1;
+      if(kezi==4)ans[1005]=2;//对对和 
+      if(qingyise)ans[1006]=3;//清一色
+      if(duizi==7)ans[1007]=3;//七对子 
+      if(quandai)ans[1008]=3;//带幺九
+      if(fulucnt==4)ans[1009]=3;//金钩钩
+      if(qingyise&&kezi==4)ans[1010]=4;
+      if(jiangdui&&kezi==4)ans[1011]=4;
+      if(ans[1000]>0&&duizi==7){ans[1012]=4;ans[1000]--;}
+      if(qingyise&&duizi==7)ans[1013]=5;
+      if(qingyise&&fulucnt==4)ans[1014]=5;
+      if(qingyise&&ans[1012]==4)ans[1015]=6;
+      if(gangzi==4){ans[1016]=6;ans[1000]-=4;}
+      if(qingyise&&gangzi==4){ans[1017]=6;ans[1000]-=4;}
+      if(liqiinfo[seat].yifa!=0&&liqiinfo[seat].liqi==0&&seat==ju&&zimo)ans[1018]=6;//天和 
+      if(liqiinfo[seat].yifa!=0&&liqiinfo[seat].liqi==0&&seat!=ju&&zimo)ans[1019]=6;//地和 
+      if(qingyise&&quandai)ans[1020]=5;
+      if(type!=1&&paishan.length/2==0)ans[1021]=1;//海底捞月 
+      return ans;
+    }
+    for(let i=partitiontmp.length-1;i>=0;i--){
+      let tile=partitiontmp[i].tile,type=partitiontmp[i].type;
+      if(type==5&&(equaltile(tile[0],lsttile)||equaltile(tile[1],lsttile)||equaltile(tile[2],lsttile))){
+        if(!zimo)partitiontmp[i].type=0;
+        let midtile=inttotile((tiletoint(tile[0])+tiletoint(tile[1])+tiletoint(tile[2]))/3);
+        if(equaltile(midtile,lsttile))updateret(calc0()); 
+        else if(tiletoint(lsttile)%9==3&&tiletoint(midtile)%9==2)updateret(calc0());
+        else if(tiletoint(lsttile)%9==7&&tiletoint(midtile)%9==8)updateret(calc0());
+        else updateret(calc0());
+        partitiontmp[i].type=5;
+      }
+      if(type==6&&equaltile(tile[0],lsttile)){
+        if(!zimo)partitiontmp[i].type=1;
+        updateret(calc0());
+        partitiontmp[i].type=6;
+      }
+      if(type==7&&equaltile(tile[0],lsttile))updateret(calc0());
+    }
+  }
+  function dfs(now){
+    if(now==35){
+      if(partition.length==7||partition.length==5)calc(); 
+      return;
+    }
+    if(cnt[now]==0){
+      dfs(now+1);
+      return;
+    }
+    let whatever=[0,2,3];
+    for(let k=0;k<3;k++){
+      if(cnt[now]<whatever[k])continue;
+      cnt[now]-=whatever[k];
+      let cnt0=cnt[now];
+      if(k==1){
+        partition.push({'type':7,'tile':[inttotile(now),inttotile(now)]});
+        dfs(now);
+      }
+      else if(k==2)partition.push({'type':6,'tile':[inttotile(now),inttotile(now),inttotile(now)]});
+      if(cnt[nxt2[now]]>=cnt0&&cnt[nxt2[nxt2[now]]]>=cnt0){
+        cnt[now]-=cnt0;
+        cnt[nxt2[now]]-=cnt0;
+        cnt[nxt2[nxt2[now]]]-=cnt0;
+        for(let i=1;i<=cnt0;i++)partition.push({'type':5,'tile':[inttotile(now),inttotile(nxt2[now]),inttotile(nxt2[nxt2[now]])]});
+        dfs(now+1);
+        cnt[now]+=cnt0;
+        cnt[nxt2[now]]+=cnt0;
+        cnt[nxt2[nxt2[now]]]+=cnt0;
+        for(let i=1;i<=cnt0;i++)partition.length=partition.length-1;
+      }
+      if(k==1||k==2)partition.length=partition.length-1;
+      cnt[now]+=whatever[k];
+    }
+  }
+  dfs(1);
+  return ret;
+}
 function calcfan(tls,seat,zimo){
   let lsttile=tls[tls.length-1],fulucnt=0;
   let ret={'yiman':false,'fans':0,'fu':0};
@@ -509,7 +729,7 @@ function calcfan(tls,seat,zimo){
   }
   function updateret(x){
     if(x==undefined)return;
-    if(calcsudian(x)>calcsudian(ret))ret=x;
+    if(calcsudian(x,1)>calcsudian(ret,1))ret=x;
   }
   function calc(){
     let cnt2=[];
@@ -642,7 +862,7 @@ function calcfan(tls,seat,zimo){
       for(let i=0;i<tls.length;i++)if(tls[i][0]=='0')alldoras[1]++;
       for(let i=0;i<fulu[seat].length;i++)
         for(let j=0;j<fulu[seat][i].tile.length;j++)if(fulu[seat][i].tile[j][0]=='0')alldoras[1]++;
-      let lstaction=actions[actions.length-1];
+      let lstaction=getlstaction();
       //------------------------------------
       if(liqiinfo[seat].yifa!=0&&liqiinfo[seat].liqi==0&&seat==ju&&zimo){ans.fans.push({'val':1,id:35});tianhu=true;}//天和 
       if(liqiinfo[seat].yifa!=0&&liqiinfo[seat].liqi==0&&seat!=ju&&zimo)ans.fans.push({'val':1,id:36});//地和 
@@ -869,6 +1089,7 @@ function calcxun(){
 }
 function calcdoras(){
   doracnt.cnt=Math.min(doracnt.cnt,5);
+  if(is_chuanma())doracnt.cnt=0;
   let doras0=[];
   for(let i=0;i<doracnt.cnt;i++)doras0[i]=doras[i];
   return doras0;
@@ -915,8 +1136,8 @@ function addNewRound(chang,ju,ben,doras,left_tile_count,liqibang,md5,paishan,sco
     return ret;
   }
   let ret={
-    name:"RecordNewRound",
-    data:{
+    'name':"RecordNewRound",
+    'data':{
       'chang':chang,
       'ju':ju,
       'ben':ben,
@@ -931,36 +1152,41 @@ function addNewRound(chang,ju,ben,doras,left_tile_count,liqibang,md5,paishan,sco
       'tiles3':[].concat(tiles3)
     }
   };
-  if(is_huansanzhang())ret.data.operations=[{
+  if(is_huansanzhang()||is_chuanma())ret.data.operations=[{
     'operation_list':[{
       'change_tile_states':[0,0,0],
-      'change_tiles':[tiles0[0],tiles0[1],tiles0[2]]
+      'change_tiles':[tiles0[0],tiles0[1],tiles0[2]],
+      'type':12
     }],
     'seat':0
   },{
     'operation_list':[{
       'change_tile_states':[0,0,0],
-      'change_tiles':[tiles1[0],tiles1[1],tiles1[2]]
+      'change_tiles':[tiles1[0],tiles1[1],tiles1[2]],
+      'type':12
     }],
     'seat':1
   },{
     'operation_list':[{
       'change_tile_states':[0,0,0],
-      'change_tiles':[tiles2[0],tiles2[1],tiles2[2]]
+      'change_tiles':[tiles2[0],tiles2[1],tiles2[2]],
+      'type':12
     }],
     'seat':2
   },{
     'operation_list':[{
       'change_tile_states':[0,0,0],
-      'change_tiles':[tiles3[0],tiles3[1],tiles3[2]]
+      'change_tiles':[tiles3[0],tiles3[1],tiles3[2]],
+      'type':12
     }],
     'seat':3
   }];
   if(is_peipaimingpai()){
     ret.data.opens=[mingpai_data(tiles0,0),mingpai_data(tiles1,1),mingpai_data(tiles2,2),mingpai_data(tiles3,3)];
   }
+  if(is_chuanma())ret.data.ju_count=editdata.actions.length;
   if(tingpai!=undefined&&tingpai!=[])ret.data.tingpai=tingpai;
-  if(!is_xuezhandaodi()){
+  if(!is_xuezhandaodi()&&!is_chuanma()){
     if(typeof(doras)=="string")ret.data.dora=doras;
     else ret.data.doras=doras;
   }
@@ -999,7 +1225,8 @@ function roundbegin(){
   }
   playertiles[ju].push(lsttile);
   if(is_dora3())doracnt.cnt=3;
-  addNewRound(chang,ju,ben,calcdoras(),paishan.length/2-14,liqibang,md5(paishan),paishan,[].concat(scores),[].concat(tiles0),[].concat(tiles1),[].concat(tiles2),[].concat(tiles3),tingpais);
+  if(!is_chuanma())addNewRound(chang,ju,ben,calcdoras(),paishan.length/2-14,liqibang,md5(paishan),paishan,[].concat(scores),[].concat(tiles0),[].concat(tiles1),[].concat(tiles2),[].concat(tiles3),tingpais);
+  else addNewRound(chang,ju,ben,calcdoras(),paishan.length/2,liqibang,md5(paishan),paishan,[].concat(scores),[].concat(tiles0),[].concat(tiles1),[].concat(tiles2),[].concat(tiles3),tingpais);
 }
 function addDiscardTile(is_liqi,is_wliqi,doras,moqie,seat,tile,tingpais){ 
   for(let i=0;i<playertiles[seat].length;i++){
@@ -1010,8 +1237,8 @@ function addDiscardTile(is_liqi,is_wliqi,doras,moqie,seat,tile,tingpais){
     }
   }
   let ret={
-    name:"RecordDiscardTile",
-    data:{
+    'name':"RecordDiscardTile",
+    'data':{
       'is_liqi':is_liqi,
       'is_wliqi':is_wliqi,
       'doras':doras,
@@ -1038,8 +1265,8 @@ function addDiscardTile(is_liqi,is_wliqi,doras,moqie,seat,tile,tingpais){
 function addDealTile(doras,left_tile_count,seat,tile,liqi){
   playertiles[seat].push(tile);
   let ret={
-    name:"RecordDealTile",
-    data:{
+    'name':"RecordDealTile",
+    'data':{
       'doras':doras,
       'left_tile_count':left_tile_count,
       'seat':seat,
@@ -1070,8 +1297,8 @@ function addChiPengGang(froms,seat,tiles,type,liqi){
     }
   }
   let ret={
-    name:"RecordChiPengGang",
-    data:{
+    'name':"RecordChiPengGang",
+    'data':{
       'froms':froms,
       'seat':seat,
       'tiles':tiles,
@@ -1113,8 +1340,8 @@ function addAnGangAddGang(doras,seat,tiles,type){
     }
   }
   actions.push({
-    name:"RecordAnGangAddGang",
-    data:{
+    'name':"RecordAnGangAddGang",
+    'data':{
       'doras':doras,
       'seat':seat,
       'tiles':tiles,
@@ -1136,8 +1363,8 @@ function addBaBei(doras,seat,moqie){
     }
   }
   actions.push({
-    name:"RecordBaBei",
-    data:{
+    'name':"RecordBaBei",
+    'data':{
       'doras':doras,
       'moqie':moqie,
       'seat':seat
@@ -1148,11 +1375,103 @@ function addBaBei(doras,seat,moqie){
 function cmp(x,y){
   return tiletoint(x)-tiletoint(y);
 }
+function hupaioneplayer_chuanma(seat){
+  function qieshang(x){
+    return Math.ceil(x/100)*100;
+  }
+  let lstaction=getlstaction(),zimo=false;
+  if(lstaction.name=="RecordDealTile"||lstaction.name=="RecordNewRound"||lstaction.name=="RecordChangeTile")zimo=true;
+  else if(lstaction.name=="RecordDiscardTile")playertiles[seat].push(lstaction.data.tile);
+  else if(lstaction.name=="RecordAnGangAddGang")playertiles[seat].push(lstaction.data.tiles);
+  else if(lstaction.name=="RecordBaBei")playertiles[seat].push("4z");
+  let fangtong;
+  if(!zimo)fangtong=lstaction.data.seat;
+  let ming=[];
+  for(let i=0;i<fulu[seat].length;i++){
+    let tiles=fulu[seat][i].tile;
+    if(fulu[seat][i].type==0)ming.push("shunzi("+tiles[0]+","+tiles[1]+","+tiles[2]+")");
+    else if(fulu[seat][i].type==1)ming.push("kezi("+tiles[0]+","+tiles[1]+","+tiles[2]+")");
+    else if(fulu[seat][i].type==2)ming.push("minggang("+tiles[0]+","+tiles[1]+","+tiles[2]+","+tiles[3]+")");
+    else if(fulu[seat][i].type==3)ming.push("angang("+tiles[0]+","+tiles[1]+","+tiles[2]+","+tiles[3]+")");
+  }
+  let hand=[].concat(playertiles[seat]),hu_tile;
+  hu_tile=hand[hand.length-1];
+  hand.length--;
+  hand.sort(cmp);
+  //-------------------------------------------
+  let points={
+    'fans':calcfan_chuanma(playertiles[seat],seat,zimo)
+  };
+  let val=0;
+  for(let i=0;i<points.fans.length;i++)val=val+points.fans[i].val;
+  //-------------------------------------------
+  let sudian=calcsudian_chuanma(points.fans);
+  let zhahu=false;
+  if(calchupai(playertiles[seat])==0||huazhu(seat))zhahu=true;
+  if(calchupai(playertiles[seat])!=3&&lstaction.name=="RecordAnGangAddGang"&&lstaction.data.type==3)zhahu=true;
+  let point_rong=0,point_sum=0,point_zimo_qin=0,point_zimo_xian=0;
+  if(zhahu){
+    for(let i=0;i<playercnt;i++){
+      if(i==seat||hupaied[i])continue;
+      delta_scores[i]-=-33000;
+      delta_scores[seat]+=-33000;
+    }
+    let ret={
+      'count':val,
+      'doras':[],
+      'li_doras':[],
+      'dadian':-delta_scores[seat],
+      'fans':[],
+      'fu':20,
+      'hand':hand,
+      'hu_tile':hu_tile,
+      'ming':ming,
+      'liqi':false,
+      'qinjia':false,
+      'seat':seat,
+      'title_id':0,
+      'yiman':false,
+      'zimo':zimo,
+    }
+    return ret;
+  }
+  if(zimo){
+    for(let i=0;i<playercnt;i++){
+      if(i==seat||hupaied[i])continue;
+      delta_scores[i]-=sudian+1000;
+      delta_scores[seat]+=sudian+1000;
+    }
+  }
+  else{
+    delta_scores[fangtong]-=sudian;
+    delta_scores[seat]+=sudian;
+  }
+  let dadian=Math.max(delta_scores[seat],-delta_scores[seat]);
+  //---------------------------------------------------
+  let ret={
+    'count':val,
+    'doras':[],
+    'li_doras':[],
+    'dadian':dadian,
+    'fans':points.fans,
+    'fu':20,
+    'hand':hand,
+    'hu_tile':hu_tile,
+    'ming':ming,
+    'liqi':false,
+    'qinjia':false,
+    'seat':seat,
+    'title_id':0,
+    'yiman':false,
+    'zimo':zimo,
+  }
+  return ret;
+}
 function hupaioneplayer(seat){
   function qieshang(x){
     return Math.ceil(x/100)*100;
   }
-  let lstaction=actions[actions.length-1],zimo=false;
+  let lstaction=getlstaction(),zimo=false;
   if(lstaction.name=="RecordDealTile"||lstaction.name=="RecordNewRound"||lstaction.name=="RecordChangeTile")zimo=true;
   else if(lstaction.name=="RecordDiscardTile")playertiles[seat].push(lstaction.data.tile);
   else if(lstaction.name=="RecordAnGangAddGang")playertiles[seat].push(lstaction.data.tiles);
@@ -1243,25 +1562,26 @@ function hupaioneplayer(seat){
       }
     }
     let ret={
-      count:0,
-      doras:doras0,
-      li_doras:li_doras0,
-      fans:[],
-      fu:0,
-      hand:hand,
-      hu_tile:hu_tile,
-      liqi:liqi,
-      ming:ming,
-      point_rong:point_rong,
-      point_sum:point_sum,
-      point_zimo_qin:point_zimo_qin,
-      point_zimo_xian:point_zimo_xian,
-      qinjia:qinjia,
-      seat:seat,
-      title_id:1,
-      yiman:false,
-      zimo:zimo,
+      'count':0,
+      'doras':doras0,
+      'li_doras':li_doras0,
+      'fans':[],
+      'fu':0,
+      'hand':hand,
+      'hu_tile':hu_tile,
+      'liqi':liqi,
+      'ming':ming,
+      'point_rong':point_rong,
+      'point_sum':point_sum,
+      'point_zimo_qin':point_zimo_qin,
+      'point_zimo_xian':point_zimo_xian,
+      'qinjia':qinjia,
+      'seat':seat,
+      'title_id':1,
+      'yiman':false,
+      'zimo':zimo,
     }
+    if(is_xuezhandaodi())ret.dadian=-delta_scores[seat];
     return ret;
   }
   if(baopai[seat]!=undefined){
@@ -1352,33 +1672,34 @@ function hupaioneplayer(seat){
   liqibang=0;
   //---------------------------------------------------
   let ret={
-    count:val,
-    doras:doras0,
-    li_doras:li_doras0,
-    fans:points.fans,
-    fu:points.fu,
-    hand:hand,
-    hu_tile:hu_tile,
-    liqi:liqi,
-    ming:ming,
-    point_rong:point_rong,
-    point_sum:point_sum,
-    point_zimo_qin:point_zimo_qin,
-    point_zimo_xian:point_zimo_xian,
-    qinjia:qinjia,
-    seat:seat,
-    title_id:title_id,
-    yiman:points.yiman,
-    zimo:zimo,
+    'count':val,
+    'doras':doras0,
+    'li_doras':li_doras0,
+    'fans':points.fans,
+    'fu':points.fu,
+    'hand':hand,
+    'hu_tile':hu_tile,
+    'liqi':liqi,
+    'ming':ming,
+    'point_rong':point_rong,
+    'point_sum':point_sum,
+    'point_zimo_qin':point_zimo_qin,
+    'point_zimo_xian':point_zimo_xian,
+    'qinjia':qinjia,
+    'seat':seat,
+    'title_id':title_id,
+    'yiman':points.yiman,
+    'zimo':zimo,
   }
   if(is_xuezhandaodi())ret.dadian=dadian;
   return ret;
 }
 function endHule(HuleInfo,old_scores,delta_scores,scores){
   actions.push({
-    name:"RecordHule",
-    data:{
+    'name':"RecordHule",
+    'data':{
       'delta_scores':[].concat(delta_scores),
+      'gameend':{},
       'hules':HuleInfo,
       'old_scores':[].concat(old_scores),
       'scores':[].concat(scores)
@@ -1388,8 +1709,8 @@ function endHule(HuleInfo,old_scores,delta_scores,scores){
 function addHuleXueZhanMid(HuleInfo,old_scores,delta_scores,scores){
   for(let seat=0;seat<4;seat++)liqiinfo[seat].yifa=0;//?????
   actions.push({
-    name:"RecordHuleXueZhanMid",
-    data:{
+    'name':"RecordHuleXueZhanMid",
+    'data':{
       'delta_scores':[].concat(delta_scores),
       'hules':HuleInfo,
       'old_scores':[].concat(old_scores),
@@ -1399,8 +1720,8 @@ function addHuleXueZhanMid(HuleInfo,old_scores,delta_scores,scores){
 }
 function addHuleXueZhanEnd(HuleInfo,old_scores,delta_scores,scores){
   actions.push({
-    name:"RecordHuleXueZhanEnd",
-    data:{
+    'name':"RecordHuleXueZhanEnd",
+    'data':{
       'delta_scores':[].concat(delta_scores),
       'hules':HuleInfo,
       'hules_history':hules_history,
@@ -1410,17 +1731,18 @@ function addHuleXueZhanEnd(HuleInfo,old_scores,delta_scores,scores){
   });
 }
 function hupai(x,type){
+  chuanmagangs.notover.length=0;
   if(typeof(x)=="boolean"){type=x;x=undefined;}
   if(typeof(x)=="number")x=[x];
   if(x==undefined){
-    let lstaction=actions[actions.length-1];
+    let lstaction=getlstaction();
     if(lstaction.name=="RecordDealTile")x=[lstaction.data.seat];
     else if(lstaction.name=="RecordNewRound"||lstaction.name=="RecordChangeTile")x=[ju];
     else{
       x=[];
       for(let i=ju;i<playercnt+ju;i++){
         seat=i%playercnt;
-        if(seat==actions[actions.length-1].data.seat||hupaied[seat])continue;
+        if(seat==getlstaction().data.seat||hupaied[seat])continue;
         if(lstaction.name=="RecordDiscardTile")playertiles[seat].push(lstaction.data.tile);
         else if(lstaction.name=="RecordAnGangAddGang")playertiles[seat].push(lstaction.data.tiles);
         else if(lstaction.name=="RecordBaBei")playertiles[seat].push("4z");
@@ -1429,7 +1751,8 @@ function hupai(x,type){
       }
     }
   }
-  if(!is_xuezhandaodi()){
+  if(is_chuanma()&&!hupaied[0]&&!hupaied[1]&&!hupaied[2]&&!hupaied[3])ju=x[0];
+  if(!is_xuezhandaodi()&&!is_chuanma()){
     let ret=[];
     for(let i=0;i<x.length;i++)ret.push(hupaioneplayer(x[i]));
     for(let i=0;i<x.length;i++)hupaied[x[i]]=true;
@@ -1437,16 +1760,18 @@ function hupai(x,type){
     for(let i=0;i<playercnt;i++)scores[i]=scores[i]+delta_scores[i];
     endHule(ret,[].concat(old_scores),[].concat(delta_scores),[].concat(scores));
     delta_scores=[0,0,0,0];
-    if(hupaied[ju])ben++;
-    else{
+    if(!is_chuanma()&&hupaied[ju])ben++;
+    else if(!is_chuanma()){
       ju++;
       ben=0;
     }
   }
-  else if(is_xuezhandaodi()&&(type==undefined||type==false)){
+  else if((is_xuezhandaodi()||is_chuanma())&&(type==undefined||type==false)){
     let ret=[];
     for(let i=0;i<x.length;i++){
-      let whatever=hupaioneplayer(x[i]);
+      let whatever;
+      if(!is_chuanma())whatever=hupaioneplayer(x[i]);
+      else whatever=hupaioneplayer_chuanma(x[i]);
       ret.push(whatever);
       hules_history.push(whatever);
     }
@@ -1456,10 +1781,12 @@ function hupai(x,type){
     addHuleXueZhanMid(ret,[].concat(old_scores),[].concat(delta_scores),[].concat(scores));
     delta_scores=[0,0,0,0];
   } 
-  else if(is_xuezhandaodi()&&type!=undefined&&type!=false){
+  else if((is_xuezhandaodi()||is_chuanma())&&type!=undefined&&type!=false){
     let ret=[];
     for(let i=0;i<x.length;i++){
-      let whatever=hupaioneplayer(x[i]);
+      let whatever;
+      if(!is_chuanma())whatever=hupaioneplayer(x[i]);
+      else whatever=hupaioneplayer_chuanma(x[i]);
       ret.push(whatever);
       hules_history.push(whatever);
     }
@@ -1468,7 +1795,7 @@ function hupai(x,type){
     for(let i=0;i<playercnt;i++)scores[i]=scores[i]+delta_scores[i];
     addHuleXueZhanEnd(ret,[].concat(old_scores),[].concat(delta_scores),[].concat(scores));
     delta_scores=[0,0,0,0];
-    ju++;
+    if(!is_chuanma())ju++;
   }
 }
 function addChangeTile(change_tile_infos,change_type,doras){
@@ -1485,11 +1812,11 @@ function addChangeTile(change_tile_infos,change_type,doras){
     for(let j=0;j<3;j++)playertiles[seat].push(change_tile_infos[seat].in_tiles[j]);
   }
   let ret={
-    name:"RecordChangeTile",
-    data:{
+    'name':"RecordChangeTile",
+    'data':{
       'change_tile_infos':change_tile_infos,
       'change_type':change_type,
-      'doras':doras,
+      'doras':doras
     }
   };
   let lsttile=playertiles[ju][playertiles[ju].length-1];
@@ -1501,6 +1828,31 @@ function addChangeTile(change_tile_infos,change_type,doras){
   }
   if(tingpais.length!=0)ret.data.tingpai=tingpais;
   playertiles[ju].push(lsttile);
+  if(is_chuanma())ret.data.operations=[{
+    'operation_list':[{
+      'gap_type':0,
+      'type':13
+    }],
+    'seat':0
+  },{
+    'operation_list':[{
+      'gap_type':0,
+      'type':13
+    }],
+    'seat':1
+  },{
+    'operation_list':[{
+      'gap_type':0,
+      'type':13
+    }],
+    'seat':2
+  },{
+    'operation_list':[{
+      'gap_type':0,
+      'type':13
+    }],
+    'seat':3
+  }];
   actions.push(ret);
 }
 //0:逆时针  1:对家   2:顺时针 
@@ -1521,10 +1873,60 @@ function huansanzhang(tiles0,tiles1,tiles2,tiles3,type){
   }
   addChangeTile(ret,type,calcdoras());
 }
+function addSelectGap(gap_types){
+  actions.push({
+    'name':"RecordSelectGap",
+    'data':{
+      'gap_types':gap_types,
+    }
+  });
+}
+//1m2s0p
+function dingque(x){
+  if(typeof(x)=="number")x=x.toString();
+  if(typeof(x)=="string")x=x.split('');
+  let ret=[];
+  for(let i=0;i<x.length;i++){
+    if(x[i]=="wan"||x[i]=="m"||x[i]=="1")ret.push(1);
+    if(x[i]=="bing"||x[i]=="p"||x[i]=="0")ret.push(0);
+    if(x[i]=="suo"||x[i]=="s"||x[i]=="2")ret.push(2);
+  }
+  gaps=ret;
+  addSelectGap(ret);
+}
+function addGangResult(gang_infos){
+  actions.push({
+    'name':"RecordGangResult",
+    'data':{
+      'gang_infos':gang_infos,
+    }
+  });
+}
+function calcgangpoint(){
+  let ret={
+    'delta_scores':[],
+    'old_scores':[].concat(scores),
+    'scores':[]
+  }
+  if(chuanmagangs.notover.length==0)return;
+  for(let i=chuanmagangs.notover.length-1;i>=0;i--){
+    chuanmagangs.over.push(chuanmagangs.notover[i]);
+    delta_scores[chuanmagangs.notover[i].from]-=chuanmagangs.notover[i].val;
+    delta_scores[chuanmagangs.notover[i].to]+=chuanmagangs.notover[i].val;
+    chuanmagangs.notover.length--;
+  }
+  ret.delta_scores=[].concat(delta_scores);
+  for(let i=0;i<playercnt;i++){
+    scores[i]=scores[i]+delta_scores[i];
+    delta_scores[i]=0;
+  }
+  ret.scores=[].concat(scores);
+  addGangResult(ret);
+}
 function endNoTile(liujumanguan,players,scores){
   let ret={
-    name:"RecordNoTile",
-    data:{
+    'name':"RecordNoTile",
+    'data':{
       'gameend':false,
       'liujumanguan':liujumanguan,
       'players':players,
@@ -1535,7 +1937,8 @@ function endNoTile(liujumanguan,players,scores){
   actions.push(ret);
 }
 function mopai(seat){
-  let lstaction=actions[actions.length-1];
+  if(is_chuanma())calcgangpoint();
+  let lstaction=getlstaction();
   if(lstaction.name=="RecordChiPengGang"||lstaction.name=="RecordBaBei"||lstaction.name=="RecordAnGangAddGang")seat=lstaction.data.seat;
   if(lstaction.name=="RecordDiscardTile"||lstaction.name=="RecordHuleXueZhanMid"){
     if(lstaction.name=="RecordDiscardTile")seat=(lstaction.data.seat+1)%playercnt;
@@ -1560,7 +1963,8 @@ function mopai(seat){
   }
   lstliqi=0;
   if(drawtype==1){
-    addDealTile(calcdoras(),paishan.length/2-15,seat,paishan.substring(0,2),liqi);
+    if(!is_chuanma())addDealTile(calcdoras(),paishan.length/2-15,seat,paishan.substring(0,2),liqi);
+    else addDealTile(calcdoras(),paishan.length/2-1,seat,paishan.substring(0,2),liqi);
     drawcard=paishan.substring(0,2);
     paishan=paishan.substring(2);
     lstdrawtype=1;
@@ -1579,8 +1983,8 @@ function qiepai(seat,kind,is_liqi,var1){
   if(typeof(kind)=="boolean"){is_liqi=kind;kind=undefined;}
   if(seat!=0&&seat!=1&&seat!=2&&seat!=playercnt-1&&seat!=undefined){kind=seat;seat=undefined;}
   if(seat==undefined){
-    let lstaction=actions[actions.length-1];
-    if(lstaction.name=="RecordNewRound"||lstaction.name=="RecordChangeTile")seat=ju;
+    let lstaction=getlstaction();
+    if(lstaction.name=="RecordNewRound"||lstaction.name=="RecordChangeTile"||lstaction.name=="RecordSelectGap")seat=ju;
     else seat=lstaction.data.seat;
   }
   if(kind==undefined){
@@ -1631,7 +2035,7 @@ function qiepai(seat,kind,is_liqi,var1){
       }
     }
   }
-  let lstactionname=actions[actions.length-1].name;
+  let lstactionname=getlstaction().name;
   if(flag==0&&kind[0]>='0'&&kind[0]<='9'){
     paihe[seat].tiles.push(kind);
     let abc=tiletoint(kind);
@@ -1686,10 +2090,10 @@ function mingpai(seat,tiles){
   }
   if(seat!=0&&seat!=1&&seat!=2&&seat!=playercnt-1){tiles=seat;seat=undefined;}
   if(seat==undefined){
-    if(tiles!=undefined&&!equaltile(tiles[0],actions[actions.length-1].data.tile))seat=(actions[actions.length-1].data.seat+1)%playercnt;
+    if(tiles!=undefined&&!equaltile(tiles[0],getlstaction().data.tile))seat=(getlstaction().data.seat+1)%playercnt;
     else if(tiles!=undefined){
       for(let seat2=0;seat2<playercnt;seat2++){
-        if(seat2==actions[actions.length-1].data.seat)continue;
+        if(seat2==getlstaction().data.seat)continue;
         let cnt=[];
         for(let i=0;i<=36;i++)cnt[i]=0;
         for(let i=0;i<playertiles[seat2].length;i++)cnt[tiletoint(playertiles[seat2][i])]++;
@@ -1700,7 +2104,7 @@ function mingpai(seat,tiles){
   }
   if(typeof(tiles)=="string")tiles=separatetile(tiles);
   if(tiles==undefined){
-    let lsttile=actions[actions.length-1].data.tile;
+    let lsttile=getlstaction().data.tile;
     lsttile=inttotile(tiletoint(lsttile));
     if(trying([lsttile,lsttile,lsttile],seat))return;
     if(lsttile[0]=='5'&&lsttile[1]!='z'){
@@ -1712,7 +2116,7 @@ function mingpai(seat,tiles){
       if(trying(["0"+lsttile[1],lsttile],seat))return;
       if(trying(["0"+lsttile[1],"0"+lsttile[1]],seat))return;
     }
-    seat=(actions[actions.length-1].data.seat+1)%playercnt;
+    seat=(getlstaction().data.seat+1)%playercnt;
     if(lsttile[1]!='z'&&lsttile[0]!='1'&&lsttile[0]!='2'){
       if(trying([inttotile(tiletoint(lsttile)-2),inttotile(tiletoint(lsttile)-1)],seat))return;
       if(trying([changedora(inttotile(tiletoint(lsttile)-2)),inttotile(tiletoint(lsttile)-1)],seat))return;
@@ -1731,9 +2135,9 @@ function mingpai(seat,tiles){
     return;
   }
   for(let i=0;i<playercnt;i++)liqiinfo[i].yifa=0;
-  let lstaction=actions[actions.length-1];
+  let lstaction=getlstaction();
   paihe[lstaction.data.seat].liujumanguan=false;
-  let from=actions[actions.length-1].data.seat,lsttile=actions[actions.length-1].data.tile;
+  let from=getlstaction().data.seat,lsttile=getlstaction().data.tile;
   let liqi=0;
   if(lstliqi!=0&&scores[lstliqi.seat]>=1000){
     liqibang=liqibang+1;
@@ -1752,7 +2156,8 @@ function mingpai(seat,tiles){
   }
   else if(tiles.length==3){
     doracnt.lsttype=1;
-    drawtype=0;
+    if(!is_chuanma())drawtype=0;
+    else chuanmagangs.notover.push({'from':from,'to':seat,'val':2000});
     fulu[seat].push({'type':2,'tile':[tiles[0],tiles[1],tiles[2],lsttile],'from':from});
     if(from==(seat+3)%4)addChiPengGang([from,seat,seat,seat],seat,[lsttile,tiles[0],tiles[1],tiles[2]],2,liqi);
     if(from==(seat+2)%4)addChiPengGang([seat,from,seat,seat],seat,[tiles[0],lsttile,tiles[1],tiles[2]],2,liqi);
@@ -1776,7 +2181,7 @@ function leimingpai(seat,tile,type){
     return false;
   }
   if(seat==undefined){
-    let lstaction=actions[actions.length-1];
+    let lstaction=getlstaction();
     if(lstaction.name=="RecordNewRound"||lstaction.name=="RecordChangeTile")seat=ju;
     else seat=lstaction.data.seat;
   }
@@ -1798,7 +2203,13 @@ function leimingpai(seat,tile,type){
     for(let i=0;i<playercnt;i++)if(liqiinfo[i].yifa==1)liqiinfo[i].yifa=2;
     doracnt.lsttype=2;
     fulu[seat].push({'type':3,'tile':[tile,tile,tile,tile]});
-    drawtype=0;
+    if(!is_chuanma())drawtype=0;
+    else{
+      for(let i=0;i<playercnt;i++){
+        if(i==seat||hupaied[i])continue;
+        chuanmagangs.notover.push({'from':i,'to':seat,'val':2000});
+      }
+    }
     addAnGangAddGang(calcdoras(),seat,tile,3);
     return true;
   }
@@ -1811,7 +2222,13 @@ function leimingpai(seat,tile,type){
           fulu[seat][i].tile.push(tile);
       }
     }
-    drawtype=0;
+    if(playertiles[seat][playertiles[seat].length-1]==tile){
+      for(let i=0;i<playercnt;i++){
+        if(i==seat||hupaied[i])continue;
+        chuanmagangs.notover.push({'from':i,'to':seat,'val':1000});
+      }
+    }
+    if(!is_chuanma())drawtype=0;
     addAnGangAddGang(calcdoras(),seat,tile,2);
     return true;
   }
@@ -1825,7 +2242,7 @@ function notileliuju(){
   let ret=[];
   for(let i=0;i<playercnt;i++){
     let tings=tingpai(i);
-    if(tings.length==0){
+    if(tings.length==0||hupaied[i]){
       ret.push({
         'tingpai':false,
         'hand':[],
@@ -1844,6 +2261,7 @@ function notileliuju(){
   }
   let ret2=[];
   for(let i=ju;i<playercnt+ju;i++){
+    if(is_chuanma())break;
     seat=i%playercnt;
     if(!paihe[seat].liujumanguan||hupaied[seat])continue;
     liujumanguan=true;
@@ -1884,26 +2302,59 @@ function notileliuju(){
       delta_scores[i]=0;
     }
   }
-  if(liujumanguan){
+  if(liujumanguan&&!is_chuanma()){
     endNoTile(true,ret,ret2);
     if(!is_xuezhandaodi())ben++;
     if(ret[ju].tingpai==false||is_xuezhandaodi())ju++;
     return;
   }
   ret2=[{'delta_scores':[],'old_scores':[]}];
-  if(liujumanguan==false&&tingcnt!=0&&tingcnt!=playercnt){
-    for(let seat=0;seat<playercnt;seat++){
-      if(hupaied[seat])continue;
-      if(ret[seat].tingpai==true)delta_scores[seat]+=(playerleft-1)*1000/tingcnt;
-      else delta_scores[seat]-=(playerleft-1)*1000/(playerleft-tingcnt);
+  if(tingcnt!=0&&tingcnt!=playerleft){
+    if(!is_chuanma()){
+      for(let seat=0;seat<playercnt;seat++){
+        if(hupaied[seat])continue;
+        if(ret[seat].tingpai==true)delta_scores[seat]+=(playerleft-1)*1000/tingcnt;
+        else delta_scores[seat]-=(playerleft-1)*1000/(playerleft-tingcnt);
+      }
+    }
+    else{
+      for(let seat=0;seat<playercnt;seat++){
+        for(let i=0;i<playercnt;i++){
+          if(hupaied[seat]||hupaied[i]||i==seat)continue;
+          if(huazhu(i)&&ret[seat].tingpai==true){
+            delta_scores[seat]+=Math.max(calcsudian_chuanma(calcfan_chuanma(playertiles[seat],seat,false)),8000);
+            delta_scores[i]-=Math.max(calcsudian_chuanma(calcfan_chuanma(playertiles[seat],seat,false)),8000);
+          }
+          else if(huazhu(i)){
+            delta_scores[seat]+=8000;
+            delta_scores[i]-=8000;
+          }
+          else if(ret[i].tingpai==false&&ret[seat].tingpai==true){
+            delta_scores[seat]+=calcsudian_chuanma(calcfan_chuanma(playertiles[seat],seat,false));
+            delta_scores[i]-=calcsudian_chuanma(calcfan_chuanma(playertiles[seat],seat,false));
+          }
+        }
+      }
     }
   }
   ret2[0].old_scores=[].concat(scores);
   ret2[0].delta_scores=[].concat(delta_scores);
+  if(is_chuanma()){
+    let taxes=[0,0,0,0];
+    for(let i=0;i<chuanmagangs.over.length;i++){
+      let from=chuanmagangs.over[i].from,to=chuanmagangs.over[i].to,val=chuanmagangs.over[i].val;
+      if(ret[to].tingpai==false){
+        taxes[to]-=val;
+        taxes[from]+=val;
+      }
+    }
+    ret2[0].taxes=taxes;
+    for(let seat=0;seat<playercnt;seat++)scores[seat]=scores[seat]+taxes[seat];
+  }
   for(let seat=0;seat<playercnt;seat++)scores[seat]=scores[seat]+delta_scores[seat];
   endNoTile(false,ret,ret2);
-  if(!is_xuezhandaodi())ben++;
-  if(ret[ju].tingpai==false||is_xuezhandaodi())ju++;
+  if(!is_xuezhandaodi()&&!is_chuanma())ben++;
+  if((ret[ju].tingpai==false||is_xuezhandaodi())&&!is_chuanma())ju++;
 }
 function liuju(){
   let ret;
@@ -1924,8 +2375,8 @@ function liuju(){
       playertiles[seat].sort(cmp);
       playertiles[seat].push(lsttile);
       if(ret==undefined)ret={
-        name:"RecordLiuJu",
-        data:{
+        'name':"RecordLiuJu",
+        'data':{
           'seat':seat,
           'tiles':[].concat(playertiles[seat]),
           'type':1
@@ -1935,8 +2386,8 @@ function liuju(){
   }
   if(playercnt==4&&paihe[0].tiles.length==1&&paihe[1].tiles.length==1&&paihe[2].tiles.length==1&&paihe[3].tiles.length==1&&paihe[0].tiles[0]==paihe[1].tiles[0]&&paihe[1].tiles[0]==paihe[2].tiles[0]&&paihe[2].tiles[0]==paihe[3].tiles[0]&&tiletoint(paihe[0].tiles[0])>=28&&tiletoint(paihe[0].tiles[0])<=31){
     if(ret==undefined)ret={
-      name:"RecordLiuJu",
-      data:{
+      'name':"RecordLiuJu",
+      'data':{
         'type':2
       }
     };
@@ -1948,8 +2399,8 @@ function liuju(){
   }
   if(doracnt.cnt==5&&havegangcnt>=2){
     if(ret==undefined)ret={
-      name:"RecordLiuJu",
-      data:{
+      'name':"RecordLiuJu",
+      'data':{
         'type':3
       }
     };
@@ -1973,8 +2424,8 @@ function liuju(){
         }
       }
       if(ret==undefined)ret={
-        name:"RecordLiuJu",
-        data:{
+        'name':"RecordLiuJu",
+        'data':{
           'type':4,
           'liqi':{
             'liqibang':liqibang,
@@ -2057,6 +2508,7 @@ function randompaishan(paishan,paishanback,reddora){
     if(reddora==undefined||reddora==3){cnt[5]=3;cnt[14]=3;cnt[23]=3;cnt[35]=1;cnt[36]=1;cnt[37]=1;}
     if(reddora==4){cnt[5]=3;cnt[14]=2;cnt[23]=3;cnt[35]=1;cnt[36]=2;cnt[37]=1;}
   }
+  if(is_chuanma()){cnt[28]=0;cnt[29]=0;cnt[30]=0;cnt[31]=0;cnt[32]=0;cnt[33]=0;cnt[34]=0;cnt[35]=0;cnt[36]=0;cnt[37]=0;cnt[5]=4;cnt[14]=4;cnt[23]=4;}
   for(let i=0;i<tiles0.length;i++)cnt[tiletoint(tiles0[i],1)]--;
   for(let i=0;i<tiles1.length;i++)cnt[tiletoint(tiles1[i],1)]--;
   for(let i=0;i<tiles2.length;i++)cnt[tiletoint(tiles2[i],1)]--;
@@ -2087,6 +2539,7 @@ editdata.config={
     'mode':1,
     'detail_rule':{
       'begin_open_mode':0,
+      'chuanma':0,
       'dora3_mode':0,
       'dora_count':3,
       'fanfu':1,
