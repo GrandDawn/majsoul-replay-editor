@@ -401,7 +401,7 @@ function getlstaction(x){
   let ret=actions.length;
   for(let i=1;i<=x;i++){
     ret--;
-    while(actions[ret].name=="RecordSelectGap"||actions[ret].name=="RecordGangResult")ret--;
+    while(actions[ret]!=undefined&&(actions[ret].name=="RecordSelectGap"||actions[ret].name=="RecordGangResult"))ret--;
   }
   return actions[ret];
 }
@@ -550,10 +550,6 @@ function calcfan_chuanma(tls,seat,zimo,type){
   let vals=[];
   function tofan(x){
     let ans=[];
-    if(x[1000])ans.push({'val':x[1000],'id':1000});
-    if(x[1001])ans.push({'val':x[1001],'id':1001});
-    if(x[1002])ans.push({'val':x[1002],'id':1002});
-    if(x[1004])ans.push({'val':x[1004],'id':1004});
     if(x[1018])ans.push({'val':x[1018],'id':1018});
     if(x[1019])ans.push({'val':x[1019],'id':1019});
     for(let i=1020;i>=1005;i--){
@@ -562,8 +558,13 @@ function calcfan_chuanma(tls,seat,zimo,type){
         ans.push({'val':x[i],'id':i});
         break;
       }
-      if(i==1005){ans.push({'val':x[1003],'id':1003});}
+      if(ans.length==0){ans.push({'val':x[1003],'id':1003});}
     }
+    if(x[1000])ans.push({'val':x[1000],'id':1000});
+    if(x[1001])ans.push({'val':x[1001],'id':1001});
+    if(x[1002])ans.push({'val':x[1002],'id':1002});
+    if(x[1004])ans.push({'val':x[1004],'id':1004});
+    if(x[1021])ans.push({'val':x[1021],'id':1021});
     return ans;
   }
   let lsttile=tls[tls.length-1],fulucnt=0;
@@ -596,7 +597,6 @@ function calcfan_chuanma(tls,seat,zimo,type){
       else if(partitiontmp[i].type==7)cnt2[tiletoint(tiles[0])]+=2;
     }
     function calc0(){
-      console.log(partitiontmp);
       let ans=[];
       let typecnt=[];
       for(let i=0;i<=34;i++)typecnt[i]=[0,0,0];
@@ -637,8 +637,8 @@ function calcfan_chuanma(tls,seat,zimo,type){
       //---------------------------
       ans[1000]=0;
       for(let i=1;i<=34;i++)if(cnt2[i]==4)ans[1000]++;
-      if(type!=1&&zimo&&(getlstaction(2).name=="RecordAnGangAddGang"||getlstaction(2).name=="RecordChiPengGang"))ans[1001]=1;
-      if(type!=1&&!zimo&&(getlstaction(3).name=="RecordAnGangAddGang"||getlstaction(3).name=="RecordChiPengGang"))ans[1002]=1;
+      if(type!=1&&zimo&&getlstaction(2)!=undefined&&(getlstaction(2).name=="RecordAnGangAddGang"||getlstaction(2).name=="RecordChiPengGang"))ans[1001]=1;
+      if(type!=1&&!zimo&&getlstaction(3)!=undefined&&(getlstaction(3).name=="RecordAnGangAddGang"||getlstaction(3).name=="RecordChiPengGang"))ans[1002]=1;
       ans[1003]=1;
       if(type!=1&&getlstaction().name=="RecordAnGangAddGang")ans[1004]=1;
       if(kezi==4)ans[1005]=2;//对对和 
@@ -2439,7 +2439,7 @@ function liuju(){
   }
   if(hules_history.length!=0)ret.data.hules_history=hules_history;
   actions.push(ret);
-  if(!is_xuezhandaodi())ben++;
+  if(!is_xuezhandaodi()&&!is_chuanma())ben++;
 }
 function roundend(){
   discardtiles=["","","",""];
