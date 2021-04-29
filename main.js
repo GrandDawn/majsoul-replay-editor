@@ -239,6 +239,8 @@ function player_datas(a){
         'charid':cfg.item_definition.skin.map_[editdata.player_datas[seat].avatar_id].character_id,
         'skin':editdata.player_datas[seat].avatar_id,
       },
+      'level':{'id':10101},
+      'level3':{'id':10101},
       'charid':cfg.item_definition.skin.map_[editdata.player_datas[seat].avatar_id].character_id,
       'seat':seat,
       'views':editdata.player_datas[seat].views,
@@ -552,13 +554,16 @@ function calcfan_chuanma(tls,seat,zimo,type){
     let ans=[];
     if(x[1018])ans.push({'val':x[1018],'id':1018});
     if(x[1019])ans.push({'val':x[1019],'id':1019});
-    for(let i=1020;i>=1005;i--){
-      if(i==1018||i==1019)continue;
+    for(let i=1017;i>=1005;i--){
+      if(i==1014&&x[1020]){
+        ans.push({'val':x[1020],'id':1020});
+        break;
+      }
       if(x[i]){
         ans.push({'val':x[i],'id':i});
         break;
       }
-      if(ans.length==0){ans.push({'val':x[1003],'id':1003});}
+      if(i==1005&&ans.length==0){ans.push({'val':x[1003],'id':1003});}
     }
     if(x[1000])ans.push({'val':x[1000],'id':1000});
     if(x[1001])ans.push({'val':x[1001],'id':1001});
@@ -864,9 +869,9 @@ function calcfan(tls,seat,zimo){
         for(let j=0;j<fulu[seat][i].tile.length;j++)if(fulu[seat][i].tile[j][0]=='0')alldoras[1]++;
       let lstaction=getlstaction();
       //------------------------------------
-      if(liqiinfo[seat].yifa!=0&&liqiinfo[seat].liqi==0&&seat==ju&&zimo){ans.fans.push({'val':1,id:35});tianhu=true;}//天和 
-      if(liqiinfo[seat].yifa!=0&&liqiinfo[seat].liqi==0&&seat!=ju&&zimo)ans.fans.push({'val':1,id:36});//地和 
-      if(liqiinfo[seat].yifa!=0&&liqiinfo[seat].liqi==0&&seat!=ju&&!zimo&&is_guyi())ans.fans.push({'val':1,id:59});//人和 
+      if(liqiinfo[seat].yifa!=0&&liqiinfo[seat].liqi==0&&seat==ju&&zimo){ans.fans.push({'val':1,'id':35});tianhu=true;}//天和 
+      if(liqiinfo[seat].yifa!=0&&liqiinfo[seat].liqi==0&&seat!=ju&&zimo)ans.fans.push({'val':1,'id':36});//地和 
+      if(liqiinfo[seat].yifa!=0&&liqiinfo[seat].liqi==0&&seat!=ju&&!zimo&&is_guyi())ans.fans.push({'val':1,'id':59});//人和 
       if(typecnt[32][1]+typecnt[33][1]+typecnt[34][1]==6){
         ans.fans.push({'val':1,'id':37});//大三元
         let fulusanyuancnt=0;
@@ -1075,9 +1080,9 @@ function calcfan(tls,seat,zimo){
   if(calchupai(tls)==3){
     let tianhu=false; 
     let ans={'yiman':true,'fans':[],'fu':0};
-    if(liqiinfo[seat].yifa!=0&&liqiinfo[seat].liqi==0&&seat==ju&&zimo){ans.fans.push({'val':1,id:35});tianhu=true;}//天和 
-    if(liqiinfo[seat].yifa!=0&&liqiinfo[seat].liqi==0&&seat!=ju&&zimo)ans.fans.push({'val':1,id:36});//地和 
-    if(liqiinfo[seat].yifa!=0&&liqiinfo[seat].liqi==0&&seat!=ju&&!zimo&&is_guyi())ans.fans.push({'val':1,id:59});//人和 
+    if(liqiinfo[seat].yifa!=0&&liqiinfo[seat].liqi==0&&seat==ju&&zimo){ans.fans.push({'val':1,'id':35});tianhu=true;}//天和 
+    if(liqiinfo[seat].yifa!=0&&liqiinfo[seat].liqi==0&&seat!=ju&&zimo)ans.fans.push({'val':1,'id':36});//地和 
+    if(liqiinfo[seat].yifa!=0&&liqiinfo[seat].liqi==0&&seat!=ju&&!zimo&&is_guyi())ans.fans.push({'val':1,'id':59});//人和 
     if(fulucnt==0&&cnt[tiletoint(lsttile)]==1&&!tianhu)ans.fans.push({'val':1,'id':42});//国士无双 
     if(fulucnt==0&&(cnt[tiletoint(lsttile)]==2||tianhu))ans.fans.push({'val':2,'id':49});//国士无双十三面 
     updateret(ans);
@@ -1751,7 +1756,6 @@ function hupai(x,type){
       }
     }
   }
-  if(is_chuanma()&&!hupaied[0]&&!hupaied[1]&&!hupaied[2]&&!hupaied[3])ju=x[0];
   if(!is_xuezhandaodi()&&!is_chuanma()){
     let ret=[];
     for(let i=0;i<x.length;i++)ret.push(hupaioneplayer(x[i]));
@@ -1797,6 +1801,7 @@ function hupai(x,type){
     delta_scores=[0,0,0,0];
     if(!is_chuanma())ju++;
   }
+  if(is_chuanma()&&!hupaied[0]&&!hupaied[1]&&!hupaied[2]&&!hupaied[3])ju=x[0];
 }
 function addChangeTile(change_tile_infos,change_type,doras){
   for(let seat=0;seat<4;seat++){
@@ -2458,12 +2463,12 @@ function gameend(){
   }
   players=[];
   for(let i=0;i<playercnt;i++)players.push({
-    gold:0,
-    grading_score:0,
-    part_point_1:scores[i],
-    part_point_2:0,
-    seat:i,
-    total_point:0,
+    'gold':0,
+    'grading_score':0,
+    'part_point_1':scores[i],
+    'part_point_2':0,
+    'seat':i,
+    'total_point':0,
   });
   players.sort(cmp2);
   players[0].part_point_1+=liqibang*1000;
