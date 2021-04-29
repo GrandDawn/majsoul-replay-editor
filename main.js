@@ -250,9 +250,6 @@ function player_datas(a){
   }
   return ret;
 }
-function game_config(){
-  return editdata.config;
-}
 function edit(){
   uiscript.UI_Replay.prototype.initData=function(t){
     let _=initData.call(this,t);
@@ -260,7 +257,7 @@ function edit(){
     return _;
   }
   view.DesktopMgr.prototype.initRoom=function(e,a,s,o,l){
-    if(o==1)return initRoom.call(this,game_config(),player_datas(a),s,o,l);
+    if(o==1)return initRoom.call(this,editdata.config,player_datas(a),s,o,l);
     else return initRoom.call(this,e,a,s,o,l);
   }
   console.log("edit successfully");
@@ -1123,7 +1120,11 @@ function gamebegin(){
   }
   else{
     if(config&&config.mode&&config.mode.detail_rule&&config.mode.detail_rule.init_point)scores=[config.mode.detail_rule.init_point,config.mode.detail_rule.init_point,config.mode.detail_rule.init_point,config.mode.detail_rule.init_point];
-    else scores=[25000,25000,25000,25000];
+    else{
+      if(is_chuanma())scores=[50000,50000,50000,50000];
+      else if(is_muyu())scores=[40000,40000,40000,40000];
+      else scores=[25000,25000,25000,25000];
+    }
   }
   firstneededscores=scores[0];
 }
@@ -1712,7 +1713,7 @@ function endHule(HuleInfo,old_scores,delta_scores,scores){
   });
 }
 function addHuleXueZhanMid(HuleInfo,old_scores,delta_scores,scores){
-  for(let seat=0;seat<4;seat++)liqiinfo[seat].yifa=0;//?????
+  for(let seat=0;seat<playercnt;seat++)liqiinfo[seat].yifa=0;//?????
   actions.push({
     'name':"RecordHuleXueZhanMid",
     'data':{
@@ -1804,7 +1805,7 @@ function hupai(x,type){
   if(is_chuanma()&&!hupaied[0]&&!hupaied[1]&&!hupaied[2]&&!hupaied[3])ju=x[0];
 }
 function addChangeTile(change_tile_infos,change_type,doras){
-  for(let seat=0;seat<4;seat++){
+  for(let seat=0;seat<playercnt;seat++){
     for(let j=0;j<3;j++){
       for(let i=0;i<playertiles[seat].length;i++){
         if(playertiles[seat][i]==change_tile_infos[seat].out_tiles[j]){
@@ -1868,11 +1869,11 @@ function huansanzhang(tiles0,tiles1,tiles2,tiles3,type){
   if(typeof(tiles3)=="string")tiles3=separatetile(tiles3);
   let ret=[];
   let tiles=[tiles0,tiles1,tiles2,tiles3];
-  for(let seat=0;seat<4;seat++){
+  for(let seat=0;seat<playercnt;seat++){
     ret.push({
       'out_tiles':tiles[seat],
       'in_tile_states':[0,0,0],
-      'in_tiles':tiles[(seat-type-1+8)%4],
+      'in_tiles':tiles[(seat-type-1+playercnt*2)%playercnt],
       'out_tile_states':[0,0,0],
     })
   }
