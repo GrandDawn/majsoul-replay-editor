@@ -240,7 +240,7 @@ function player_datas(a){
         'skin':editdata.player_datas[seat].avatar_id,
       },
       'level':{'id':10101},
-      'level3':{'id':10101},
+      'level3':{'id':20101},
       'charid':cfg.item_definition.skin.map_[editdata.player_datas[seat].avatar_id].character_id,
       'seat':seat,
       'views':editdata.player_datas[seat].views,
@@ -387,7 +387,21 @@ function update_muyu(){
   muyutimes=[1,1,1,1];
   muyutimes[muyu.seat]++;
 }
+function decompose(x){
+  for(let i=0;i<x.length;i++){
+    if(x[i]!='m'&&x[i]!='p'&&x[i]!='s'&&x[i]!='z')
+      for(let j=i+1;j<x.length;j++){
+        if(x[j]=='m'||x[j]=='p'||x[j]=='s'||x[j]=='z'){
+          if(j!=i+1)x=x.substring(0,i+1)+x[j]+x.substring(i+1);
+          i++;
+          break;
+        }
+      }
+  }
+  return x;
+}
 function separatetile(x){
+  x=decompose(x);
   let ret=[];
   while(x.length>0){
     ret.push(x.substring(0,2));
@@ -1210,6 +1224,7 @@ function addNewRound(chang,ju,ben,doras,left_tile_count,liqibang,md5,paishan,sco
   calcxun();
 }
 function roundbegin(){
+  paishan=decompose(paishan);
   if(ju==playercnt){chang++;ju=0;}
   if(chang==playercnt)chang=0;
   if(typeof(tiles0)=="string")tiles0=separatetile(tiles0);
@@ -2491,6 +2506,8 @@ function randompaishan(paishan,paishanback,reddora){
   if(typeof(tiles2)=="string")tiles2=separatetile(tiles2);
   if(typeof(tiles3)=="string")tiles3=separatetile(tiles3);
   if(typeof(paishanback)=="number"){reddora=paishanback;paishanback=undefined;}
+  paishan=decompose(paishan);
+  if(paishanback!=undefined)paishanback=decompose(paishanback);
   if(reddora==undefined){
     if(config.mode.mode==11){
       if(config&&config.mode&&config.mode.detail_rule&&config.mode.detail_rule.dora_count!=undefined)reddora=config.mode.detail_rule.dora_count;
@@ -2611,10 +2628,10 @@ qiepai("1p",true);
 hupai();
 roundend();
 //第四局（诈和示范） 
-tiles1=["1m","1m","1m","2m","3m","4m","0m","6m","7m","8m","9m","9m","9m","6z"];
-tiles2=["2s","3s","8s","5p","5p","1z","2z","5z","5z","6z","6z","7z","7z"];
-tiles3=["2s","2s","3s","4s","4s","6s","6s","8s","8s","3z","4z","5z","7z"];  
-tiles0=["3s","4s","6s","5p","9p","1z","1z","2z","2z","3z","3z","4z","4z"];
+tiles1="1112340678999m6z";
+tiles2="238s55p12556677z";
+tiles3="223446688s3457z";  
+tiles0="346s59p11223344z";
 paishan=randompaishan("3s");
 roundbegin();
 hupai();
