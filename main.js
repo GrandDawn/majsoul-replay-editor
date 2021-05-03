@@ -198,7 +198,7 @@ var initData,initRoom,show;
 uiscript.UI_ScoreChange.prototype.setBaopai=function(){}
 if(initData==undefined)initData=uiscript.UI_Replay.prototype.initData;
 if(initRoom==undefined)initRoom=view.DesktopMgr.prototype.initRoom;
-if(show==undefined)show=uiscript.UI_GameEnd.Inst.show;
+if(show==undefined)show=uiscript.UI_GameEnd.prototype.show;
 function editgame(){
   let UI_Replay=uiscript.UI_Replay.Inst;
   let rounds=[];
@@ -248,8 +248,8 @@ function edit(){
     if(o==1)return initRoom.call(this,editdata.config,player_datas(a),s,o,l);
     else return initRoom.call(this,e,a,s,o,l);
   }
-  uiscript.UI_GameEnd.Inst.show=function(){
-    if(is_chuanma()&&getlstaction().name=="RecordGangResultEnd")view.DesktopMgr.Inst.gameEndResult={'players':editdata.players};
+  uiscript.UI_GameEnd.prototype.show=function(){
+    if(is_chuanma()&&editdata.actions[editdata.actions.length-1][editdata.actions[editdata.actions.length-1].length-1].name=="RecordGangResultEnd")view.DesktopMgr.Inst.gameEndResult={'players':editdata.players};
     return show.call(this);
   }
   console.log("edit successfully");
@@ -261,7 +261,7 @@ function canceledit(){
   view.DesktopMgr.prototype.initRoom=function(e,a,s,o,l){
     return initRoom.call(this,e,a,s,o,l);
   }
-  uiscript.UI_GameEnd.Inst.show=function(){
+  uiscript.UI_GameEnd.prototype.show=function(){
     return show.call(this);
   }
 }
