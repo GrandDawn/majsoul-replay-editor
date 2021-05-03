@@ -194,23 +194,11 @@ function md5(string){
   }
   return(md5_WordToHex(a)+md5_WordToHex(b)+md5_WordToHex(c)+md5_WordToHex(d)).toLowerCase();
 }
-var initData,initRoom,openMJRoom;
+var initData,initRoom,show;
 uiscript.UI_ScoreChange.prototype.setBaopai=function(){}
 if(initData==undefined)initData=uiscript.UI_Replay.prototype.initData;
 if(initRoom==undefined)initRoom=view.DesktopMgr.prototype.initRoom;
-if(openMJRoom==undefined)openMJRoom=game.Scene_MJ.prototype.openMJRoom;
-game.Scene_MJ.prototype.openMJRoom=function(...args){
-  args[1].forEach(player=>{
-    if(player.account_id==GameMgr.Inst.account_id){
-      player.character=uiscript.UI_Sushe.characters[uiscript.UI_Sushe.main_character_id-200001];
-      player.avatar_id=uiscript.UI_Sushe.main_chara_info.skin;
-      player.views=uiscript.UI_Sushe.commonViewList[uiscript.UI_Sushe.using_commonview_index];
-      player.avatar_frame=GameMgr.Inst.account_data.avatar_frame;
-      player.title=GameMgr.Inst.account_data.title;
-    }
-  });
-  return openMJRoom.call(this,...args);
-}
+if(show==undefined)show=uiscript.UI_GameEnd.Inst.show;
 function editgame(){
   let UI_Replay=uiscript.UI_Replay.Inst;
   let rounds=[];
@@ -260,6 +248,10 @@ function edit(){
     if(o==1)return initRoom.call(this,editdata.config,player_datas(a),s,o,l);
     else return initRoom.call(this,e,a,s,o,l);
   }
+  uiscript.UI_GameEnd.Inst.show=function(){
+    if(is_chuanma()&&getlstaction().name=="RecordGangResultEnd")view.DesktopMgr.Inst.gameEndResult={'players':editdata.players};
+    return show.call(this);
+  }
   console.log("edit successfully");
 }
 function canceledit(){
@@ -268,6 +260,9 @@ function canceledit(){
   }
   view.DesktopMgr.prototype.initRoom=function(e,a,s,o,l){
     return initRoom.call(this,e,a,s,o,l);
+  }
+  uiscript.UI_GameEnd.Inst.show=function(){
+    return show.call(this);
   }
 }
 var scores=[25000,25000,25000,25000],tiles0,tiles1,tiles2,tiles3,firstneededscores; 
@@ -652,27 +647,27 @@ function calcfan_chuanma(tls,seat,zimo,type){
       }
       //---------------------------
       ans[1000]=0;
-      for(let i=1;i<=34;i++)if(cnt2[i]==4)ans[1000]++;
-      if(type!=1&&zimo&&getlstaction(2)!=undefined&&(getlstaction(2).name=="RecordAnGangAddGang"||getlstaction(2).name=="RecordChiPengGang"))ans[1001]=1;
-      if(type!=1&&!zimo&&getlstaction(3)!=undefined&&(getlstaction(3).name=="RecordAnGangAddGang"||getlstaction(3).name=="RecordChiPengGang"))ans[1002]=1;
+      for(let i=1;i<=34;i++)if(cnt2[i]==4)ans[1000]++;//根
+      if(type!=1&&zimo&&getlstaction(2)!=undefined&&(getlstaction(2).name=="RecordAnGangAddGang"||getlstaction(2).name=="RecordChiPengGang"))ans[1001]=1;//杠上花
+      if(type!=1&&!zimo&&getlstaction(3)!=undefined&&(getlstaction(3).name=="RecordAnGangAddGang"||getlstaction(3).name=="RecordChiPengGang"))ans[1002]=1;//杠上炮
       ans[1003]=1;
-      if(type!=1&&getlstaction().name=="RecordAnGangAddGang")ans[1004]=1;
+      if(type!=1&&getlstaction().name=="RecordAnGangAddGang")ans[1004]=1;//抢杠
       if(kezi==4)ans[1005]=2;//对对和 
       if(qingyise)ans[1006]=3;//清一色
       if(duizi==7)ans[1007]=3;//七对子 
       if(quandai)ans[1008]=3;//带幺九
       if(fulucnt==4)ans[1009]=3;//金钩钩
-      if(qingyise&&kezi==4)ans[1010]=4;
-      if(jiangdui&&kezi==4)ans[1011]=4;
-      if(ans[1000]>0&&duizi==7){ans[1012]=4;ans[1000]--;}
-      if(qingyise&&duizi==7)ans[1013]=5;
-      if(qingyise&&fulucnt==4)ans[1014]=5;
-      if(qingyise&&ans[1012]==4)ans[1015]=6;
-      if(gangzi==4){ans[1016]=6;ans[1000]-=4;}
-      if(qingyise&&gangzi==4){ans[1017]=6;ans[1000]-=4;}
+      if(qingyise&&kezi==4)ans[1010]=4;//清对
+      if(jiangdui&&kezi==4)ans[1011]=4;//将对
+      if(ans[1000]>0&&duizi==7){ans[1012]=4;ans[1000]--;}//龙七对
+      if(qingyise&&duizi==7)ans[1013]=5;//清七对
+      if(qingyise&&fulucnt==4)ans[1014]=5;//清金钩钩
+      if(qingyise&&ans[1012]==4)ans[1015]=6;//清龙七对
+      if(gangzi==4){ans[1016]=6;ans[1000]-=4;}//十八罗汉
+      if(qingyise&&gangzi==4)ans[1017]=6;//清十八罗汉
       if(liqiinfo[seat].yifa!=0&&liqiinfo[seat].liqi==0&&seat==ju&&zimo)ans[1018]=6;//天和 
       if(liqiinfo[seat].yifa!=0&&liqiinfo[seat].liqi==0&&seat!=ju&&zimo)ans[1019]=6;//地和 
-      if(qingyise&&quandai)ans[1020]=5;
+      if(qingyise&&quandai)ans[1020]=5;//清带幺
       if(type!=1&&paishan.length/2==0)ans[1021]=1;//海底捞月 
       return ans;
     }
@@ -1225,6 +1220,7 @@ function addNewRound(chang,ju,ben,doras,left_tile_count,liqibang,md5,paishan,sco
 }
 function roundbegin(){
   paishan=decompose(paishan);
+  for(let i=0;i<discardtiles.length;i++)discardtiles[i]=decompose(discardtiles[i]);
   if(ju==playercnt){chang++;ju=0;}
   if(chang==playercnt)chang=0;
   if(typeof(tiles0)=="string")tiles0=separatetile(tiles0);
@@ -1739,7 +1735,7 @@ function addHuleXueZhanMid(HuleInfo,old_scores,delta_scores,scores){
     }
   });
 }
-function addHuleXueZhanEnd(HuleInfo,old_scores,delta_scores,scores){
+function addHuleXueZhanEnd(HuleInfo,old_scores,delta_scores,scores,hules_history){
   actions.push({
     'name':"RecordHuleXueZhanEnd",
     'data':{
@@ -1795,6 +1791,7 @@ function hupai(x,type){
       ret.push(whatever);
       hules_history.push(whatever);
     }
+    if(is_chuanma()&&!hupaied[0]&&!hupaied[1]&&!hupaied[2]&&!hupaied[3])ju=x[0];
     for(let i=0;i<x.length;i++)hupaied[x[i]]=true;
     let old_scores=[].concat(scores);
     for(let i=0;i<playercnt;i++)scores[i]=scores[i]+delta_scores[i];
@@ -1810,10 +1807,11 @@ function hupai(x,type){
       ret.push(whatever);
       hules_history.push(whatever);
     }
+    if(is_chuanma()&&!hupaied[0]&&!hupaied[1]&&!hupaied[2]&&!hupaied[3])ju=x[0];
     for(let i=0;i<x.length;i++)hupaied[x[i]]=true;
     let old_scores=[].concat(scores);
     for(let i=0;i<playercnt;i++)scores[i]=scores[i]+delta_scores[i];
-    addHuleXueZhanEnd(ret,[].concat(old_scores),[].concat(delta_scores),[].concat(scores));
+    addHuleXueZhanEnd(ret,[].concat(old_scores),[].concat(delta_scores),[].concat(scores),hules_history);
     delta_scores=[0,0,0,0];
     if(!is_chuanma())ju++;
   }
@@ -1923,7 +1921,16 @@ function addGangResult(gang_infos){
     }
   });
 }
-function calcgangpoint(){
+function addGangResultEnd(gang_infos,hules_history){
+  actions.push({
+    'name':"RecordGangResultEnd",
+    'data':{
+      'gang_infos':gang_infos,
+      'hules_history':hules_history
+    }
+  });
+}
+function calcgangpoint(type){
   let ret={
     'delta_scores':[],
     'old_scores':[].concat(scores),
@@ -1942,7 +1949,8 @@ function calcgangpoint(){
     delta_scores[i]=0;
   }
   ret.scores=[].concat(scores);
-  addGangResult(ret);
+  if(type==undefined||type==false)addGangResult(ret);
+  else addGangResultEnd(ret,hules_history);
 }
 function endNoTile(liujumanguan,players,scores){
   let ret={
@@ -2463,6 +2471,7 @@ function liuju(){
   if(!is_xuezhandaodi()&&!is_chuanma())ben++;
 }
 function roundend(){
+  if(is_chuanma()&&chuanmagangs.notover.length!=0&&getlstaction().name!="RecordNoTile"&&getlstaction().name!="RecordHuleXueZhanEnd")calcgangpoint(true);
   discardtiles=["","","",""];
   muyuseats="";
   editdata.actions.push([].concat(actions));
