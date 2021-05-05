@@ -248,8 +248,8 @@ function edit(){
     if(o==1)return initRoom.call(this,editdata.config,player_datas(a),s,o,l);
     else return initRoom.call(this,e,a,s,o,l);
   }
-  uiscript.UI_GameEnd.prototype.show=function(){
-    if(is_chuanma()&&editdata.actions[editdata.actions.length-1][editdata.actions[editdata.actions.length-1].length-1].name=="RecordGangResultEnd")view.DesktopMgr.Inst.gameEndResult={'players':editdata.players};
+  if(is_chuanma()&&editdata.actions[editdata.actions.length-1][editdata.actions[editdata.actions.length-1].length-1].name=="RecordGangResultEnd")uiscript.UI_GameEnd.prototype.show=function(){
+    view.DesktopMgr.Inst.gameEndResult={'players':editdata.players};
     return show.call(this);
   }
   console.log("edit successfully");
@@ -1921,12 +1921,11 @@ function addGangResult(gang_infos){
     }
   });
 }
-function addGangResultEnd(gang_infos,hules_history){
+function addGangResultEnd(gang_infos){
   actions.push({
     'name':"RecordGangResultEnd",
     'data':{
       'gang_infos':gang_infos,
-      'hules_history':hules_history
     }
   });
 }
@@ -1950,7 +1949,10 @@ function calcgangpoint(type){
   }
   ret.scores=[].concat(scores);
   if(type==undefined||type==false)addGangResult(ret);
-  else addGangResultEnd(ret,hules_history);
+  else {
+    ret.hules_history=hules_history;
+    addGangResultEnd(ret);
+  }
 }
 function endNoTile(liujumanguan,players,scores){
   let ret={
