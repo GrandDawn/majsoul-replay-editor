@@ -16,15 +16,21 @@
 
 ## 已知BUG
 
-暂无，欢迎反馈BUG。
+1.龙之目玉模式需要先开一个龙之目玉回放并退出，否则目玉上的数字会消失。
+
+2.四川麻将开杠飞人实现有小问题。
+
+欢迎反馈更多BUG。
 
 ## 版权声明
 
 1.md5加密来自于[百度百科](https://baike.baidu.com/item/MD5/212708?fromtitle=MD5%E5%8A%A0%E5%AF%86&fromid=5706230&fr=aladdin)。
 
-2.更改回放的方法参考了B站[一般通过彳亍人](https://space.bilibili.com/23019265)的[BV1HE411Q7JM](https://www.bilibili.com/video/BV1HE411Q7JM)和greasyfork [2938137849](https://greasyfork.org/zh-CN/users/749724-2938137849)的[雀魂麻将脚本](https://greasyfork.org/zh-CN/scripts/423689-%E9%9B%80%E9%AD%82%E9%BA%BB%E5%B0%86%E8%84%9A%E6%9C%AC)。
+2.更改回放的方法参考了B站[一般通过彳亍人](https://space.bilibili.com/23019265)的[BV1HE411Q7JM](https://www.bilibili.com/video/BV1HE411Q7JM)。
 
-3.其他部分均由本人编写。可以用于个人使用，请勿用于商业用途，谢谢配合。请不要将示例代码进行录制并宣传，谢谢。
+3.有少部分摘抄于雀魂源码。
+
+4.其他部分均由本人编写。可以用于个人使用，请勿用于商业用途，谢谢配合。请不要将示例代码进行录制并宣传，谢谢。
 
 ## 示例代码的部分截图
 
