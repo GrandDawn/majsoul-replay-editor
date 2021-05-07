@@ -1,7 +1,7 @@
 !function(t){
   var e=function(e){
     function i(){
-      return null!==e&&e.apply(this,arguments)|| this
+      return null!==e&&e.apply(this,arguments)||this
     }
     return __extends(i,e),i.play=function(e){
       app.Log.log("ActionBabei play data:"+JSON.stringify(e)),e.doras&&t.DesktopMgr.Inst.WhenDoras(e.doras,!1);
@@ -46,7 +46,7 @@
 !function(t){
   var e=function(e){
     function i(){
-      return null!==e&&e.apply(this,arguments)|| this
+      return null!==e&&e.apply(this,arguments)||this
     }
     return __extends(i,e),i.record=function(e,i){
       var i=this,n=1;
@@ -62,7 +62,7 @@
             s==t.DesktopMgr.Inst.seat?t.DesktopMgr.Inst.mainrole.OnDiscardTile(mjcore.MJPai.Create(a[0].hu_tile),0,0):t.DesktopMgr.Inst.players[t.DesktopMgr.Inst.seat2LocalPosition(s)].recordDiscardTile(mjcore.MJPai.Create(a[0].hu_tile),true,0,0);
           })
           if(t.DesktopMgr.Inst.lastqipai)t.DesktopMgr.Inst.lastqipai.isxuezhanhu=!0;
-          if(t.DesktopMgr.Inst.lastqipai&&t.DesktopMgr.Inst.lastqipai.model.meshRender)t.DesktopMgr.Inst.lastqipai.OnChoosedPai();
+          //if(t.DesktopMgr.Inst.lastqipai&&t.DesktopMgr.Inst.lastqipai.model.meshRender)t.DesktopMgr.Inst.lastqipai.OnChoosedPai();
         }
         else{
           for(var o=0,l=-1,h=[],c=0;c<a.length;c++){
@@ -70,7 +70,14 @@
             h.push(t.DesktopMgr.Inst.seat2LocalPosition(_)),-1==l&&(l=_)
           }
           l>=0&&(o=t.DesktopMgr.Inst.player_effects[l][game.EView.hupai_effect]),n&&uiscript.UI_Huleshow.Inst.showRong(h),r+=n?1200:200,Laya.timer.once(r,i,function(){
-            t.DesktopMgr.Inst.players[t.DesktopMgr.Inst.seat2LocalPosition(t.DesktopMgr.Inst.lastpai_seat)].QiPaiNoPass();
+            if(!t.DesktopMgr.Inst.isLastPaiMingPai())t.DesktopMgr.Inst.players[t.DesktopMgr.Inst.seat2LocalPosition(t.DesktopMgr.Inst.lastpai_seat)].QiPaiNoPass();
+            else{
+              t.DesktopMgr.Inst.lastqipai.lastColor=new Laya.Vector4(1,.78,.78,.4);
+              t.DesktopMgr.Inst.lastqipai.model.meshRender.sharedMaterial.setColor(caps.Cartoon.COLOR,t.DesktopMgr.Inst.lastqipai.lastColor);
+              t.DesktopMgr.Inst.lastqipai.model.meshRender.sharedMaterial.blend=2;
+              t.DesktopMgr.Inst.lastqipai.val.type+=10;
+              t.DesktopMgr.Inst.lastqipai.isxuezhanhu=!0,t.DesktopMgr.Inst.lastqipai.OnChoosedPai()
+            }
             for(var e=0;e<a.length;e++){
               var i=a[e].seat;
               var s=mjcore.MJPai.Create(a[0].hu_tile);
@@ -129,7 +136,14 @@
         if(t.DesktopMgr.Inst.lastqipai)t.DesktopMgr.Inst.lastqipai.isxuezhanhu=!0,t.DesktopMgr.Inst.lastqipai.OnChoosedPai();
       }
       else{
-        t.DesktopMgr.Inst.players[t.DesktopMgr.Inst.seat2LocalPosition(t.DesktopMgr.Inst.lastpai_seat)].QiPaiNoPass();
+        if(!t.DesktopMgr.Inst.isLastPaiMingPai())t.DesktopMgr.Inst.players[t.DesktopMgr.Inst.seat2LocalPosition(t.DesktopMgr.Inst.lastpai_seat)].QiPaiNoPass();
+        else{
+          t.DesktopMgr.Inst.lastqipai.lastColor=new Laya.Vector4(1,.78,.78,.4);
+          t.DesktopMgr.Inst.lastqipai.model.meshRender.sharedMaterial.setColor(caps.Cartoon.COLOR,t.DesktopMgr.Inst.lastqipai.lastColor);
+          t.DesktopMgr.Inst.lastqipai.model.meshRender.sharedMaterial.blend=2;
+          t.DesktopMgr.Inst.lastqipai.val.type+=10;
+          t.DesktopMgr.Inst.lastqipai.isxuezhanhu=!0,t.DesktopMgr.Inst.lastqipai.OnChoosedPai()
+        }
         for(s=0;s<n.length;s++){
           var o=n[s].seat;
           t.DesktopMgr.Inst.players[t.DesktopMgr.Inst.seat2LocalPosition(o)].AddBabei(mjcore.MJPai.Create(n[s].hu_tile),true,0);
