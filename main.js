@@ -1781,7 +1781,17 @@ function addHuleXueLiu(HuleInfo,old_scores,delta_scores,scores){
   });
 }
 function hupai(x,type){
-  chuanmagangs.notover.length=0;
+  if(chuanmagangs.notover.length!=0){
+    let seat=getlstaction().data.seat,tile=getlstaction().data.tiles;
+    for(let i=0;i<fulu[seat].length;i++){
+      if(fulu[seat][i].type==2&&equaltile(fulu[seat][i].tile[0],tile)){
+          fulu[seat][i].type=1;
+          fulu[seat][i].tile.length--;
+          break;
+      }
+    }
+    chuanmagangs.notover.length=0;
+  }
   if(typeof(x)=="boolean"){type=x;x=undefined;}
   if(typeof(x)=="number")x=[x];
   if(x==undefined){
@@ -2288,13 +2298,15 @@ function leimingpai(seat,tile,type){
           fulu[seat][i].tile.push(tile);
       }
     }
-    if(playertiles[seat][playertiles[seat].length-1]==tile){
-      for(let i=0;i<playercnt;i++){
-        if(i==seat||hupaied[i])continue;
-        chuanmagangs.notover.push({'from':i,'to':seat,'val':1000});
+    if(!is_chuanma())drawtype=0;
+    else{
+      if(playertiles[seat][playertiles[seat].length-1]==tile){
+        for(let i=0;i<playercnt;i++){
+          if(i==seat||hupaied[i])continue;
+          chuanmagangs.notover.push({'from':i,'to':seat,'val':1000});
+        }
       }
     }
-    if(!is_chuanma())drawtype=0;
     addAnGangAddGang(calcdoras(),seat,tile,2);
     return true;
   }
@@ -2617,7 +2629,8 @@ editdata.config={
       'init_point':25000,
       'muyu_mode':0,
       'shiduan':1,
-      'xuezhandaodi':0
+      'xuezhandaodi':0,
+      'xueliu':0
     }
   }
 }
