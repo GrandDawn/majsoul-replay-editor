@@ -254,18 +254,19 @@ function md5(string){
           uiscript.UI_Huleshow.Inst.showZimo([t.DesktopMgr.Inst.seat2LocalPosition(s)]),r+=n?1200:200,
           Laya.timer.once(r,i,function(){
             t.DesktopMgr.Inst.players[t.DesktopMgr.Inst.seat2LocalPosition(s)].AddBabei(mjcore.MJPai.Create(a[0].hu_tile),true,1);
-            if(t.DesktopMgr.Inst.lastqipai)t.DesktopMgr.Inst.lastqipai.isxuezhanhu=!0,t.DesktopMgr.Inst.lastqipai.OnChoosedPai()
-            s==t.DesktopMgr.Inst.seat?t.DesktopMgr.Inst.mainrole.onBabei(mjcore.MJPai.Create(a[0].hu_tile),0,0):t.DesktopMgr.Inst.players[t.DesktopMgr.Inst.seat2LocalPosition(s)].recordBabei(mjcore.MJPai.Create(a[0].hu_tile),true,0,0);
+            if(t.DesktopMgr.Inst.lastqipai)t.DesktopMgr.Inst.lastqipai.isxuezhanhu=!0,t.DesktopMgr.Inst.lastqipai.OnChoosedPai();
+            s==t.DesktopMgr.Inst.seat?t.DesktopMgr.Inst.mainrole.OnDiscardTile(mjcore.MJPai.Create(a[0].hu_tile),0,0):t.DesktopMgr.Inst.players[t.DesktopMgr.Inst.seat2LocalPosition(s)].recordDiscardTile(mjcore.MJPai.Create(a[0].hu_tile),true,0,0);
           })
-          if(t.DesktopMgr.Inst.lastqipai)t.DesktopMgr.Inst.lastqipai.isxuezhanhu=!0,t.DesktopMgr.Inst.lastqipai.OnChoosedPai()
+          if(t.DesktopMgr.Inst.lastqipai)t.DesktopMgr.Inst.lastqipai.isxuezhanhu=!0;
+          if(t.DesktopMgr.Inst.lastqipai&&t.DesktopMgr.Inst.lastqipai.model.meshRender)t.DesktopMgr.Inst.lastqipai.OnChoosedPai();
         }
         else{
-          t.DesktopMgr.Inst.players[t.DesktopMgr.Inst.seat2LocalPosition(t.DesktopMgr.Inst.lastpai_seat)].QiPaiNoPass();
           for(var o=0,l=-1,h=[],c=0;c<a.length;c++){
             var _=a[c].seat;
             h.push(t.DesktopMgr.Inst.seat2LocalPosition(_)),-1==l&&(l=_)
           }
           l>=0&&(o=t.DesktopMgr.Inst.player_effects[l][game.EView.hupai_effect]),n&&uiscript.UI_Huleshow.Inst.showRong(h),r+=n?1200:200,Laya.timer.once(r,i,function(){
+            t.DesktopMgr.Inst.players[t.DesktopMgr.Inst.seat2LocalPosition(t.DesktopMgr.Inst.lastpai_seat)].QiPaiNoPass();
             for(var e=0;e<a.length;e++){
               var i=a[e].seat;
               var s=mjcore.MJPai.Create(a[0].hu_tile);
@@ -273,10 +274,10 @@ function md5(string){
               //i==t.DesktopMgr.Inst.seat?t.DesktopMgr.Inst.mainrole.onBabei(mjcore.MJPai.Create(a[e].hu_tile),0,0):t.DesktopMgr.Inst.players[t.DesktopMgr.Inst.seat2LocalPosition(i)].recordBabei(mjcore.MJPai.Create(a[e].hu_tile),true,0,0);
               if(e!=0)t.DesktopMgr.Inst.lastqipai.lastColor=new Laya.Vector4(1,.78,.78,.4);
               else t.DesktopMgr.Inst.lastqipai.lastColor=new Laya.Vector4(1,.78,.78,1);
-              t.DesktopMgr.Inst.lastqipai.model.meshRender.sharedMaterial.setColor(caps.Cartoon.COLOR,t.DesktopMgr.Inst.lastqipai.lastColor);
-              t.DesktopMgr.Inst.lastqipai.model.meshRender.sharedMaterial.blend=2;
-              t.DesktopMgr.Inst.lastqipai.val.type+=10;
-              t.DesktopMgr.Inst.lastqipai.isxuezhanhu=!0,t.DesktopMgr.Inst.lastqipai.OnChoosedPai()
+              if(t.DesktopMgr.Inst.lastqipai)t.DesktopMgr.Inst.lastqipai.model.meshRender.sharedMaterial.setColor(caps.Cartoon.COLOR,t.DesktopMgr.Inst.lastqipai.lastColor);
+              if(t.DesktopMgr.Inst.lastqipai)t.DesktopMgr.Inst.lastqipai.model.meshRender.sharedMaterial.blend=2;
+              if(t.DesktopMgr.Inst.lastqipai)t.DesktopMgr.Inst.lastqipai.val.type+=10;
+              if(t.DesktopMgr.Inst.lastqipai)t.DesktopMgr.Inst.lastqipai.isxuezhanhu=!0,t.DesktopMgr.Inst.lastqipai.OnChoosedPai()
             }
           })
         }
@@ -320,7 +321,7 @@ function md5(string){
       if(n[0].zimo){
         a=n[0].seat;
         t.DesktopMgr.Inst.players[t.DesktopMgr.Inst.seat2LocalPosition(a)].AddBabei(mjcore.MJPai.Create(n[0].hu_tile),true,0);
-        a==t.DesktopMgr.Inst.seat?t.DesktopMgr.Inst.mainrole.onBabei(mjcore.MJPai.Create(n[0].hu_tile),0,1):t.DesktopMgr.Inst.players[t.DesktopMgr.Inst.seat2LocalPosition(a)].recordBabei(mjcore.MJPai.Create(n[0].hu_tile),true,0,1);
+        a==t.DesktopMgr.Inst.seat?t.DesktopMgr.Inst.mainrole.OnDiscardTile(mjcore.MJPai.Create(n[0].hu_tile),0,1):t.DesktopMgr.Inst.players[t.DesktopMgr.Inst.seat2LocalPosition(a)].recordDiscardTile(mjcore.MJPai.Create(n[0].hu_tile),true,0,1);
         if(t.DesktopMgr.Inst.lastqipai)t.DesktopMgr.Inst.lastqipai.isxuezhanhu=!0,t.DesktopMgr.Inst.lastqipai.OnChoosedPai();
       }
       else{
@@ -331,10 +332,10 @@ function md5(string){
           //o==t.DesktopMgr.Inst.seat?t.DesktopMgr.Inst.mainrole.onBabei(mjcore.MJPai.Create(n[s].hu_tile),0,1):t.DesktopMgr.Inst.players[t.DesktopMgr.Inst.seat2LocalPosition(o)].recordBabei(mjcore.MJPai.Create(n[s].hu_tile),true,0,1);
           if(s!=0)t.DesktopMgr.Inst.lastqipai.lastColor=new Laya.Vector4(1,.78,.78,.4);
           else t.DesktopMgr.Inst.lastqipai.lastColor=new Laya.Vector4(1,.78,.78,1);
-          t.DesktopMgr.Inst.lastqipai.model.meshRender.sharedMaterial.setColor(caps.Cartoon.COLOR,t.DesktopMgr.Inst.lastqipai.lastColor);
-          t.DesktopMgr.Inst.lastqipai.model.meshRender.sharedMaterial.blend=2;
-          t.DesktopMgr.Inst.lastqipai.val.type+=10;
-          t.DesktopMgr.Inst.lastqipai.isxuezhanhu=!0,t.DesktopMgr.Inst.lastqipai.OnChoosedPai()
+          if(t.DesktopMgr.Inst.lastqipai)t.DesktopMgr.Inst.lastqipai.model.meshRender.sharedMaterial.setColor(caps.Cartoon.COLOR,t.DesktopMgr.Inst.lastqipai.lastColor);
+          if(t.DesktopMgr.Inst.lastqipai)t.DesktopMgr.Inst.lastqipai.model.meshRender.sharedMaterial.blend=2;
+          if(t.DesktopMgr.Inst.lastqipai)t.DesktopMgr.Inst.lastqipai.val.type+=10;
+          if(t.DesktopMgr.Inst.lastqipai)t.DesktopMgr.Inst.lastqipai.isxuezhanhu=!0,t.DesktopMgr.Inst.lastqipai.OnChoosedPai()
         }
       }
       for (var l=0,h=t.DesktopMgr.Inst.players;l<h.length;l++){
@@ -346,6 +347,16 @@ function md5(string){
   }(t.ActionBase);
   t.ActionHuleXueLiu=e
 }(view||(view={}));
+view.ViewPai.prototype.OnChoosedPai=function(){
+  let e = view.DesktopMgr.Inst.choosed_pai;
+  if(null==e||0!=mjcore.MJPai.Distance(this.val,e)) {
+    if(this.lastColor!==undefined)this.model.meshRender.sharedMaterial.setColor(caps.Cartoon.COLOR, this.lastColor);
+    else if(this.isxuezhanhu||this.ispaopai)this.model.meshRender.sharedMaterial.setColor(caps.Cartoon.COLOR, new Laya.Vector4(1, .78, .78, 1));
+    else if (this.ismoqie)this.model.meshRender.sharedMaterial.setColor(caps.Cartoon.COLOR, new Laya.Vector4(.8, .8, .8, 1));
+    else this.model.meshRender.sharedMaterial.setColor(caps.Cartoon.COLOR, this.GetDefaultColor());
+  } 
+  else this.model.meshRender.sharedMaterial.setColor(caps.Cartoon.COLOR, new Laya.Vector4(.615, .827, .976, 1));
+}
 uiscript.UI_Replay.prototype.doRecord=function(t){
   try{
     var e=0;
