@@ -258,11 +258,11 @@ function canceledit(){
     return initRoom.call(this,e,a,s,o,l);
   }
 }
-var scores=[25000,25000,25000,25000],tiles0,tiles1,tiles2,tiles3,firstneededscores;
+var scores=[25000,25000,25000,25000],tiles0=null,tiles1=null,tiles2=null,tiles3=null,firstneededscores;
 var baopai,liqibang=0,lstliqi,doracnt,playertiles,fulu,paihe,muyu={'count':5,'seat':0,'id':0};
 var liqiinfo,drawtype,lstdrawtype,doras,li_doras,delta_scores,muyutimes,muyuseats;
 var chang=0,ju=0,ben=0,playercnt,actions,xun,players,benchangbang,chuanmagangs,error_detector=false;
-var config,hules_history,hupaied,paishan,discardtiles=["","","",""],gaps,juc=-1;
+var config,hules_history,hupaied,paishan=null,discardtiles=["","","",""],gaps,juc=-1;
 var editdata={
   'actions':[],
   'xun':[],
@@ -294,7 +294,38 @@ function init(){
             {'liqi':0,'yifa':1},{'liqi':0,'yifa':1}];
   drawtype=1;lstdrawtype=1;
   playercnt;doras=[];li_doras=[];
-  if(tiles3.length==0){
+  if(tiles0==null&&tiles1==null&&tiles2==null&&tiles3==null){
+    tiles0=[];tiles1=[];tiles2=[];tiles3=[];
+    if(paishan==null)paishan=randompaishan("");
+    for(let i=1;i<=3;i++){
+      if(ju==0)for(let o=1;o<=4;o++){tiles0.push(paishan.substring(paishan.length-2));paishan=paishan.substring(0,paishan.length-2);}
+      if(ju==0||ju==1)for(let o=1;o<=4;o++){tiles1.push(paishan.substring(paishan.length-2));paishan=paishan.substring(0,paishan.length-2);}
+      if(ju==0||ju==1||ju==2)for(let o=1;o<=4;o++){tiles2.push(paishan.substring(paishan.length-2));paishan=paishan.substring(0,paishan.length-2);}
+      for(let o=1;o<=4;o++){tiles3.push(paishan.substring(paishan.length-2));paishan=paishan.substring(0,paishan.length-2);}
+      if(ju==1||ju==2||ju==3)for(let o=1;o<=4;o++){tiles0.push(paishan.substring(paishan.length-2));paishan=paishan.substring(0,paishan.length-2);}
+      if(ju==2||ju==3)for(let o=1;o<=4;o++){tiles1.push(paishan.substring(paishan.length-2));paishan=paishan.substring(0,paishan.length-2);}
+      if(ju==3)for(let o=1;o<=4;o++){tiles2.push(paishan.substring(paishan.length-2));paishan=paishan.substring(0,paishan.length-2);}
+    }
+    if(ju==0){tiles0.push(paishan.substring(paishan.length-2));paishan=paishan.substring(0,paishan.length-2);}
+    if(ju==0||ju==1){tiles1.push(paishan.substring(paishan.length-2));paishan=paishan.substring(0,paishan.length-2);}
+    if(ju==0||ju==1||ju==2){tiles2.push(paishan.substring(paishan.length-2));paishan=paishan.substring(0,paishan.length-2);}
+    tiles3.push(paishan.substring(paishan.length-2));paishan=paishan.substring(0,paishan.length-2);
+    tiles0.push(paishan.substring(paishan.length-2));paishan=paishan.substring(0,paishan.length-2);
+    if(ju==1||ju==2||ju==3){tiles1.push(paishan.substring(paishan.length-2));paishan=paishan.substring(0,paishan.length-2);}
+    if(ju==2||ju==3){tiles2.push(paishan.substring(paishan.length-2));paishan=paishan.substring(0,paishan.length-2);}
+    if(ju==3){tiles3.push(paishan.substring(paishan.length-2));paishan=paishan.substring(0,paishan.length-2);}
+  }
+  paishan=decompose(paishan);
+  for(let i=0;i<discardtiles.length;i++)discardtiles[i]=decompose(discardtiles[i]);
+  if(typeof(tiles0)=="string")tiles0=separatetile(tiles0);
+  if(typeof(tiles1)=="string")tiles1=separatetile(tiles1);
+  if(typeof(tiles2)=="string")tiles2=separatetile(tiles2);
+  if(typeof(tiles3)=="string")tiles3=separatetile(tiles3);
+  tiles0.sort(cmp);
+  tiles1.sort(cmp);
+  tiles2.sort(cmp);
+  tiles3.sort(cmp);
+  if(tiles3.length==0||tiles3==null){
     playercnt=3;
     for(let i=0;i<5;i++){
       doras[i]=paishan[paishan.length-18-4*i]+paishan[paishan.length-17-4*i];
@@ -1256,18 +1287,8 @@ function addNewRound(chang,ju,ben,doras,left_tile_count,liqibang,md5,paishan,sco
 }
 function roundbegin(){
   if(is_chuanma()&&juc!=-1){ju=juc;juc=-1;}
-  paishan=decompose(paishan);
-  for(let i=0;i<discardtiles.length;i++)discardtiles[i]=decompose(discardtiles[i]);
   if(ju==playercnt){chang++;ju=0;}
   if(chang==playercnt)chang=0;
-  if(typeof(tiles0)=="string")tiles0=separatetile(tiles0);
-  if(typeof(tiles1)=="string")tiles1=separatetile(tiles1);
-  if(typeof(tiles2)=="string")tiles2=separatetile(tiles2);
-  if(typeof(tiles3)=="string")tiles3=separatetile(tiles3);
-  tiles0.sort(cmp);
-  tiles1.sort(cmp);
-  tiles2.sort(cmp);
-  tiles3.sort(cmp);
   init();
   benchangbang=ben;
   let lsttile=playertiles[ju][playertiles[ju].length-1];
@@ -1438,6 +1459,7 @@ function hupaioneplayer_chuanma(seat){
     return Math.ceil(x/100)*100;
   }
   let lstaction=getlstaction(),zimo=false;
+  if(lstaction.name=="RecordNewRound"||lstaction.name=="RecordChangeTile")playertiles[seat].sort(cmp);
   if(lstaction.name=="RecordDealTile"||lstaction.name=="RecordNewRound"||lstaction.name=="RecordChangeTile")zimo=true;
   else if(lstaction.name=="RecordDiscardTile")playertiles[seat].push(lstaction.data.tile);
   else if(lstaction.name=="RecordAnGangAddGang")playertiles[seat].push(lstaction.data.tiles);
@@ -1491,6 +1513,7 @@ function hupaioneplayer_chuanma(seat){
       'yiman':false,
       'zimo':zimo,
     }
+    playertiles[seat].length--;
     return ret;
   }
   if(zimo){
@@ -1531,6 +1554,7 @@ function hupaioneplayer(seat){
     return Math.ceil(x/100)*100;
   }
   let lstaction=getlstaction(),zimo=false;
+  if(lstaction.name=="RecordNewRound"||lstaction.name=="RecordChangeTile")playertiles[seat].sort(cmp);
   if(lstaction.name=="RecordDealTile"||lstaction.name=="RecordNewRound"||lstaction.name=="RecordChangeTile")zimo=true;
   else if(lstaction.name=="RecordDiscardTile")playertiles[seat].push(lstaction.data.tile);
   else if(lstaction.name=="RecordAnGangAddGang")playertiles[seat].push(lstaction.data.tiles);
@@ -1640,6 +1664,7 @@ function hupaioneplayer(seat){
       'yiman':false,
       'zimo':zimo,
     }
+    playertiles[seat].length--;
     if(is_xuezhandaodi())ret.dadian=-delta_scores[seat];
     return ret;
   }
@@ -1802,6 +1827,28 @@ function addHuleXueLiu(HuleInfo,old_scores,delta_scores,scores){
     }
   });
 }
+function addHuleXueLiuEnd(HuleInfo,old_scores,delta_scores,scores,hules_history){
+  let allplayertiles=["","","",""];
+  for(let seat=0;seat<playercnt;seat++){
+    playertiles[seat].sort(cmp);
+    for(let i=0;i<playertiles[seat].length;i++){
+      allplayertiles[seat]+=playertiles[seat][i];
+      if(i!=playertiles[seat].length-1)allplayertiles[seat]+="|";
+    }
+  }
+  for(let seat=0;seat<playercnt;seat++)liqiinfo[seat].yifa=0;
+  actions.push({
+    'name':"RecordHuleXueLiuEnd",
+    'data':{
+      'delta_scores':[].concat(delta_scores),
+      'hules':HuleInfo,
+      'hules_history':hules_history,
+      'old_scores':[].concat(old_scores),
+      'scores':[].concat(scores),
+      'allplayertiles':allplayertiles
+    }
+  });
+}
 function hupai(x,type){
   if(chuanmagangs.notover.length!=0){
     let seat=getlstaction().data.seat,tile=getlstaction().data.tiles;
@@ -1878,7 +1925,7 @@ function hupai(x,type){
     let old_scores=[].concat(scores);
     for(let i=0;i<playercnt;i++)scores[i]=scores[i]+delta_scores[i];
     if(!is_xueliu())addHuleXueZhanEnd(ret,[].concat(old_scores),[].concat(delta_scores),[].concat(scores),hules_history);
-    else addHuleXueLiu(ret,[].concat(old_scores),[].concat(delta_scores),[].concat(scores));
+    else addHuleXueLiuEnd(ret,[].concat(old_scores),[].concat(delta_scores),[].concat(scores),hules_history);
     delta_scores=[0,0,0,0];
     if(!is_chuanma())ju++;
   }
@@ -1960,12 +2007,19 @@ function huansanzhang(tiles0,tiles1,tiles2,tiles3,type){
   addChangeTile(ret,type,calcdoras());
 }
 function addSelectGap(gap_types){
-  actions.push({
+  let ret={
     'name':"RecordSelectGap",
     'data':{
       'gap_types':gap_types,
     }
-  });
+  };
+  let tingpais=[];
+  for(let i=0;i<playercnt;i++){
+    let tingpaitmp=tingpai(i);
+    if(tingpaitmp.length!=0)tingpais.push({'seat':i,'tingpais1':tingpaitmp});
+  }
+  if(tingpais.length!=0)ret.data.tingpai=tingpais;
+  actions.push(ret);
 }
 //1m2s0p
 function dingque(x){
@@ -2671,6 +2725,7 @@ function liuju(){
 function roundend(){
   if(is_chuanma()&&chuanmagangs.notover.length!=0&&getlstaction().name!="RecordNoTile"&&getlstaction().name!="RecordHuleXueZhanEnd")calcgangpoint(true);
   discardtiles=["","","",""];
+  tiles0=null;tiles1=null;tiles2=null;tiles3=null;paishan=null;
   muyuseats="";
   editdata.actions.push([].concat(actions));
   editdata.xun.push([].concat(xun));
