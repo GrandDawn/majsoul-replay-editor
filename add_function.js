@@ -165,15 +165,126 @@
   }(t.ActionBase);
   t.ActionHuleXueLiu=e
 }(view||(view={}));
+!function(t){
+  var e=function(e){
+    function i(){
+      return null!==e&&e.apply(this,arguments)||this
+    }
+    return __extends(i,e),i.record=function(e){
+      var i=this,n=1;
+      e.doras&&t.DesktopMgr.Inst.WhenDoras(e.doras,0);
+      Laya.timer.once(100,this,function(){
+        var a=e.hules,r=0;
+        if(e.hules_history)Laya.timer.once(3e3,i,function(){
+          for(var i=0,a=e.hules_history;i<a.length;i++){
+            var r=a[i],
+              s=t.DesktopMgr.Inst.players[t.DesktopMgr.Inst.seat2LocalPosition(r.seat)];
+            if(s&&s.already_xuezhan_hule_state){
+              for(var o=[],l=0;l<r.hand.length;l++)o.push(mjcore.MJPai.Create(r.hand[l]));
+              o=o.sort(mjcore.MJPai.Distance),s.onXuezhanEnd(o,!n)
+            }
+          }
+        })
+        if(a[0].zimo){
+          var s=a[0].seat;
+          uiscript.UI_Huleshow.Inst.showZimo([t.DesktopMgr.Inst.seat2LocalPosition(s)]),r+=n?1200:200,
+          Laya.timer.once(r,i,function(){
+            t.DesktopMgr.Inst.players[t.DesktopMgr.Inst.seat2LocalPosition(s)].AddBabei(mjcore.MJPai.Create(a[0].hu_tile),true,1);
+            if(t.DesktopMgr.Inst.lastqipai)t.DesktopMgr.Inst.lastqipai.isxuezhanhu=!0,t.DesktopMgr.Inst.lastqipai.OnChoosedPai();
+            s==t.DesktopMgr.Inst.seat?t.DesktopMgr.Inst.mainrole.OnDiscardTile(mjcore.MJPai.Create(a[0].hu_tile),0,0):t.DesktopMgr.Inst.players[t.DesktopMgr.Inst.seat2LocalPosition(s)].recordDiscardTile(mjcore.MJPai.Create(a[0].hu_tile),true,0,0);
+          })
+          if(t.DesktopMgr.Inst.lastqipai)t.DesktopMgr.Inst.lastqipai.isxuezhanhu=!0;
+          //if(t.DesktopMgr.Inst.lastqipai&&t.DesktopMgr.Inst.lastqipai.model.meshRender)t.DesktopMgr.Inst.lastqipai.OnChoosedPai();
+        }
+        else{
+          for(var o=0,l=-1,h=[],c=0;c<a.length;c++){
+            var _=a[c].seat;
+            h.push(t.DesktopMgr.Inst.seat2LocalPosition(_)),-1==l&&(l=_)
+          }
+          l>=0&&(o=t.DesktopMgr.Inst.player_effects[l][game.EView.hupai_effect]),n&&uiscript.UI_Huleshow.Inst.showRong(h),r+=n?1200:200,Laya.timer.once(r,i,function(){
+            if(!t.DesktopMgr.Inst.isLastPaiMingPai())t.DesktopMgr.Inst.players[t.DesktopMgr.Inst.seat2LocalPosition(t.DesktopMgr.Inst.lastpai_seat)].QiPaiNoPass();
+            else{
+              t.DesktopMgr.Inst.lastqipai.lastColor=new Laya.Vector4(1,.78,.78,.4);
+              t.DesktopMgr.Inst.lastqipai.model.meshRender.sharedMaterial.setColor(caps.Cartoon.COLOR,t.DesktopMgr.Inst.lastqipai.lastColor);
+              t.DesktopMgr.Inst.lastqipai.model.meshRender.sharedMaterial.blend=2;
+              t.DesktopMgr.Inst.lastqipai.val.type+=10;
+              t.DesktopMgr.Inst.lastqipai.isxuezhanhu=!0,t.DesktopMgr.Inst.lastqipai.OnChoosedPai()
+            }
+            for(var e=0;e<a.length;e++){
+              var i=a[e].seat;
+              var s=mjcore.MJPai.Create(a[0].hu_tile);
+              t.DesktopMgr.Inst.players[t.DesktopMgr.Inst.seat2LocalPosition(i)].AddBabei(s,true,1);
+              //i==t.DesktopMgr.Inst.seat?t.DesktopMgr.Inst.mainrole.onBabei(mjcore.MJPai.Create(a[e].hu_tile),0,0):t.DesktopMgr.Inst.players[t.DesktopMgr.Inst.seat2LocalPosition(i)].recordBabei(mjcore.MJPai.Create(a[e].hu_tile),true,0,0);
+              if(e!=0)t.DesktopMgr.Inst.lastqipai.lastColor=new Laya.Vector4(1,.78,.78,.4);
+              else t.DesktopMgr.Inst.lastqipai.lastColor=new Laya.Vector4(1,.78,.78,1);
+              if(t.DesktopMgr.Inst.lastqipai)t.DesktopMgr.Inst.lastqipai.model.meshRender.sharedMaterial.setColor(caps.Cartoon.COLOR,t.DesktopMgr.Inst.lastqipai.lastColor);
+              if(t.DesktopMgr.Inst.lastqipai)t.DesktopMgr.Inst.lastqipai.model.meshRender.sharedMaterial.blend=2;
+              if(t.DesktopMgr.Inst.lastqipai)t.DesktopMgr.Inst.lastqipai.val.type+=10;
+              if(t.DesktopMgr.Inst.lastqipai)t.DesktopMgr.Inst.lastqipai.isxuezhanhu=!0,t.DesktopMgr.Inst.lastqipai.OnChoosedPai()
+            }
+          })
+        }
+        r+=2e3,Laya.timer.once(r,i,function(){
+          for (var n=0,r=t.DesktopMgr.Inst.players;n<r.length;n++){
+            r[n].hideLiqi()
+          }
+          e.liqi?Laya.timer.once(2500,i,function(){
+            t.ActionLiqi.play(e.liqi)
+          }):uiscript.UI_DesktopInfo.Inst.setLiqibang(0);
+          for (var s=[],o=0;o<e.delta_scores.length;o++){
+            var l={
+              title_id:0,
+              score:0,
+              delta:0
+            };
+            if(e.delta_scores[o]>0){
+              o==t.DesktopMgr.Inst.seat,uiscript.UI_DesktopInfo.Inst.changeHeadEmo(o,"emoji_7",-1),l.delta=e.delta_scores[o];
+              for(var h=0,c=a;h<c.length;h++) {
+                var _=c[h];
+                if(_.seat == o){
+                  l.title_id=_.title_id;
+                  break
+                }
+              }
+            } 
+            else e.delta_scores[o]<0&&(l.delta=e.delta_scores[o],uiscript.UI_DesktopInfo.Inst.changeHeadEmo(o,"emoji_8",-1));
+            l.score=e.old_scores[o],s.push(l)
+          }
+          Laya.timer.once(200,i,function(){
+            t.DesktopMgr.Inst.setScores(e.scores)
+          }),uiscript.UI_Hu_Xuezhan.Inst.showScoreChange(s)
+        }),r+=2500,Laya.timer.once(r,this,function(){
+          for(var i=0;i<e.allplayertiles.length;i++){
+            for(var n=e.allplayertiles[i].split("|"),r=[],s=0;s<n.length;s++)r.push(mjcore.MJPai.Create(n[s]));
+            r=r.sort(mjcore.MJPai.Distance),t.DesktopMgr.Inst.players[t.DesktopMgr.Inst.seat2LocalPosition(i)].Huangpai(!0,r,!1)
+          }
+        }),r+=2500,Laya.timer.once(r,i,function(){
+          uiscript.UIMgr.Inst.ShowWin(e,!1),t.DesktopMgr.Inst.ActionRunComplete()
+        })
+      })
+      return 1e5;
+    },i.fastrecord=function(e,i){
+      app.Log.log("ActionHule fastplay data:"+JSON.stringify(e));
+      t.BgmListMgr.stopBgm(),t.DesktopMgr.Inst.gameing=!1,e.muyu&&t.DesktopMgr.Inst.onMuyuChange(e.muyu,!1),e.doras&&t.DesktopMgr.Inst.WhenDoras(e.doras,!1),t.DesktopMgr.Inst.setScores(e.scores),uiscript.UIMgr.Inst.ShowWin(e,!1)
+    },i
+  }(t.ActionBase);
+  t.ActionHuleXueLiuEnd=e
+}(view||(view={}));
+let OnChoosedPai=view.ViewPai.prototype.OnChoosedPai;
 view.ViewPai.prototype.OnChoosedPai=function(){
-  let e = view.DesktopMgr.Inst.choosed_pai;
-  if(null==e||0!=mjcore.MJPai.Distance(this.val,e)) {
-    if(this.lastColor!==undefined)this.model.meshRender.sharedMaterial.setColor(caps.Cartoon.COLOR, this.lastColor);
-    else if(this.isxuezhanhu||this.ispaopai)this.model.meshRender.sharedMaterial.setColor(caps.Cartoon.COLOR, new Laya.Vector4(1, .78, .78, 1));
-    else if (this.ismoqie)this.model.meshRender.sharedMaterial.setColor(caps.Cartoon.COLOR, new Laya.Vector4(.8, .8, .8, 1));
-    else this.model.meshRender.sharedMaterial.setColor(caps.Cartoon.COLOR, this.GetDefaultColor());
-  } 
-  else this.model.meshRender.sharedMaterial.setColor(caps.Cartoon.COLOR, new Laya.Vector4(.615, .827, .976, 1));
+  try{
+    let e=view.DesktopMgr.Inst.choosed_pai;
+    if(null==e||0!=mjcore.MJPai.Distance(this.val,e)) {
+      if(this.lastColor!==undefined)this.model.meshRender.sharedMaterial.setColor(caps.Cartoon.COLOR,this.lastColor);
+      else if(this.isxuezhanhu||this.ispaopai)this.model.meshRender.sharedMaterial.setColor(caps.Cartoon.COLOR,new Laya.Vector4(1,.78,.78,1));
+      else if(this.ismoqie)this.model.meshRender.sharedMaterial.setColor(caps.Cartoon.COLOR,new Laya.Vector4(.8,.8,.8,1));
+      else this.model.meshRender.sharedMaterial.setColor(caps.Cartoon.COLOR,this.GetDefaultColor());
+    } 
+    else this.model.meshRender.sharedMaterial.setColor(caps.Cartoon.COLOR,new Laya.Vector4(.615,.827,.976,1));
+  }catch(e){
+    OnChoosedPai.call(this);
+    console.error(e);
+  }
 }
 uiscript.UI_Replay.prototype.doRecord=function(t){
   try{
@@ -225,7 +336,10 @@ uiscript.UI_Replay.prototype.doRecord=function(t){
         e=view.ActionGangResultEnd.record(t.data);
         break;
       case "RecordHuleXueLiu":
-        e=view.ActionHuleXueLiu.record(t.data)
+        e=view.ActionHuleXueLiu.record(t.data);
+        break;
+      case "RecordHuleXueLiuEnd":
+        e=view.ActionHuleXueLiuEnd.record(t.data)
     }
     return this.auto_play&&(e+=this._get_autoplay_delay(t)),"RecordNewRound"!=t.name&&"RecordDealTile"!=t.name||this.page_paishan.refresh(),e
   }catch (e){
@@ -276,7 +390,10 @@ uiscript.UI_Replay.prototype.doFastRecord = function(t) {
         view.ActionHuleXueZhanEnd.fastrecord(t.data);
         break;
       case "RecordHuleXueLiu":
-        view.ActionHuleXueLiu.fastrecord(t.data)
+        view.ActionHuleXueLiu.fastrecord(t.data);
+        break;
+      case "RecordHuleXueLiuEnd":
+        view.ActionHuleXueLiuEnd.fastrecord(t.data);
     }
     "RecordNewRound"!=t.name&&"RecordDealTile"!=t.name||this.page_paishan.refresh()
   }catch (i){
