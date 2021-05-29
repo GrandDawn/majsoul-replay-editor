@@ -2098,7 +2098,6 @@ function mopai(seat){
     else seat=(lstaction.data.hules[lstaction.data.hules.length-1].seat+1)%playercnt;
     while(hupaied[seat])seat=(seat+1)%playercnt;
   }
-  if(seat==undefined)console.error("Seat is not defined in function mopai().");
   if(doracnt.lsttype==2){
     doracnt.lsttype=0;
     doracnt.cnt++;
@@ -2154,7 +2153,6 @@ function qiepai(seat,kind,is_liqi,var1){
   if(is_liqi&&liqiinfo[seat].yifa!=0)is_wliqi=true;
   if(is_wliqi)lstliqi={'seat':seat,'type':2};
   else if(is_liqi)lstliqi={'seat':seat,'type':1};
-  if(seat==undefined)console.error("Seat is not defined in function qiepai().");
   if(doracnt.lsttype==1){
     doracnt.lsttype=0;
     doracnt.cnt++;
@@ -2259,130 +2257,36 @@ function mingpai(seat,tiles){
   }
   if(typeof(tiles)=="string")tiles=separatetile(tiles);
   if(tiles==undefined){
-    error_detector=false;let flag=false;
     let lsttile=getlstaction().data.tile;
     lsttile=inttotile(tiletoint(lsttile));
-    if(trying([lsttile,lsttile,lsttile],seat))flag=true;
+    if(trying([lsttile,lsttile,lsttile],seat))return;
     if(lsttile[0]=='5'&&lsttile[1]!='z'){
-      if(trying(["0"+lsttile[1],lsttile,lsttile],seat))flag=true;
-      if(trying(["0"+lsttile[1],"0"+lsttile[1],lsttile],seat))flag=true;
+      if(trying(["0"+lsttile[1],lsttile,lsttile],seat))return;
+      if(trying(["0"+lsttile[1],"0"+lsttile[1],lsttile],seat))return;
     }
-    if(flag==true)return;
-    if(trying([lsttile,lsttile],seat)){flag=true;error_detector=true;}
+    if(trying([lsttile,lsttile],seat))return;
     if(lsttile[0]=='5'&&lsttile[1]!='z'){
-      if(trying(["0"+lsttile[1],lsttile],seat)){
-        if(flag==true){
-          console.warning("More than one way of Pon can be found in function mingpai().");
-          return;
-        }
-        else{
-          flag=true;error_detector=true;
-        }
-      }
-      if(trying(["0"+lsttile[1],"0"+lsttile[1]],seat)){
-        if(flag==true){
-          console.warning("More than one way of Pon can be found in function mingpai().");
-          return;
-        }
-        else{
-          flag=true;error_detector=true;
-        }
-      }
+      if(trying(["0"+lsttile[1],lsttile],seat))return;
+      if(trying(["0"+lsttile[1],"0"+lsttile[1]],seat))return;
     }
-    if(flag==true)return;
     seat=(getlstaction().data.seat+1)%playercnt;
     if(lsttile[1]!='z'&&lsttile[0]!='1'&&lsttile[0]!='2'){
-      if(trying([inttotile(tiletoint(lsttile)-2),inttotile(tiletoint(lsttile)-1)],seat)){
-        if(flag==true){
-          console.warning("More than one way of Chii can be found in function mingpai().");
-          return;
-        }
-        else{
-          flag=true;error_detector=true;
-        }
-      }
-      if(trying([changedora(inttotile(tiletoint(lsttile)-2)),inttotile(tiletoint(lsttile)-1)],seat)){
-        if(flag==true){
-          console.warning("More than one way of Chii can be found in function mingpai().");
-          return;
-        }
-        else{
-          flag=true;error_detector=true;
-        }
-      }
-      if(trying([inttotile(tiletoint(lsttile)-2),changedora(inttotile(tiletoint(lsttile)-1))],seat)){
-        if(flag==true){
-          console.warning("More than one way of Chii can be found in function mingpai().");
-          return;
-        }
-        else{
-          flag=true;error_detector=true;
-        }
-      }
+      if(trying([inttotile(tiletoint(lsttile)-2),inttotile(tiletoint(lsttile)-1)],seat))return;
+      if(trying([changedora(inttotile(tiletoint(lsttile)-2)),inttotile(tiletoint(lsttile)-1)],seat))return;
+      if(trying([inttotile(tiletoint(lsttile)-2),changedora(inttotile(tiletoint(lsttile)-1))],seat))return;
     }
     if(lsttile[1]!='z'&&lsttile[0]!='1'&&lsttile[0]!='9'){
-      if(trying([inttotile(tiletoint(lsttile)-1),inttotile(tiletoint(lsttile)+1)],seat)){
-        if(flag==true){
-          console.warning("More than one way of Chii can be found in function mingpai().");
-          return;
-        }
-        else{
-          flag=true;error_detector=true;
-        }
-      }
-      if(trying([changedora(inttotile(tiletoint(lsttile)-1)),inttotile(tiletoint(lsttile)+1)],seat)){
-        if(flag==true){
-          console.warning("More than one way of Chii can be found in function mingpai().");
-          return;
-        }
-        else{
-          flag=true;error_detector=true;
-        }
-      }
-      if(trying([inttotile(tiletoint(lsttile)-1),changedora(inttotile(tiletoint(lsttile)+1))],seat)){
-        if(flag==true){
-          console.warning("More than one way of Chii can be found in function mingpai().");
-          return;
-        }
-        else{
-          flag=true;error_detector=true;
-        }
-      }
+      if(trying([inttotile(tiletoint(lsttile)-1),inttotile(tiletoint(lsttile)+1)],seat))return;
+      if(trying([changedora(inttotile(tiletoint(lsttile)-1)),inttotile(tiletoint(lsttile)+1)],seat))return;
+      if(trying([inttotile(tiletoint(lsttile)-1),changedora(inttotile(tiletoint(lsttile)+1))],seat))return;
     }
     if(lsttile[1]!='z'&&lsttile[0]!='8'&&lsttile[0]!='9'){
-      if(trying([inttotile(tiletoint(lsttile)+1),inttotile(tiletoint(lsttile)+2)],seat)){
-        if(flag==true){
-          console.warning("More than one way of Chii can be found in function mingpai().");
-          return;
-        }
-        else{
-          flag=true;error_detector=true;
-        }
-      }
-      if(trying([changedora(inttotile(tiletoint(lsttile)+1)),inttotile(tiletoint(lsttile)+2)],seat)){
-        if(flag==true){
-          console.warning("More than one way of Chii can be found in function mingpai().");
-          return;
-        }
-        else{
-          flag=true;error_detector=true;
-        }
-      }
-      if(trying([inttotile(tiletoint(lsttile)+1),changedora(inttotile(tiletoint(lsttile)+2))],seat)){
-        if(flag==true){
-          console.warning("More than one way of Chii can be found in function mingpai().");
-          return;
-        }
-        else{
-          flag=true;error_detector=true;
-        }
-      }
+      if(trying([inttotile(tiletoint(lsttile)+1),inttotile(tiletoint(lsttile)+2)],seat))return;
+      if(trying([changedora(inttotile(tiletoint(lsttile)+1)),inttotile(tiletoint(lsttile)+2)],seat))return;
+      if(trying([inttotile(tiletoint(lsttile)+1),changedora(inttotile(tiletoint(lsttile)+2))],seat))return;
     }
-    if(flag==true)return;
-    console.warning("No ways of Chii/Pon/Daiminkan can be found in function leimingpai().");
     return;
   }
-  if(seat==undefined)console.error("Seat is not defined in function mingpai().");
   for(let i=0;i<playercnt;i++)liqiinfo[i].yifa=0;
   let lstaction=getlstaction();
   paihe[lstaction.data.seat].liujumanguan=false;
@@ -2426,34 +2330,8 @@ function leimingpai(seat,tile,type){
   if(tile==undefined){
     error_detector=false;
     if(leimingpai("4z","babei"))return true;
-    let flag=false;
-    for(let i=1;i<=34;i++){
-      if(leimingpai(inttotile(i),"angang")){
-        if(flag==false){
-          flag=true;
-          error_detector=true;
-        }
-        else{
-          console.warning("More than one way of Ankan can be found in function leimingpai().");
-          return true;
-        }
-      }
-    }
-    if(flag==true)return true;
-    for(let i=1;i<=34;i++){
-      if(leimingpai(inttotile(i),"jiagang")){
-        if(flag==false){
-          flag=true;
-          error_detector=true;
-        }
-        else{
-          console.warning("More than one way of Shouminkan can be found in function leimingpai().");
-          return true;
-        }
-      }
-    }
-    if(flag==true)return true;
-    console.warning("No ways of Kan can be found in function leimingpai().");
+    for(let i=1;i<=34;i++)if(leimingpai(inttotile(i),"angang"))return true;
+    for(let i=1;i<=34;i++)if(leimingpai(inttotile(i),"jiagang"))return true;
     return false;
   }
   if(seat==undefined){
@@ -2480,7 +2358,26 @@ function leimingpai(seat,tile,type){
     if(error_detector==true)return true;
     for(let i=0;i<playercnt;i++)if(liqiinfo[i].yifa==1)liqiinfo[i].yifa=2;
     doracnt.lsttype=2;
-    fulu[seat].push({'type':3,'tile':[tile,tile,tile,tile]});
+    fulu[seat].push({'type':3,'tile':[]});
+    for(let i=0;i<playertiles[seat].length;i++){
+      if(equaltile(tile,playertiles[seat][i]))fulu[seat][fulu[seat].length-1].tile.push(playertiles[seat][i]);
+    }
+    let tmptile;
+    if(fulu[seat][fulu[seat].length-1].tile[0][0]=='0'&&fulu[seat][fulu[seat].length-1].tile[0][1]!='0'){
+      tmptile=fulu[seat][fulu[seat].length-1].tile[0][0];
+      fulu[seat][fulu[seat].length-1].tile[0][0]=fulu[seat][fulu[seat].length-1].tile[0][1];
+      fulu[seat][fulu[seat].length-1].tile[0][1]=tmptile;
+    }
+    if(fulu[seat][fulu[seat].length-1].tile[0][3]=='0'&&fulu[seat][fulu[seat].length-1].tile[0][2]!='0'){
+      tmptile=fulu[seat][fulu[seat].length-1].tile[0][3];
+      fulu[seat][fulu[seat].length-1].tile[0][3]=fulu[seat][fulu[seat].length-1].tile[0][2];
+      fulu[seat][fulu[seat].length-1].tile[0][2]=tmptile;
+    }
+    if(fulu[seat][fulu[seat].length-1].tile[0][2]=='0'&&fulu[seat][fulu[seat].length-1].tile[0][1]!='0'){
+      tmptile=fulu[seat][fulu[seat].length-1].tile[0][2];
+      fulu[seat][fulu[seat].length-1].tile[0][2]=fulu[seat][fulu[seat].length-1].tile[0][1];
+      fulu[seat][fulu[seat].length-1].tile[0][1]=tmptile;
+    }
     if(!is_chuanma())drawtype=0;
     else{
       for(let i=0;i<playercnt;i++){
@@ -2498,7 +2395,11 @@ function leimingpai(seat,tile,type){
     for(let i=0;i<fulu[seat].length;i++){
       if(fulu[seat][i].type==1&&equaltile(fulu[seat][i].tile[0],tile)){
           fulu[seat][i].type=2;
+          for(let j=0;j<playertiles[seat].length;j++){
+            if(equaltile(tile,playertiles[seat][j]))fulu[seat][i].tile.push(playertiles[seat][j]);
+          }
           fulu[seat][i].tile.push(tile);
+          break;
       }
     }
     if(!is_chuanma())drawtype=0;
