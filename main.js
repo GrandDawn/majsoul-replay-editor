@@ -2362,22 +2362,11 @@ function leimingpai(seat,tile,type){
     for(let i=0;i<playertiles[seat].length;i++){
       if(equaltile(tile,playertiles[seat][i]))fulu[seat][fulu[seat].length-1].tile.push(playertiles[seat][i]);
     }
-    let tmptile;
-    if(fulu[seat][fulu[seat].length-1].tile[0][0]=='0'&&fulu[seat][fulu[seat].length-1].tile[0][1]!='0'){
-      tmptile=fulu[seat][fulu[seat].length-1].tile[0][0];
-      fulu[seat][fulu[seat].length-1].tile[0][0]=fulu[seat][fulu[seat].length-1].tile[0][1];
-      fulu[seat][fulu[seat].length-1].tile[0][1]=tmptile;
-    }
-    if(fulu[seat][fulu[seat].length-1].tile[0][3]=='0'&&fulu[seat][fulu[seat].length-1].tile[0][2]!='0'){
-      tmptile=fulu[seat][fulu[seat].length-1].tile[0][3];
-      fulu[seat][fulu[seat].length-1].tile[0][3]=fulu[seat][fulu[seat].length-1].tile[0][2];
-      fulu[seat][fulu[seat].length-1].tile[0][2]=tmptile;
-    }
-    if(fulu[seat][fulu[seat].length-1].tile[0][2]=='0'&&fulu[seat][fulu[seat].length-1].tile[0][1]!='0'){
-      tmptile=fulu[seat][fulu[seat].length-1].tile[0][2];
-      fulu[seat][fulu[seat].length-1].tile[0][2]=fulu[seat][fulu[seat].length-1].tile[0][1];
-      fulu[seat][fulu[seat].length-1].tile[0][1]=tmptile;
-    }
+    fulu[seat][fulu[seat].length-1].tile.sort();
+    let tmptile=fulu[seat][fulu[seat].length-1].tile[2];
+    fulu[seat][fulu[seat].length-1].tile[2]=fulu[seat][fulu[seat].length-1].tile[1];
+    fulu[seat][fulu[seat].length-1].tile[1]=fulu[seat][fulu[seat].length-1].tile[0];
+    fulu[seat][fulu[seat].length-1].tile[0]=tmptile;
     if(!is_chuanma())drawtype=0;
     else{
       for(let i=0;i<playercnt;i++){
