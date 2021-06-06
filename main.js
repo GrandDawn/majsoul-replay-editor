@@ -195,7 +195,7 @@ function md5(string){
   return(md5_WordToHex(a)+md5_WordToHex(b)+md5_WordToHex(c)+md5_WordToHex(d)).toLowerCase();
 }
 var initData,initRoom,show;
-uiscript.UI_ScoreChange.prototype.setBaopai=function(){}
+//uiscript.UI_ScoreChange.prototype.setBaopai=function(){}
 if(initData==undefined)initData=uiscript.UI_Replay.prototype.initData;
 if(initRoom==undefined)initRoom=view.DesktopMgr.prototype.initRoom;
 if(show==undefined)show=uiscript.UI_GameEnd.prototype.show;
@@ -393,8 +393,8 @@ function is_xueliu(){
   if(config&&config.mode&&config.mode.detail_rule&&config.mode.detail_rule.xueliu)return true;
   return false;
 }
-function is_openhand(){
-  if(config&&config.mode&&config.mode.detail_rule&&config.mode.detail_rule.open_hand)return true;
+function is_openhand(seat){
+  if(config&&config.mode&&config.mode.detail_rule&&config.mode.detail_rule.open_hand&&config.mode.detail_rule.open_hand[seat]=='1')return true;
   return false;
 }
 function is_shiduan(){
@@ -1220,6 +1220,7 @@ function gamebegin(){
     if(is_muyu())config.mode.detail_rule.muyu_mode=0;
     if(is_dora3())config.mode.detail_rule.dora3_mode=0;
   }
+  if(config.mode&&config.mode.detail_rule&&config.mode.detail_rule.open_hand==1)config.mode.detail_rule.open_hand="1111";
   if(config.mode.mode==11){
     if(config&&config.mode&&config.mode.detail_rule&&config.mode.detail_rule.init_point)scores=[config.mode.detail_rule.init_point,config.mode.detail_rule.init_point,config.mode.detail_rule.init_point];
     else scores=[35000,35000,35000];
@@ -1295,9 +1296,12 @@ function addNewRound(chang,ju,ben,doras,left_tile_count,liqibang,md5,paishan,sco
     }],
     'seat':3
   }];
-  if(is_peipaimingpai()||is_openhand()){
-    ret.data.opens=[mingpai_data(tiles0,0),mingpai_data(tiles1,1),mingpai_data(tiles2,2),mingpai_data(tiles3,3)];
-  }
+  ret.data.opens=[];
+  if(is_peipaimingpai()||is_openhand(0))ret.data.opens.push(mingpai_data(tiles0,0));
+  if(is_peipaimingpai()||is_openhand(1))ret.data.opens.push(mingpai_data(tiles1,1));
+  if(is_peipaimingpai()||is_openhand(2))ret.data.opens.push(mingpai_data(tiles2,2));
+  if(is_peipaimingpai()||is_openhand(3))ret.data.opens.push(mingpai_data(tiles3,3));
+  
   if(is_chuanma())ret.data.ju_count=editdata.actions.length;
   if(tingpai!=undefined&&tingpai!=[])ret.data.tingpai=tingpai;
   if(!is_xuezhandaodi()&&!is_chuanma()){
@@ -1818,7 +1822,7 @@ function hupaioneplayer(seat){
   playertiles[seat].length--;
   return ret;
 }
-function endHule(HuleInfo,old_scores,delta_scores,scores){
+function endHule(HuleInfo,old_scores,delta_scores,scores,baopai){
   actions.push({
     'name':"RecordHule",
     'data':{
@@ -1826,7 +1830,8 @@ function endHule(HuleInfo,old_scores,delta_scores,scores){
       'gameend':{},
       'hules':HuleInfo,
       'old_scores':[].concat(old_scores),
-      'scores':[].concat(scores)
+      'scores':[].concat(scores),
+      'baopai':baopai
     }
   });
 }
@@ -1920,12 +1925,13 @@ function hupai(x,type){
     }
   }
   if(!is_xuezhandaodi()&&!is_chuanma()&&!is_xueliu()){
-    let ret=[];
+    let ret=[],baopait=0;
     for(let i=0;i<x.length;i++)ret.push(hupaioneplayer(x[i]));
     for(let i=0;i<x.length;i++)hupaied[x[i]]=true;
+    for(let i=0;i<x.length;i++)if(baopai[x[i]])baopait=baopai[x[i]].seat+1;
     let old_scores=[].concat(scores);
     for(let i=0;i<playercnt;i++)scores[i]=scores[i]+delta_scores[i];
-    endHule(ret,[].concat(old_scores),[].concat(delta_scores),[].concat(scores));
+    endHule(ret,[].concat(old_scores),[].concat(delta_scores),[].concat(scores),baopait);
     delta_scores=[0,0,0,0];
     if(!is_chuanma()&&hupaied[ju])ben++;
     else if(!is_chuanma()){
@@ -2155,7 +2161,7 @@ function mopai(seat){
   }
   lstliqi=0;
   let tile_state;
-  if(is_openhand()||liqiinfo[seat].kai)tile_state=1;
+  if(is_openhand(seat)||liqiinfo[seat].kai)tile_state=1;
   if(drawtype==1){
     if(!is_chuanma())addDealTile(calcdoras(),paishan.length/2-15,seat,paishan.substring(0,2),liqi,tile_state);
     else addDealTile(calcdoras(),paishan.length/2-1,seat,paishan.substring(0,2),liqi,tile_state);
@@ -2224,7 +2230,7 @@ function qiepai(seat,kind,is_liqi){
   }
   let lstactionname=getlstaction().name;
   let tile_state;
-  if(is_openhand())tile_state=1;
+  if(is_openhand(seat))tile_state=1;
   if(flag==0&&kind[0]>='0'&&kind[0]<='9'){
     if(is_peipaimingpai()){tile_state=erasemingpai(kind,seat);}
     paihe[seat].tiles.push(kind);
