@@ -1,3 +1,512 @@
+! function(t) {
+  var e = function(e) {
+    function i() {
+      return null !== e && e.apply(this, arguments) || this
+    }
+    return __extends(i, e), i.play = function(e) {
+      app.Log.log("ActionDiscardTile play data:" + JSON.stringify(e)), e.doras && t.DesktopMgr.Inst.WhenDoras(e.doras, !1);
+      var i = e.seat,
+        n = mjcore.MJPai.Create(e.tile),
+        a = !(null == e.is_liqi || void 0 == e.is_liqi || !e.is_liqi);
+      if(e.muyu && t.DesktopMgr.Inst.onMuyuChange(e.muyu, !0), t.DesktopMgr.Inst.players[t.DesktopMgr.Inst.seat2LocalPosition(i)].AddQiPai(n, a, e.moqie), a) {
+        e.is_wliqi ? t.DesktopMgr.Inst.players[t.DesktopMgr.Inst.seat2LocalPosition(i)].PlaySound("act_drich") : t.DesktopMgr.Inst.players[t.DesktopMgr.Inst.seat2LocalPosition(i)].PlaySound("act_rich");
+        var r = t.DesktopMgr.Inst.player_effects[i][game.EView.lizhi_bgm];
+        if(r && 0 != r) {
+          var s = cfg.item_definition.item.get(r).sargs[0];
+          t.AudioMgr.lizhiMuted ? t.AudioMgr.PlayLiqiBgm(s, 300, !0) : (t.BgmListMgr.stopBgm(), Laya.timer.once(1e3, this, function() {
+            t.DesktopMgr.Inst.gameing && (t.BgmListMgr.PlayMJBgm("", !0), t.AudioMgr.PlayLiqiBgm(s, 300, !0))
+          }))
+        }
+      }
+      var o = !1;
+      e.tile_state && e.tile_state > 0 && (o = !0), i == t.DesktopMgr.Inst.seat ? t.DesktopMgr.Inst.mainrole.OnDiscardTile(n, o, !1, e.moqie) : t.DesktopMgr.Inst.players[t.DesktopMgr.Inst.seat2LocalPosition(i)].onDiscardTile(e.moqie, e.tile, o, !1), e.operation && Laya.timer.once(500, this, function() {
+        t.ActionOperation.play(e.operation)
+      }), void 0 != e.zhenting && void 0 == e.operation && (uiscript.UI_DesktopInfo.Inst.setZhenting(e.zhenting), uiscript.UI_TingPai.Inst.setZhengting(e.zhenting)), i == t.DesktopMgr.Inst.seat && uiscript.UI_TingPai.Inst.setData1(e, !1), Laya.timer.once(500, this, function() {
+        a ? t.DesktopMgr.Inst.clearMindVoice() : t.DesktopMgr.Inst.playMindVoice()
+      })
+    }, i.fastplay = function(e, i) {
+      app.Log.log("ActionDiscardTile fastplay data:" + JSON.stringify(e) + " usetime:" + i), e.doras && t.DesktopMgr.Inst.WhenDoras(e.doras, !0);
+      var n = e.seat,
+        a = mjcore.MJPai.Create(e.tile),
+        r = !(null == e.is_liqi || void 0 == e.is_liqi || !e.is_liqi),
+        s = !1;
+      e.tile_state && e.tile_state > 0 && (s = !0), t.DesktopMgr.Inst.players[t.DesktopMgr.Inst.seat2LocalPosition(n)].AddQiPai(a, r, e.moqie, !1), e.muyu && t.DesktopMgr.Inst.onMuyuChange(e.muyu, !1), n == t.DesktopMgr.Inst.seat ? t.DesktopMgr.Inst.mainrole.OnDiscardTile(a, s, !0, e.moqie) : t.DesktopMgr.Inst.players[t.DesktopMgr.Inst.seat2LocalPosition(n)].onDiscardTile(e.moqie, e.tile, s, !0), e.operation && -1 != i && Laya.timer.once(500, this, function() {
+        t.ActionOperation.play(e.operation, i)
+      }), void 0 != e.zhenting && void 0 == e.operation && (uiscript.UI_DesktopInfo.Inst.setZhenting(e.zhenting), uiscript.UI_TingPai.Inst.setZhengting(e.zhenting)), n == t.DesktopMgr.Inst.seat && uiscript.UI_TingPai.Inst.setData1(e, !0)
+    }, i.record = function(e, i) {
+      void 0 === i && (i = 0), app.Log.log("ActionDiscardTile record data:" + JSON.stringify(e)), e.doras && t.DesktopMgr.Inst.WhenDoras(e.doras, !0);
+      var n = e.seat,
+        a = mjcore.MJPai.Create(e.tile),
+        r = !(null == e.is_liqi || void 0 == e.is_liqi || !e.is_liqi),
+        s = !1;
+      if(e.is_kailiqi){
+        if(e.seat!=view.DesktopMgr.Inst.seat){
+          for(let i=0;i<view.DesktopMgr.Inst.players[(4+e.seat-view.DesktopMgr.Inst.seat)%4].hand.length;i++)view.DesktopMgr.Inst.players[(4+e.seat-view.DesktopMgr.Inst.seat)%4].hand[i].DoAnim_FullDown();
+          for(let i=0;i<view.DesktopMgr.Inst.players[(4+e.seat-view.DesktopMgr.Inst.seat)%4].hand.length;i++)view.DesktopMgr.Inst.players[(4+e.seat-view.DesktopMgr.Inst.seat)%4].hand[i].is_open=true;
+        }
+        /*else{
+          for (o = 0; o < view.DesktopMgr.Inst.players[0].hand.length; o++) view.DesktopMgr.Inst.players[0].hand[o].Hule();
+          for (var r = [], s =view.DesktopMgr.Inst.players[0].trans_hand3D, o = 0; o < view.DesktopMgr.Inst.players[0].hand.length; o++) {
+            var l = new t.HandPai3D(s);
+            l.SetVal(view.DesktopMgr.Inst.players[0].hand[o].val, !1), l.SetIndex(o, !1), l.Stand(), t.DesktopMgr.Inst.is_chuanma_mode() && (l.pai3D.is_gap = l.val.type == view.DesktopMgr.Inst.players[0].gap_type, l.pai3D.OnChoosedPai()), r.push(l)
+          }
+          var h = r.length;
+          for (o = 0; o < h; o++) view.DesktopMgr.Inst.players[0]._hand3d[o].DoAnim_FullDown();
+        }*/
+      }
+      if(e.tile_state && e.tile_state > 0 && (s = !0), e.muyu && t.DesktopMgr.Inst.onMuyuChange(e.muyu, !0), t.DesktopMgr.Inst.players[t.DesktopMgr.Inst.seat2LocalPosition(n)].AddQiPai(a, r, e.moqie), r && (e.is_wliqi ? t.DesktopMgr.Inst.players[t.DesktopMgr.Inst.seat2LocalPosition(n)].PlaySound("act_drich") : t.DesktopMgr.Inst.players[t.DesktopMgr.Inst.seat2LocalPosition(n)].PlaySound("act_rich"), uiscript.UI_DesktopInfo.Inst.changeHeadEmo(n, "emoji_9", 2e3)), n == t.DesktopMgr.Inst.seat ? t.DesktopMgr.Inst.mainrole.OnDiscardTile(a, s, !1, e.moqie) : t.DesktopMgr.Inst.players[t.DesktopMgr.Inst.seat2LocalPosition(n)].recordDiscardTile(a, e.moqie, s, !1), e.tingpais && t.DesktopMgr.Inst.setTingpai(e.seat, e.tingpais), t.DesktopMgr.Inst.mode == t.EMJMode.live_broadcast && uiscript.UI_Live_Broadcast.Inst.during_play && e.operations)
+        for(var o = 0; o < e.operations.length; o++) t.ActionOperation.ob(e.operations[o], i, 450);
+      return 500
+    }, i.fastrecord = function(e, i) {
+      void 0 === i && (i = -1), app.Log.log("ActionDiscardTile fastrecord data:" + JSON.stringify(e)), e.doras && t.DesktopMgr.Inst.WhenDoras(e.doras, !0);
+      var n = e.seat,
+        a = mjcore.MJPai.Create(e.tile),
+        r = !(null == e.is_liqi || void 0 == e.is_liqi || !e.is_liqi),
+        s = !1;
+      if(e.is_kailiqi){
+        if(e.seat!=view.DesktopMgr.Inst.seat){
+          for(let i=0;i<view.DesktopMgr.Inst.players[(4+e.seat-view.DesktopMgr.Inst.seat)%4].hand.length;i++)view.DesktopMgr.Inst.players[(4+e.seat-view.DesktopMgr.Inst.seat)%4].hand[i].DoAnim_FullDown();
+          for(let i=0;i<view.DesktopMgr.Inst.players[(4+e.seat-view.DesktopMgr.Inst.seat)%4].hand.length;i++)view.DesktopMgr.Inst.players[(4+e.seat-view.DesktopMgr.Inst.seat)%4].hand[i].is_open=true;
+        }
+        /*else{
+          for (o = 0; o < view.DesktopMgr.Inst.players[0].hand.length; o++) view.DesktopMgr.Inst.players[0].hand[o].Hule();
+          for (var r = [], s =view.DesktopMgr.Inst.players[0].trans_hand3D, o = 0; o < view.DesktopMgr.Inst.players[0].hand.length; o++) {
+            var l = new t.HandPai3D(s);
+            l.SetVal(view.DesktopMgr.Inst.players[0].hand[o].val, !1), l.SetIndex(o, !1), l.Stand(), t.DesktopMgr.Inst.is_chuanma_mode() && (l.pai3D.is_gap = l.val.type == view.DesktopMgr.Inst.players[0].gap_type, l.pai3D.OnChoosedPai()), r.push(l)
+          }
+          var h = r.length;
+          for (o = 0; o < h; o++)view.DesktopMgr.Inst.players[0]._hand3d[o].FullDown();
+        }*/
+      }
+      if(e.tile_state && e.tile_state > 0 && (s = !0), e.muyu && t.DesktopMgr.Inst.onMuyuChange(e.muyu, !1), t.DesktopMgr.Inst.players[t.DesktopMgr.Inst.seat2LocalPosition(n)].AddQiPai(a, r, e.moqie, !1), n == t.DesktopMgr.Inst.seat ? t.DesktopMgr.Inst.mainrole.OnDiscardTile(a, s, !0, e.moqie) : t.DesktopMgr.Inst.players[t.DesktopMgr.Inst.seat2LocalPosition(n)].recordDiscardTile(a, e.moqie, s, !0), e.tingpais && t.DesktopMgr.Inst.setTingpai(e.seat, e.tingpais), t.DesktopMgr.Inst.mode == t.EMJMode.live_broadcast && uiscript.UI_Live_Broadcast.Inst.during_play && i >= 0 && e.operations)
+        for(var o = 0; o < e.operations.length; o++) t.ActionOperation.ob(e.operations[o], i, 450)
+    }, i
+  }(t.ActionBase);
+  t.ActionDiscardTile = e
+}(view || (view = {}));
+!function(t){
+  var e=function(e){
+    function i(){
+      return null!==e&&e.apply(this,arguments)||this
+    }
+    return __extends(i,e),i.play=function(e){
+      app.Log.log("ActionBabei play data:"+JSON.stringify(e)),e.doras&&t.DesktopMgr.Inst.WhenDoras(e.doras,!1);
+      var i=e.seat,n;
+      e.tile?n=mjcore.MJPai.Create(e.tile):n=mjcore.MJPai.Create("4z");
+      t.DesktopMgr.Inst.players[t.DesktopMgr.Inst.seat2LocalPosition(i)].AddBabei(n,e.moqie,!0),t.DesktopMgr.Inst.players[t.DesktopMgr.Inst.seat2LocalPosition(i)].PlaySound("act_babei");
+      var a=!1;
+      e.tile_state&&e.tile_state>0&&(a=!0),e.muyu&&t.DesktopMgr.Inst.onMuyuChange(e.muyu,!0),i==t.DesktopMgr.Inst.seat ? t.DesktopMgr.Inst.mainrole.onBabei(n,a,!1):t.DesktopMgr.Inst.players[t.DesktopMgr.Inst.seat2LocalPosition(i)].onBabei(e.moqie,a,!1),e.operation&&Laya.timer.once(500,this,function(){
+        t.ActionOperation.play(e.operation)
+      }),void 0 !=e.zhenting&&void 0==e.operation&&(uiscript.UI_DesktopInfo.Inst.setZhenting(e.zhenting),uiscript.UI_TingPai.Inst.setZhengting(e.zhenting)),i==t.DesktopMgr.Inst.seat&&uiscript.UI_TingPai.Inst.setData1(e,!1),t.DesktopMgr.Inst.waiting_lingshang_deal_tile=!0
+    },i.fastplay=function(e,i){
+      app.Log.log("ActionBabei fastplay data:"+JSON.stringify(e)+" usetime:"+i),e.doras&&t.DesktopMgr.Inst.WhenDoras(e.doras,!0);
+      var n=e.seat,a;
+      e.tile?a=mjcore.MJPai.Create(e.tile):a=mjcore.MJPai.Create("4z");
+      t.DesktopMgr.Inst.players[t.DesktopMgr.Inst.seat2LocalPosition(n)].AddBabei(a,e.moqie,!1);
+      var r=!1;
+      e.tile_state&&e.tile_state>0&&(r=!0),e.muyu&&t.DesktopMgr.Inst.onMuyuChange(e.muyu,!1),n==t.DesktopMgr.Inst.seat ? t.DesktopMgr.Inst.mainrole.onBabei(a,r,!0):t.DesktopMgr.Inst.players[t.DesktopMgr.Inst.seat2LocalPosition(n)].onBabei(e.moqie,r,!0),e.operation&&-1 !=i&&Laya.timer.once(500,this,function(){
+        t.ActionOperation.play(e.operation,i)
+      }),void 0 !=e.zhenting&&void 0==e.operation&&(uiscript.UI_DesktopInfo.Inst.setZhenting(e.zhenting),uiscript.UI_TingPai.Inst.setZhengting(e.zhenting)),n==t.DesktopMgr.Inst.seat&&uiscript.UI_TingPai.Inst.setData1(e,!0),t.DesktopMgr.Inst.waiting_lingshang_deal_tile=!0
+    },i.record=function(e,i){
+      void 0===i&&(i=0),app.Log.log("ActionBabei record data:"+JSON.stringify(e)),e.doras&&t.DesktopMgr.Inst.WhenDoras(e.doras,!0);
+      var n=e.seat,a;
+      e.tile?a=mjcore.MJPai.Create(e.tile):a=mjcore.MJPai.Create("4z");
+      t.DesktopMgr.Inst.players[t.DesktopMgr.Inst.seat2LocalPosition(n)].AddBabei(a,e.moqie,!0),t.DesktopMgr.Inst.players[t.DesktopMgr.Inst.seat2LocalPosition(n)].PlaySound("act_babei");
+      var r=!1;
+      if(e.tile_state&&e.tile_state>0&&(r=!0),e.muyu&&t.DesktopMgr.Inst.onMuyuChange(e.muyu,!0),n==t.DesktopMgr.Inst.seat ? t.DesktopMgr.Inst.mainrole.onBabei(a,r,!1):t.DesktopMgr.Inst.players[t.DesktopMgr.Inst.seat2LocalPosition(n)].recordBabei(a,e.moqie,r,!1),e.tingpais&&t.DesktopMgr.Inst.setTingpai(e.seat,e.tingpais),t.DesktopMgr.Inst.mode==t.EMJMode.live_broadcast&&uiscript.UI_Live_Broadcast.Inst.during_play&&e.operations)
+        for(var s=0;s<e.operations.length;s++)t.ActionOperation.ob(e.operations[s],i,450);
+      return t.DesktopMgr.Inst.waiting_lingshang_deal_tile=!0,1e3
+    },i.fastrecord=function(e,i){
+      void 0===i&&(i=-1),app.Log.log("ActionBabei fastrecord data:"+JSON.stringify(e)),e.doras&&t.DesktopMgr.Inst.WhenDoras(e.doras,!0);
+      var n=e.seat,a;
+      e.tile?a=mjcore.MJPai.Create(e.tile):a=mjcore.MJPai.Create("4z");
+      t.DesktopMgr.Inst.players[t.DesktopMgr.Inst.seat2LocalPosition(n)].AddBabei(a,e.moqie,!1);
+      var r=!1;
+      if(e.tile_state&&e.tile_state>0&&(r=!0),e.muyu&&t.DesktopMgr.Inst.onMuyuChange(e.muyu,!1),n==t.DesktopMgr.Inst.seat ? t.DesktopMgr.Inst.mainrole.onBabei(a,r,!0):t.DesktopMgr.Inst.players[t.DesktopMgr.Inst.seat2LocalPosition(n)].recordBabei(a,e.moqie,r,!0),e.tingpais&&t.DesktopMgr.Inst.setTingpai(e.seat,e.tingpais),t.DesktopMgr.Inst.mode==t.EMJMode.live_broadcast&&uiscript.UI_Live_Broadcast.Inst.during_play&&i>=0&&e.operations)
+        for(var s=0;s<e.operations.length;s++)t.ActionOperation.ob(e.operations[s],i,450);
+      t.DesktopMgr.Inst.waiting_lingshang_deal_tile=!0
+    },i
+  }(t.ActionBase);
+  t.ActionBabei=e
+}(view||(view={}));
+!function(t){
+  var e=function(e){
+    function i(){
+      return null!==e&&e.apply(this,arguments)||this
+    }
+    return __extends(i,e),i.record=function(e,i){
+      var i=this,n=1;
+      e.doras&&t.DesktopMgr.Inst.WhenDoras(e.doras,0);
+      Laya.timer.once(100,this,function(){
+        var a=e.hules,r=0;
+        if(a[0].zimo){
+          var s=a[0].seat;
+          uiscript.UI_Huleshow.Inst.showZimo([t.DesktopMgr.Inst.seat2LocalPosition(s)]),r+=n?1200:200,
+          Laya.timer.once(r,i,function(){
+            t.DesktopMgr.Inst.players[t.DesktopMgr.Inst.seat2LocalPosition(s)].AddBabei(mjcore.MJPai.Create(a[0].hu_tile),true,1);
+            if(t.DesktopMgr.Inst.lastqipai)t.DesktopMgr.Inst.lastqipai.isxuezhanhu=!0,t.DesktopMgr.Inst.lastqipai.OnChoosedPai();
+            s==t.DesktopMgr.Inst.seat?t.DesktopMgr.Inst.mainrole.OnDiscardTile(mjcore.MJPai.Create(a[0].hu_tile),0,0):t.DesktopMgr.Inst.players[t.DesktopMgr.Inst.seat2LocalPosition(s)].recordDiscardTile(mjcore.MJPai.Create(a[0].hu_tile),true,0,0);
+          })
+          if(t.DesktopMgr.Inst.lastqipai)t.DesktopMgr.Inst.lastqipai.isxuezhanhu=!0;
+          //if(t.DesktopMgr.Inst.lastqipai&&t.DesktopMgr.Inst.lastqipai.model.meshRender)t.DesktopMgr.Inst.lastqipai.OnChoosedPai();
+        }
+        else{
+          for(var o=0,l=-1,h=[],c=0;c<a.length;c++){
+            var _=a[c].seat;
+            h.push(t.DesktopMgr.Inst.seat2LocalPosition(_)),-1==l&&(l=_)
+          }
+          l>=0&&(o=t.DesktopMgr.Inst.player_effects[l][game.EView.hupai_effect]),n&&uiscript.UI_Huleshow.Inst.showRong(h),r+=n?1200:200,Laya.timer.once(r,i,function(){
+            if(!t.DesktopMgr.Inst.isLastPaiMingPai())t.DesktopMgr.Inst.players[t.DesktopMgr.Inst.seat2LocalPosition(t.DesktopMgr.Inst.lastpai_seat)].QiPaiNoPass();
+            else{
+              t.DesktopMgr.Inst.lastqipai.lastColor=new Laya.Vector4(1,.78,.78,.4);
+              t.DesktopMgr.Inst.lastqipai.model.meshRender.sharedMaterial.setColor(caps.Cartoon.COLOR,t.DesktopMgr.Inst.lastqipai.lastColor);
+              t.DesktopMgr.Inst.lastqipai.model.meshRender.sharedMaterial.blend=2;
+              t.DesktopMgr.Inst.lastqipai.val.type+=10;
+              t.DesktopMgr.Inst.lastqipai.isxuezhanhu=!0,t.DesktopMgr.Inst.lastqipai.OnChoosedPai()
+            }
+            for(var e=0;e<a.length;e++){
+              var i=a[e].seat;
+              var s=mjcore.MJPai.Create(a[0].hu_tile);
+              t.DesktopMgr.Inst.players[t.DesktopMgr.Inst.seat2LocalPosition(i)].AddBabei(s,true,1);
+              //i==t.DesktopMgr.Inst.seat?t.DesktopMgr.Inst.mainrole.onBabei(mjcore.MJPai.Create(a[e].hu_tile),0,0):t.DesktopMgr.Inst.players[t.DesktopMgr.Inst.seat2LocalPosition(i)].recordBabei(mjcore.MJPai.Create(a[e].hu_tile),true,0,0);
+              if(e!=0)t.DesktopMgr.Inst.lastqipai.lastColor=new Laya.Vector4(1,.78,.78,.4);
+              else t.DesktopMgr.Inst.lastqipai.lastColor=new Laya.Vector4(1,.78,.78,1);
+              if(t.DesktopMgr.Inst.lastqipai)t.DesktopMgr.Inst.lastqipai.model.meshRender.sharedMaterial.setColor(caps.Cartoon.COLOR,t.DesktopMgr.Inst.lastqipai.lastColor);
+              if(t.DesktopMgr.Inst.lastqipai)t.DesktopMgr.Inst.lastqipai.model.meshRender.sharedMaterial.blend=2;
+              if(t.DesktopMgr.Inst.lastqipai)t.DesktopMgr.Inst.lastqipai.val.type+=10;
+              if(t.DesktopMgr.Inst.lastqipai)t.DesktopMgr.Inst.lastqipai.isxuezhanhu=!0,t.DesktopMgr.Inst.lastqipai.OnChoosedPai()
+            }
+          })
+        }
+        r+=2e3,Laya.timer.once(r,i,function(){
+          for (var n=0,r=t.DesktopMgr.Inst.players;n<r.length;n++){
+            r[n].hideLiqi()
+          }
+          e.liqi?Laya.timer.once(2500,i,function(){
+            t.ActionLiqi.play(e.liqi)
+          }):uiscript.UI_DesktopInfo.Inst.setLiqibang(0);
+          for (var s=[],o=0;o<e.delta_scores.length;o++){
+            var l={
+              title_id:0,
+              score:0,
+              delta:0
+            };
+            if(e.delta_scores[o]>0){
+              o==t.DesktopMgr.Inst.seat,uiscript.UI_DesktopInfo.Inst.changeHeadEmo(o,"emoji_7",-1),l.delta=e.delta_scores[o];
+              for(var h=0,c=a;h<c.length;h++) {
+                var _=c[h];
+                if(_.seat == o){
+                  l.title_id=_.title_id;
+                  break
+                }
+              }
+            } 
+            else e.delta_scores[o]<0&&(l.delta=e.delta_scores[o],uiscript.UI_DesktopInfo.Inst.changeHeadEmo(o,"emoji_8",-1));
+            l.score=e.old_scores[o],s.push(l)
+          }
+          Laya.timer.once(200,i,function(){
+            t.DesktopMgr.Inst.setScores(e.scores)
+          }),uiscript.UI_Hu_Xuezhan.Inst.showScoreChange(s)
+        }),r+=3e3,Laya.timer.once(r,i,function(){
+          t.DesktopMgr.Inst.ActionRunComplete()
+        })
+      })
+      return 6e3;
+    },i.fastrecord=function(e,i){
+      app.Log.log("ActionHule fastplay data:"+JSON.stringify(e));
+      var n=e.hules;
+      if(n[0].zimo){
+        a=n[0].seat;
+        t.DesktopMgr.Inst.players[t.DesktopMgr.Inst.seat2LocalPosition(a)].AddBabei(mjcore.MJPai.Create(n[0].hu_tile),true,0);
+        a==t.DesktopMgr.Inst.seat?t.DesktopMgr.Inst.mainrole.OnDiscardTile(mjcore.MJPai.Create(n[0].hu_tile),0,1):t.DesktopMgr.Inst.players[t.DesktopMgr.Inst.seat2LocalPosition(a)].recordDiscardTile(mjcore.MJPai.Create(n[0].hu_tile),true,0,1);
+        if(t.DesktopMgr.Inst.lastqipai)t.DesktopMgr.Inst.lastqipai.isxuezhanhu=!0,t.DesktopMgr.Inst.lastqipai.OnChoosedPai();
+      }
+      else{
+        if(!t.DesktopMgr.Inst.isLastPaiMingPai())t.DesktopMgr.Inst.players[t.DesktopMgr.Inst.seat2LocalPosition(t.DesktopMgr.Inst.lastpai_seat)].QiPaiNoPass();
+        else{
+          t.DesktopMgr.Inst.lastqipai.lastColor=new Laya.Vector4(1,.78,.78,.4);
+          t.DesktopMgr.Inst.lastqipai.model.meshRender.sharedMaterial.setColor(caps.Cartoon.COLOR,t.DesktopMgr.Inst.lastqipai.lastColor);
+          t.DesktopMgr.Inst.lastqipai.model.meshRender.sharedMaterial.blend=2;
+          t.DesktopMgr.Inst.lastqipai.val.type+=10;
+          t.DesktopMgr.Inst.lastqipai.isxuezhanhu=!0,t.DesktopMgr.Inst.lastqipai.OnChoosedPai()
+        }
+        for(s=0;s<n.length;s++){
+          var o=n[s].seat;
+          t.DesktopMgr.Inst.players[t.DesktopMgr.Inst.seat2LocalPosition(o)].AddBabei(mjcore.MJPai.Create(n[s].hu_tile),true,0);
+          //o==t.DesktopMgr.Inst.seat?t.DesktopMgr.Inst.mainrole.onBabei(mjcore.MJPai.Create(n[s].hu_tile),0,1):t.DesktopMgr.Inst.players[t.DesktopMgr.Inst.seat2LocalPosition(o)].recordBabei(mjcore.MJPai.Create(n[s].hu_tile),true,0,1);
+          if(s!=0)t.DesktopMgr.Inst.lastqipai.lastColor=new Laya.Vector4(1,.78,.78,.4);
+          else t.DesktopMgr.Inst.lastqipai.lastColor=new Laya.Vector4(1,.78,.78,1);
+          if(t.DesktopMgr.Inst.lastqipai)t.DesktopMgr.Inst.lastqipai.model.meshRender.sharedMaterial.setColor(caps.Cartoon.COLOR,t.DesktopMgr.Inst.lastqipai.lastColor);
+          if(t.DesktopMgr.Inst.lastqipai)t.DesktopMgr.Inst.lastqipai.model.meshRender.sharedMaterial.blend=2;
+          if(t.DesktopMgr.Inst.lastqipai)t.DesktopMgr.Inst.lastqipai.val.type+=10;
+          if(t.DesktopMgr.Inst.lastqipai)t.DesktopMgr.Inst.lastqipai.isxuezhanhu=!0,t.DesktopMgr.Inst.lastqipai.OnChoosedPai()
+        }
+      }
+      for (var l=0,h=t.DesktopMgr.Inst.players;l<h.length;l++){
+        var c=h[l];
+        c.hideLiqi()
+      }
+      e.liqi?t.ActionLiqi.fastplay(e.liqi,0):uiscript.UI_DesktopInfo.Inst.setLiqibang(0),t.DesktopMgr.Inst.setScores(e.scores)
+    },i
+  }(t.ActionBase);
+  t.ActionHuleXueLiu=e
+}(view||(view={}));
+!function(t){
+  var e=function(e){
+    function i(){
+      return null!==e&&e.apply(this,arguments)||this
+    }
+    return __extends(i,e),i.record=function(e){
+      var i=this,n=1;
+      e.doras&&t.DesktopMgr.Inst.WhenDoras(e.doras,0);
+      Laya.timer.once(100,this,function(){
+        var a=e.hules,r=0;
+        if(e.hules_history)Laya.timer.once(3e3,i,function(){
+          for(var i=0,a=e.hules_history;i<a.length;i++){
+            var r=a[i],
+              s=t.DesktopMgr.Inst.players[t.DesktopMgr.Inst.seat2LocalPosition(r.seat)];
+            if(s&&s.already_xuezhan_hule_state){
+              for(var o=[],l=0;l<r.hand.length;l++)o.push(mjcore.MJPai.Create(r.hand[l]));
+              o=o.sort(mjcore.MJPai.Distance),s.onXuezhanEnd(o,!n)
+            }
+          }
+        })
+        if(a[0].zimo){
+          var s=a[0].seat;
+          uiscript.UI_Huleshow.Inst.showZimo([t.DesktopMgr.Inst.seat2LocalPosition(s)]),r+=n?1200:200,
+          Laya.timer.once(r,i,function(){
+            t.DesktopMgr.Inst.players[t.DesktopMgr.Inst.seat2LocalPosition(s)].AddBabei(mjcore.MJPai.Create(a[0].hu_tile),true,1);
+            if(t.DesktopMgr.Inst.lastqipai)t.DesktopMgr.Inst.lastqipai.isxuezhanhu=!0,t.DesktopMgr.Inst.lastqipai.OnChoosedPai();
+            s==t.DesktopMgr.Inst.seat?t.DesktopMgr.Inst.mainrole.OnDiscardTile(mjcore.MJPai.Create(a[0].hu_tile),0,0):t.DesktopMgr.Inst.players[t.DesktopMgr.Inst.seat2LocalPosition(s)].recordDiscardTile(mjcore.MJPai.Create(a[0].hu_tile),true,0,0);
+          })
+          if(t.DesktopMgr.Inst.lastqipai)t.DesktopMgr.Inst.lastqipai.isxuezhanhu=!0;
+          //if(t.DesktopMgr.Inst.lastqipai&&t.DesktopMgr.Inst.lastqipai.model.meshRender)t.DesktopMgr.Inst.lastqipai.OnChoosedPai();
+        }
+        else{
+          for(var o=0,l=-1,h=[],c=0;c<a.length;c++){
+            var _=a[c].seat;
+            h.push(t.DesktopMgr.Inst.seat2LocalPosition(_)),-1==l&&(l=_)
+          }
+          l>=0&&(o=t.DesktopMgr.Inst.player_effects[l][game.EView.hupai_effect]),n&&uiscript.UI_Huleshow.Inst.showRong(h),r+=n?1200:200,Laya.timer.once(r,i,function(){
+            if(!t.DesktopMgr.Inst.isLastPaiMingPai())t.DesktopMgr.Inst.players[t.DesktopMgr.Inst.seat2LocalPosition(t.DesktopMgr.Inst.lastpai_seat)].QiPaiNoPass();
+            else{
+              t.DesktopMgr.Inst.lastqipai.lastColor=new Laya.Vector4(1,.78,.78,.4);
+              t.DesktopMgr.Inst.lastqipai.model.meshRender.sharedMaterial.setColor(caps.Cartoon.COLOR,t.DesktopMgr.Inst.lastqipai.lastColor);
+              t.DesktopMgr.Inst.lastqipai.model.meshRender.sharedMaterial.blend=2;
+              t.DesktopMgr.Inst.lastqipai.val.type+=10;
+              t.DesktopMgr.Inst.lastqipai.isxuezhanhu=!0,t.DesktopMgr.Inst.lastqipai.OnChoosedPai()
+            }
+            for(var e=0;e<a.length;e++){
+              var i=a[e].seat;
+              var s=mjcore.MJPai.Create(a[0].hu_tile);
+              t.DesktopMgr.Inst.players[t.DesktopMgr.Inst.seat2LocalPosition(i)].AddBabei(s,true,1);
+              //i==t.DesktopMgr.Inst.seat?t.DesktopMgr.Inst.mainrole.onBabei(mjcore.MJPai.Create(a[e].hu_tile),0,0):t.DesktopMgr.Inst.players[t.DesktopMgr.Inst.seat2LocalPosition(i)].recordBabei(mjcore.MJPai.Create(a[e].hu_tile),true,0,0);
+              if(e!=0)t.DesktopMgr.Inst.lastqipai.lastColor=new Laya.Vector4(1,.78,.78,.4);
+              else t.DesktopMgr.Inst.lastqipai.lastColor=new Laya.Vector4(1,.78,.78,1);
+              if(t.DesktopMgr.Inst.lastqipai)t.DesktopMgr.Inst.lastqipai.model.meshRender.sharedMaterial.setColor(caps.Cartoon.COLOR,t.DesktopMgr.Inst.lastqipai.lastColor);
+              if(t.DesktopMgr.Inst.lastqipai)t.DesktopMgr.Inst.lastqipai.model.meshRender.sharedMaterial.blend=2;
+              if(t.DesktopMgr.Inst.lastqipai)t.DesktopMgr.Inst.lastqipai.val.type+=10;
+              if(t.DesktopMgr.Inst.lastqipai)t.DesktopMgr.Inst.lastqipai.isxuezhanhu=!0,t.DesktopMgr.Inst.lastqipai.OnChoosedPai()
+            }
+          })
+        }
+        r+=2e3,Laya.timer.once(r,i,function(){
+          for (var n=0,r=t.DesktopMgr.Inst.players;n<r.length;n++){
+            r[n].hideLiqi()
+          }
+          e.liqi?Laya.timer.once(2500,i,function(){
+            t.ActionLiqi.play(e.liqi)
+          }):uiscript.UI_DesktopInfo.Inst.setLiqibang(0);
+          for (var s=[],o=0;o<e.delta_scores.length;o++){
+            var l={
+              title_id:0,
+              score:0,
+              delta:0
+            };
+            if(e.delta_scores[o]>0){
+              o==t.DesktopMgr.Inst.seat,uiscript.UI_DesktopInfo.Inst.changeHeadEmo(o,"emoji_7",-1),l.delta=e.delta_scores[o];
+              for(var h=0,c=a;h<c.length;h++) {
+                var _=c[h];
+                if(_.seat == o){
+                  l.title_id=_.title_id;
+                  break
+                }
+              }
+            } 
+            else e.delta_scores[o]<0&&(l.delta=e.delta_scores[o],uiscript.UI_DesktopInfo.Inst.changeHeadEmo(o,"emoji_8",-1));
+            l.score=e.old_scores[o],s.push(l)
+          }
+          Laya.timer.once(200,i,function(){
+            t.DesktopMgr.Inst.setScores(e.scores)
+          }),uiscript.UI_Hu_Xuezhan.Inst.showScoreChange(s)
+        }),r+=2500,Laya.timer.once(r,this,function(){
+          for(var i=0;i<e.allplayertiles.length;i++){
+            for(var n=e.allplayertiles[i].split("|"),r=[],s=0;s<n.length;s++)r.push(mjcore.MJPai.Create(n[s]));
+            r=r.sort(mjcore.MJPai.Distance),t.DesktopMgr.Inst.players[t.DesktopMgr.Inst.seat2LocalPosition(i)].Huangpai(!0,r,!1)
+          }
+        }),r+=2500,Laya.timer.once(r,i,function(){
+          uiscript.UIMgr.Inst.ShowWin(e,!1),t.DesktopMgr.Inst.ActionRunComplete()
+        })
+      })
+      return 1e5;
+    },i.fastrecord=function(e,i){
+      app.Log.log("ActionHule fastplay data:"+JSON.stringify(e));
+      t.BgmListMgr.stopBgm(),t.DesktopMgr.Inst.gameing=!1,e.muyu&&t.DesktopMgr.Inst.onMuyuChange(e.muyu,!1),e.doras&&t.DesktopMgr.Inst.WhenDoras(e.doras,!1),t.DesktopMgr.Inst.setScores(e.scores),uiscript.UIMgr.Inst.ShowWin(e,!1)
+    },i
+  }(t.ActionBase);
+  t.ActionHuleXueLiuEnd=e
+}(view||(view={}));
+let OnChoosedPai=view.ViewPai.prototype.OnChoosedPai;
+view.ViewPai.prototype.OnChoosedPai=function(){
+  try{
+    let e=view.DesktopMgr.Inst.choosed_pai;
+    if(null==e||0!=mjcore.MJPai.Distance(this.val,e)) {
+      if(this.lastColor!==undefined)this.model.meshRender.sharedMaterial.setColor(caps.Cartoon.COLOR,this.lastColor);
+      else if(this.isxuezhanhu||this.ispaopai)this.model.meshRender.sharedMaterial.setColor(caps.Cartoon.COLOR,new Laya.Vector4(1,.78,.78,1));
+      else if(this.ismoqie)this.model.meshRender.sharedMaterial.setColor(caps.Cartoon.COLOR,new Laya.Vector4(.8,.8,.8,1));
+      else this.model.meshRender.sharedMaterial.setColor(caps.Cartoon.COLOR,this.GetDefaultColor());
+    } 
+    else this.model.meshRender.sharedMaterial.setColor(caps.Cartoon.COLOR,new Laya.Vector4(.615,.827,.976,1));
+  }catch(e){
+    OnChoosedPai.call(this);
+    console.error(e);
+  }
+}
+uiscript.UI_Replay.prototype.doRecord=function(t){
+  try{
+    var e=0;
+    switch(t.name){
+      case "RecordNewRound":
+        e=view.ActionNewRound.record(t.data);
+        break;
+      case "RecordChangeTile":
+        e=view.ActionChangeTile.record(t.data);
+        break;
+      case "RecordSelectGap":
+        e=view.ActionSelectGap.record(t.data);
+        break;
+      case "RecordDiscardTile":
+        e=view.ActionDiscardTile.record(t.data);
+        break;
+      case "RecordDealTile":
+        e=view.ActionDealTile.record(t.data);
+        break;
+      case "RecordChiPengGang":
+        e=view.ActionChiPengGang.record(t.data);
+        break;
+      case "RecordAnGangAddGang":
+        e=view.ActionAnGangAddGang.record(t.data);
+        break;
+      case "RecordBaBei":
+        e=view.ActionBabei.record(t.data);
+        break;
+      case "RecordHule":
+        e=view.ActionHule.record(t.data);
+        break;
+      case "RecordLiuJu":
+        e=view.ActionLiuJu.record(t.data);
+        break;
+      case "RecordNoTile":
+        e=view.ActionNoTile.record(t.data);
+        break;
+      case "RecordHuleXueZhanMid":
+        e=view.ActionHuleXueZhanMid.record(t.data);
+        break;
+      case "RecordHuleXueZhanEnd":
+        e=view.ActionHuleXueZhanEnd.record(t.data);
+        break;
+      case "RecordGangResult":
+        e=view.ActionGangResult.record(t.data);
+        break;
+      case "RecordGangResultEnd":
+        e=view.ActionGangResultEnd.record(t.data);
+        break;
+      case "RecordHuleXueLiu":
+        e=view.ActionHuleXueLiu.record(t.data);
+        break;
+      case "RecordHuleXueLiuEnd":
+        e=view.ActionHuleXueLiuEnd.record(t.data)
+    }
+    return this.auto_play&&(e+=this._get_autoplay_delay(t)),"RecordNewRound"!=t.name&&"RecordDealTile"!=t.name||this.page_paishan.refresh(),e
+  }catch (e){
+    var i={};
+    return i.error=e.message,i.stack=e.stack,i.method="ui_replay doRecord",i.name=t.name,i.data=t.data,GameMgr.Inst.onFatalError(i),1e6
+  }
+};
+uiscript.UI_Replay.prototype.doFastRecord = function(t) {
+  try{
+    switch(t.name){
+      case "RecordNewRound":
+        view.ActionNewRound.fastrecord(t.data);
+        break;
+      case "RecordChangeTile":
+        view.ActionChangeTile.fastrecord(t.data);
+        break;
+      case "RecordSelectGap":
+        view.ActionSelectGap.fastrecord(t.data);
+        break;
+      case "RecordDiscardTile":
+        view.ActionDiscardTile.fastrecord(t.data);
+        break;
+      case "RecordDealTile":
+        view.ActionDealTile.fastrecord(t.data);
+        break;
+      case "RecordChiPengGang":
+        view.ActionChiPengGang.fastrecord(t.data);
+        break;
+      case "RecordAnGangAddGang":
+        view.ActionAnGangAddGang.fastrecord(t.data);
+        break;
+      case "RecordHule":
+        view.ActionHule.fastrecord(t.data);
+        break;
+      case "RecordLiuJu":
+        view.ActionLiuJu.fastrecord(t.data);
+        break;
+      case "RecordNoTile":
+        view.ActionNoTile.fastrecord(t.data);
+        break;
+      case "RecordBaBei":
+        view.ActionBabei.fastrecord(t.data);
+        break;
+      case "RecordHuleXueZhanMid":
+        view.ActionHuleXueZhanMid.fastrecord(t.data);
+        break;
+      case "RecordHuleXueZhanEnd":
+        view.ActionHuleXueZhanEnd.fastrecord(t.data);
+        break;
+      case "RecordHuleXueLiu":
+        view.ActionHuleXueLiu.fastrecord(t.data);
+        break;
+      case "RecordHuleXueLiuEnd":
+        view.ActionHuleXueLiuEnd.fastrecord(t.data);
+    }
+    "RecordNewRound"!=t.name&&"RecordDealTile"!=t.name||this.page_paishan.refresh()
+  }catch (i){
+    var e={};
+    return e.error=i.message,e.stack=i.stack,e.method="ui_replay doRecord",e.name=t.name,e.data=t.data,GameMgr.Inst.onFatalError(e),1e6
+  }
+  return 0
+}
+uiscript.UI_Replay.prototype._get_autoplay_delay=function(t){
+  switch(t.name){
+    case "RecordNewRound":
+      return 0;
+    case "RecordChangeTile":
+    case "RecordDiscardTile":
+    case "RecordDealTile":
+    case "RecordChiPengGang":
+      return 500;
+    case "RecordAnGangAddGang":
+    case "RecordBaBei":
+      return 200;
+    case "RecordHuleXueZhanMid":
+      return 500;
+    case "RecordHuleXueLiu":
+      return 500;
+  }
+  return 0
+}
 function md5(string){
   function md5_RotateLeft(lValue,iShiftBits){
     return(lValue<<iShiftBits)|(lValue>>>(32-iShiftBits));
@@ -199,56 +708,65 @@ var initData,initRoom,show;
 if(initData==undefined)initData=uiscript.UI_Replay.prototype.initData;
 if(initRoom==undefined)initRoom=view.DesktopMgr.prototype.initRoom;
 if(show==undefined)show=uiscript.UI_GameEnd.prototype.show;
-function editgame(){
-  let UI_Replay=uiscript.UI_Replay.Inst;
-  let rounds=[];
-  for(let i=0;i<editdata.actions.length;i++){
-    let whatever={
-      'actions':editdata.actions[i],
-      'xun':[]
+function editgame(editdata){
+  try{
+    let UI_Replay=uiscript.UI_Replay.Inst;
+    let rounds=[];
+    for(let i=0;i<editdata.actions.length;i++){
+      let whatever={
+        'actions':editdata.actions[i],
+        'xun':[]
+      }
+      try{
+        whatever.xun=editdata.xun[i][view.DesktopMgr.Inst.seat];
+      }catch(e){
+        //throw(e);
+        whatever.xun=editdata.xun[i][0];
+      }
+      rounds.push(whatever);
     }
-    if(view.DesktopMgr.Inst.seat)whatever.xun=editdata.xun[i][view.DesktopMgr.Inst.seat];
-    else whatever.xun=editdata.xun[i][0];
-    rounds.push(whatever);
+    UI_Replay.rounds=rounds;
+    UI_Replay.gameResult.result.players=editdata.players;
+  }catch(e){
+    throw(e);
   }
-  UI_Replay.rounds=rounds;
-  UI_Replay.gameResult.result.players=editdata.players;
 }
-function player_datas(a){
-  let ret=[];
-  for(let seat=0;seat<4;seat++){
-    ret[seat]={
-      'nickname':editdata.player_datas[seat].nickname,
-      'avatar_id':editdata.player_datas[seat].avatar_id,
-      'avatar_frame':editdata.player_datas[seat].avatar_frame,
-      'character':{
-        'is_upgraded':true,
-        'level':5,
-        'charid':cfg.item_definition.skin.map_[editdata.player_datas[seat].avatar_id].character_id,
-        'skin':editdata.player_datas[seat].avatar_id,
-      },
-      'level':{'id':10101},
-      'level3':{'id':20101},
-      'charid':cfg.item_definition.skin.map_[editdata.player_datas[seat].avatar_id].character_id,
-      'seat':seat,
-      'views':editdata.player_datas[seat].views,
-      'title':editdata.player_datas[seat].title,
+function edit(x){
+  function player_datas(a){
+    let ret=[];
+    for(let seat=0;seat<4;seat++){
+      ret[seat]={
+        'nickname':x.player_datas[seat].nickname,
+        'avatar_id':x.player_datas[seat].avatar_id,
+        'avatar_frame':x.player_datas[seat].avatar_frame,
+        'character':{
+          'is_upgraded':true,
+          'level':5,
+          'charid':cfg.item_definition.skin.map_[x.player_datas[seat].avatar_id].character_id,
+          'skin':x.player_datas[seat].avatar_id,
+        },
+        'level':{'id':10101},
+        'level3':{'id':20101},
+        'charid':cfg.item_definition.skin.map_[x.player_datas[seat].avatar_id].character_id,
+        'seat':seat,
+        'views':x.player_datas[seat].views,
+        'title':editdata.player_datas[seat].title,
+      }
+      if(a[seat].account_id!=undefined)ret[seat].account_id=a[seat].account_id;
     }
-    if(a[seat].account_id!=undefined)ret[seat].account_id=a[seat].account_id;
+    return ret;
   }
-  return ret;
-}
-function edit(){
+  if(x==undefined)x=JSON.parse(JSON.stringify(editdata));
   uiscript.UI_Replay.prototype.initData=function(t){
     let _=initData.call(this,t);
-    editgame();
+    editgame(x);
     return _;
   }
   view.DesktopMgr.prototype.initRoom=function(e,a,s,o,l){
-    if(o==1)return initRoom.call(this,editdata.config,player_datas(a),s,o,l);
+    if(o==1)return initRoom.call(this,x.config,player_datas(a),s,o,l);
     else return initRoom.call(this,e,a,s,o,l);
   }
-  console.log("edit successfully");
+  //console.log("edit successfully");
 }
 function canceledit(){
   uiscript.UI_Replay.prototype.initData=function(t){
@@ -258,11 +776,11 @@ function canceledit(){
     return initRoom.call(this,e,a,s,o,l);
   }
 }
-var scores=[25000,25000,25000,25000],tiles0=null,tiles1=null,tiles2=null,tiles3=null,firstneededscores;
-var baopai,liqibang=0,lstliqi,doracnt,playertiles,fulu,paihe,muyu={'count':5,'seat':0,'id':0};
-var liqiinfo,drawtype,lstdrawtype,doras,li_doras,delta_scores,muyutimes,muyuseats,mingpais=[{},{},{},{}];
-var chang=0,ju=0,ben=0,playercnt,actions,xun,players,benchangbang,chuanmagangs;
-var config,hules_history,hupaied,paishan=null,discardtiles=["","","",""],gaps,juc=-1;
+var scores=[25000,25000,25000,25000],tiles0=null,tiles1=null,tiles2=null,tiles3=null,firstneededscores=null;
+var baopai=null,liqibang=0,lstliqi=null,doracnt=null,playertiles=null,fulu=null,paihe=null,muyu={'count':5,'seat':0,'id':0};
+var liqiinfo=null,drawtype=null,lstdrawtype=null,doras=null,li_doras=null,delta_scores=null,muyutimes=null,muyuseats=null,mingpais=[{},{},{},{}];
+var chang=0,ju=0,ben=0,playercnt=null,actions=[],xun=[],players=[],benchangbang=null,chuanmagangs=null;
+var config=null,hules_history=null,hupaied=null,paishan=null,discardtiles=["","","",""],gaps=null,juc=-1;
 var specialtiles={
   'all':separatetile("0123456789m0123456789p0123456789s1234567z"),
   'lvyise':separatetile("0123456789m0123456789p01579s123457z"),
@@ -281,7 +799,7 @@ var specialtiles={
 var editdata={
   'actions':[],
   'xun':[],
-  'players':null,
+  'players':[],
   'config':{},
   'settings':{},
   'player_datas':[{'avatar_frame':0,'avatar_id':400101,'nickname':"电脑(简单)",'title':600001,'views':[]},
@@ -289,7 +807,95 @@ var editdata={
                   {'avatar_frame':0,'avatar_id':400101,'nickname':"电脑(简单)",'title':600001,'views':[]},
                   {'avatar_frame':0,'avatar_id':400101,'nickname':"电脑(简单)",'title':600001,'views':[]}]
 };
-function clear(){
+var lstscene;
+function saveproject(){
+  let tmp={};
+  tmp.scores=JSON.parse(JSON.stringify(scores));
+  tmp.tiles0=JSON.parse(JSON.stringify(tiles0));
+  tmp.tiles1=JSON.parse(JSON.stringify(tiles1));
+  tmp.tiles2=JSON.parse(JSON.stringify(tiles2));
+  tmp.tiles3=JSON.parse(JSON.stringify(tiles3));
+  tmp.firstneededscores=JSON.parse(JSON.stringify(firstneededscores));
+  tmp.baopai=JSON.parse(JSON.stringify(baopai));
+  tmp.liqibang=JSON.parse(JSON.stringify(liqibang));
+  tmp.lstliqi=JSON.parse(JSON.stringify(lstliqi));
+  tmp.doracnt=JSON.parse(JSON.stringify(doracnt));
+  tmp.playertiles=JSON.parse(JSON.stringify(playertiles));
+  tmp.fulu=JSON.parse(JSON.stringify(fulu));
+  tmp.paihe=JSON.parse(JSON.stringify(paihe));
+  tmp.muyu=JSON.parse(JSON.stringify(muyu));
+  tmp.liqiinfo=JSON.parse(JSON.stringify(liqiinfo));
+  tmp.drawtype=JSON.parse(JSON.stringify(drawtype));
+  tmp.lstdrawtype=JSON.parse(JSON.stringify(lstdrawtype));
+  tmp.doras=JSON.parse(JSON.stringify(doras));
+  tmp.li_doras=JSON.parse(JSON.stringify(li_doras));
+  tmp.delta_scores=JSON.parse(JSON.stringify(delta_scores));
+  tmp.muyutimes=JSON.parse(JSON.stringify(muyutimes));
+  tmp.muyuseats=JSON.parse(JSON.stringify(muyuseats));
+  tmp.mingpais=JSON.parse(JSON.stringify(mingpais));
+  tmp.chang=JSON.parse(JSON.stringify(chang));
+  tmp.ju=JSON.parse(JSON.stringify(ju));
+  tmp.ben=JSON.parse(JSON.stringify(ben));
+  tmp.playercnt=JSON.parse(JSON.stringify(playercnt));
+  tmp.actions=JSON.parse(JSON.stringify(actions));
+  tmp.xun=JSON.parse(JSON.stringify(xun));
+  tmp.players=JSON.parse(JSON.stringify(players));
+  tmp.benchangbang=JSON.parse(JSON.stringify(benchangbang));
+  tmp.chuanmagangs=JSON.parse(JSON.stringify(chuanmagangs));
+  tmp.config=JSON.parse(JSON.stringify(config));
+  tmp.hules_history=JSON.parse(JSON.stringify(hules_history));
+  tmp.hupaied=JSON.parse(JSON.stringify(hupaied));
+  tmp.paishan=JSON.parse(JSON.stringify(paishan));
+  tmp.discardtiles=JSON.parse(JSON.stringify(discardtiles));
+  tmp.gaps=JSON.parse(JSON.stringify(gaps));
+  tmp.juc=JSON.parse(JSON.stringify(juc));
+  tmp.editdata=JSON.parse(JSON.stringify(editdata));
+  lstscene=tmp;
+}
+function loadproject(x){
+  if(x!=undefined){
+    scores=JSON.parse(JSON.stringify(x.scores));
+    tiles0=JSON.parse(JSON.stringify(x.tiles0));
+    tiles1=JSON.parse(JSON.stringify(x.tiles1));
+    tiles2=JSON.parse(JSON.stringify(x.tiles2));
+    tiles3=JSON.parse(JSON.stringify(x.tiles3));
+    firstneededscores=JSON.parse(JSON.stringify(x.firstneededscores));
+    baopai=JSON.parse(JSON.stringify(x.baopai));
+    liqibang=JSON.parse(JSON.stringify(x.liqibang));
+    lstliqi=JSON.parse(JSON.stringify(x.lstliqi));
+    doracnt=JSON.parse(JSON.stringify(x.doracnt));
+    playertiles=JSON.parse(JSON.stringify(x.playertiles));
+    fulu=JSON.parse(JSON.stringify(x.fulu));
+    paihe=JSON.parse(JSON.stringify(x.paihe));
+    muyu=JSON.parse(JSON.stringify(x.muyu));
+    liqiinfo=JSON.parse(JSON.stringify(x.liqiinfo));
+    drawtype=JSON.parse(JSON.stringify(x.drawtype));
+    lstdrawtype=JSON.parse(JSON.stringify(x.lstdrawtype));
+    doras=JSON.parse(JSON.stringify(x.doras));
+    li_doras=JSON.parse(JSON.stringify(x.li_doras));
+    delta_scores=JSON.parse(JSON.stringify(x.delta_scores));
+    muyutimes=JSON.parse(JSON.stringify(x.muyutimes));
+    muyuseats=JSON.parse(JSON.stringify(x.muyuseats));
+    mingpais=JSON.parse(JSON.stringify(x.mingpais));
+    chang=JSON.parse(JSON.stringify(x.chang));
+    ju=JSON.parse(JSON.stringify(x.ju));
+    ben=JSON.parse(JSON.stringify(x.ben));
+    playercnt=JSON.parse(JSON.stringify(x.playercnt));
+    actions=JSON.parse(JSON.stringify(x.actions));
+    xun=JSON.parse(JSON.stringify(x.xun));
+    players=JSON.parse(JSON.stringify(x.players));
+    benchangbang=JSON.parse(JSON.stringify(x.benchangbang));
+    chuanmagangs=JSON.parse(JSON.stringify(x.chuanmagangs));
+    config=JSON.parse(JSON.stringify(x.config));
+    hules_history=JSON.parse(JSON.stringify(x.hules_history));
+    hupaied=JSON.parse(JSON.stringify(x.hupaied));
+    paishan=JSON.parse(JSON.stringify(x.paishan));
+    discardtiles=JSON.parse(JSON.stringify(x.discardtiles));
+    gaps=JSON.parse(JSON.stringify(x.gaps));
+    juc=JSON.parse(JSON.stringify(x.juc));
+    editdata=JSON.parse(JSON.stringify(x.editdata));
+    return;
+  }
   scores=[25000,25000,25000,25000];tiles0=null;tiles1=null;tiles2=null;tiles3=null;
   liqibang=0;muyu={'count':5,'seat':0,'id':0};
   mingpais=[{},{},{},{}];chang=0;ju=0;ben=0;
@@ -305,6 +911,27 @@ function clear(){
                     {'avatar_frame':0,'avatar_id':400101,'nickname':"电脑(简单)",'title':600001,'views':[]},
                     {'avatar_frame':0,'avatar_id':400101,'nickname':"电脑(简单)",'title':600001,'views':[]}]
   };
+}
+function edit_online(){
+  saveproject();
+  if(actions.length!=0)roundend(true);
+  gameend(true);
+  try{
+    if(view.DesktopMgr.Inst.active){
+      //console.log("Path1");
+      editgame(JSON.parse(JSON.stringify(editdata)));
+    }
+    else{
+      //console.log("Path2");
+      edit(JSON.parse(JSON.stringify(editdata)));
+    }
+  }catch(e){
+    //console.log("Path2");
+    edit(JSON.parse(JSON.stringify(editdata)));
+  }
+  try{view.DesktopMgr.Inst.player_datas=(JSON.parse(JSON.stringify(x))).player_datas}catch(e){};
+  try{view.DesktopMgr.Inst.gameEndResult.players=(JSON.parse(JSON.stringify(x))).players;}catch(e){};
+  loadproject(lstscene);
 }
 function init(){
   muyutimes=[1,1,1,1];
@@ -1237,6 +1864,8 @@ function gamebegin(){
     if(is_muyu())config.mode.detail_rule.muyu_mode=0;
     if(is_dora3())config.mode.detail_rule.dora3_mode=0;
   }
+  if(config.mode.mode==11)playercnt=3;
+  else playercnt=4;
   if(config.mode&&config.mode.detail_rule&&config.mode.detail_rule.open_hand==1)config.mode.detail_rule.open_hand="1111";
   if(config.mode.mode==11){
     if(config&&config.mode&&config.mode.detail_rule&&config.mode.detail_rule.init_point)scores=[config.mode.detail_rule.init_point,config.mode.detail_rule.init_point,config.mode.detail_rule.init_point];
@@ -1252,6 +1881,7 @@ function gamebegin(){
     }
   }
   firstneededscores=scores[0];
+  edit_online();
 }
 function addNewRound(chang,ju,ben,doras,left_tile_count,liqibang,md5,paishan,scores,tiles0,tiles1,tiles2,tiles3,tingpai){
   function mingpai_data(tiles,seat){
@@ -1337,24 +1967,31 @@ function addNewRound(chang,ju,ben,doras,left_tile_count,liqibang,md5,paishan,sco
   }
   actions.push(ret);
   calcxun();
+  edit_online();
 }
 function roundbegin(){
-  if(is_chuanma()&&juc!=-1){ju=juc;juc=-1;}
-  if(ju==playercnt){chang++;ju=0;}
-  if(chang==playercnt)chang=0;
-  init();
-  benchangbang=ben;
-  let lsttile=playertiles[ju][playertiles[ju].length-1];
-  playertiles[ju].length--;
-  let tingpais=[];
-  for(let i=0;i<playercnt;i++){
-    let tingpaitmp=tingpai(i);
-    if(tingpaitmp.length!=0)tingpais.push({'seat':i,'tingpais1':tingpaitmp});
+  try{
+    if(is_chuanma()&&juc!=-1){ju=juc;juc=-1;}
+    if(ju==playercnt){chang++;ju=0;}
+    if(chang==playercnt)chang=0;
+    init();
+    benchangbang=ben;
+    let lsttile=playertiles[ju][playertiles[ju].length-1];
+    playertiles[ju].length--;
+    let tingpais=[];
+    for(let i=0;i<playercnt;i++){
+      let tingpaitmp=tingpai(i);
+      if(tingpaitmp.length!=0)tingpais.push({'seat':i,'tingpais1':tingpaitmp});
+    }
+    playertiles[ju].push(lsttile);
+    if(is_dora3())doracnt.cnt=3;
+    if(!is_chuanma())addNewRound(chang,ju,ben,calcdoras(),paishan.length/2-14,liqibang,md5(paishan),paishan,[].concat(scores),[].concat(tiles0),[].concat(tiles1),[].concat(tiles2),[].concat(tiles3),tingpais);
+    else addNewRound(chang,ju,ben,calcdoras(),paishan.length/2,liqibang,md5(paishan),paishan,[].concat(scores),[].concat(tiles0),[].concat(tiles1),[].concat(tiles2),[].concat(tiles3),tingpais);
+    saveproject();
+  }catch(e){
+    throw(e);
+    loadproject(lstscene);
   }
-  playertiles[ju].push(lsttile);
-  if(is_dora3())doracnt.cnt=3;
-  if(!is_chuanma())addNewRound(chang,ju,ben,calcdoras(),paishan.length/2-14,liqibang,md5(paishan),paishan,[].concat(scores),[].concat(tiles0),[].concat(tiles1),[].concat(tiles2),[].concat(tiles3),tingpais);
-  else addNewRound(chang,ju,ben,calcdoras(),paishan.length/2,liqibang,md5(paishan),paishan,[].concat(scores),[].concat(tiles0),[].concat(tiles1),[].concat(tiles2),[].concat(tiles3),tingpais);
 }
 function addDiscardTile(is_liqi,is_wliqi,doras,moqie,seat,tile,tingpais,tile_state,is_kailiqi){ 
   for(let i=0;i<playertiles[seat].length;i++){
@@ -1391,6 +2028,7 @@ function addDiscardTile(is_liqi,is_wliqi,doras,moqie,seat,tile,tingpais,tile_sta
   if(is_kailiqi)ret.data.is_kailiqi=true;
   actions.push(ret);
   calcxun();
+  edit_online();
 }
 function addDealTile(doras,left_tile_count,seat,tile,liqi,tile_state){
   playertiles[seat].push(tile);
@@ -1416,6 +2054,7 @@ function addDealTile(doras,left_tile_count,seat,tile,liqi,tile_state){
   }
   actions.push(ret);
   calcxun();
+  edit_online();
 }
 function addChiPengGang(froms,seat,tiles,type,liqi,tile_states){
   for(let j=0;j<tiles.length;j++){
@@ -1449,6 +2088,7 @@ function addChiPengGang(froms,seat,tiles,type,liqi,tile_states){
   }
   actions.push(ret);
   calcxun();
+  edit_online();
 }
 function addAnGangAddGang(doras,seat,tiles,type,tile_states){
   if(type!=3){
@@ -1483,6 +2123,7 @@ function addAnGangAddGang(doras,seat,tiles,type,tile_states){
   if(tile_states)ret.data.tile_states=tile_states;
   actions.push(ret);
   calcxun();
+  edit_online();
 }
 function addBaBei(doras,seat,moqie,tile,tile_states){
   if(typeof(moqie)=="string"){tile=moqie;moqie=undefined;}
@@ -1510,6 +2151,7 @@ function addBaBei(doras,seat,moqie,tile,tile_states){
   if(tile_states!=undefined)ret.data.tile_states;
   actions.push(ret);
   calcxun();
+  edit_online();
 }
 function cmp(x,y){
   return tiletoint(x)-tiletoint(y);
@@ -1851,6 +2493,7 @@ function endHule(HuleInfo,old_scores,delta_scores,scores,baopai){
       'baopai':baopai
     }
   });
+  edit_online();
 }
 function addHuleXueZhanMid(HuleInfo,old_scores,delta_scores,scores){
   for(let seat=0;seat<playercnt;seat++)liqiinfo[seat].yifa=0;//?????
@@ -1863,6 +2506,7 @@ function addHuleXueZhanMid(HuleInfo,old_scores,delta_scores,scores){
       'scores':[].concat(scores)
     }
   });
+  edit_online();
 }
 function addHuleXueZhanEnd(HuleInfo,old_scores,delta_scores,scores,hules_history){
   actions.push({
@@ -1887,6 +2531,7 @@ function addHuleXueLiu(HuleInfo,old_scores,delta_scores,scores){
       'scores':[].concat(scores)
     }
   });
+  edit_online();
 }
 function addHuleXueLiuEnd(HuleInfo,old_scores,delta_scores,scores,hules_history){
   let allplayertiles=["","","",""];
@@ -1909,89 +2554,96 @@ function addHuleXueLiuEnd(HuleInfo,old_scores,delta_scores,scores,hules_history)
       'allplayertiles':allplayertiles
     }
   });
+  edit_online();
 }
 function hupai(x,type){
-  if(chuanmagangs.notover.length!=0){
-    let seat=getlstaction().data.seat,tile=getlstaction().data.tiles;
-    for(let i=0;i<fulu[seat].length;i++){
-      if(fulu[seat][i].type==2&&equaltile(fulu[seat][i].tile[0],tile)){
-          fulu[seat][i].type=1;
-          fulu[seat][i].tile.length--;
-          break;
+  try{
+    if(chuanmagangs.notover.length!=0){
+      let seat=getlstaction().data.seat,tile=getlstaction().data.tiles;
+      for(let i=0;i<fulu[seat].length;i++){
+        if(fulu[seat][i].type==2&&equaltile(fulu[seat][i].tile[0],tile)){
+            fulu[seat][i].type=1;
+            fulu[seat][i].tile.length--;
+            break;
+        }
+      }
+      chuanmagangs.notover.length=0;
+    }
+    if(typeof(x)=="boolean"){type=x;x=undefined;}
+    if(typeof(x)=="number")x=[x];
+    if(x==undefined){
+      let lstaction=getlstaction();
+      if(lstaction.name=="RecordDealTile")x=[lstaction.data.seat];
+      else if(lstaction.name=="RecordNewRound"||lstaction.name=="RecordChangeTile")x=[ju];
+      else{
+        x=[];
+        for(let i=ju;i<playercnt+ju;i++){
+          seat=i%playercnt;
+          if(seat==getlstaction().data.seat||hupaied[seat])continue;
+          if(lstaction.name=="RecordDiscardTile")playertiles[seat].push(lstaction.data.tile);
+          else if(lstaction.name=="RecordAnGangAddGang")playertiles[seat].push(lstaction.data.tiles);
+          else if(lstaction.name=="RecordBaBei")playertiles[seat].push(lstaction.data.tile);
+          if(calchupai(playertiles[seat])!=0)x.push(seat);
+          playertiles[seat].length=playertiles[seat].length-1;
+        }
       }
     }
-    chuanmagangs.notover.length=0;
-  }
-  if(typeof(x)=="boolean"){type=x;x=undefined;}
-  if(typeof(x)=="number")x=[x];
-  if(x==undefined){
-    let lstaction=getlstaction();
-    if(lstaction.name=="RecordDealTile")x=[lstaction.data.seat];
-    else if(lstaction.name=="RecordNewRound"||lstaction.name=="RecordChangeTile")x=[ju];
-    else{
-      x=[];
-      for(let i=ju;i<playercnt+ju;i++){
-        seat=i%playercnt;
-        if(seat==getlstaction().data.seat||hupaied[seat])continue;
-        if(lstaction.name=="RecordDiscardTile")playertiles[seat].push(lstaction.data.tile);
-        else if(lstaction.name=="RecordAnGangAddGang")playertiles[seat].push(lstaction.data.tiles);
-        else if(lstaction.name=="RecordBaBei")playertiles[seat].push(lstaction.data.tile);
-        if(calchupai(playertiles[seat])!=0)x.push(seat);
-        playertiles[seat].length=playertiles[seat].length-1;
+    if(!is_xuezhandaodi()&&!is_chuanma()&&!is_xueliu()){
+      let ret=[],baopait=0;
+      for(let i=0;i<x.length;i++)ret.push(hupaioneplayer(x[i]));
+      for(let i=0;i<x.length;i++)hupaied[x[i]]=true;
+      for(let i=0;i<x.length;i++)if(baopai[x[i]])baopait=baopai[x[i]].seat+1;
+      let old_scores=[].concat(scores);
+      for(let i=0;i<playercnt;i++)scores[i]=scores[i]+delta_scores[i];
+      endHule(ret,[].concat(old_scores),[].concat(delta_scores),[].concat(scores),baopait);
+      delta_scores=[0,0,0,0];
+      if(!is_chuanma()&&hupaied[ju])ben++;
+      else if(!is_chuanma()){
+        ju++;
+        ben=0;
       }
     }
-  }
-  if(!is_xuezhandaodi()&&!is_chuanma()&&!is_xueliu()){
-    let ret=[],baopait=0;
-    for(let i=0;i<x.length;i++)ret.push(hupaioneplayer(x[i]));
-    for(let i=0;i<x.length;i++)hupaied[x[i]]=true;
-    for(let i=0;i<x.length;i++)if(baopai[x[i]])baopait=baopai[x[i]].seat+1;
-    let old_scores=[].concat(scores);
-    for(let i=0;i<playercnt;i++)scores[i]=scores[i]+delta_scores[i];
-    endHule(ret,[].concat(old_scores),[].concat(delta_scores),[].concat(scores),baopait);
-    delta_scores=[0,0,0,0];
-    if(!is_chuanma()&&hupaied[ju])ben++;
-    else if(!is_chuanma()){
-      ju++;
-      ben=0;
+    else if((is_xuezhandaodi()||is_chuanma()||is_xueliu())&&(type==undefined||type==false)){
+      let ret=[];
+      for(let i=0;i<x.length;i++){
+        let whatever;
+        if(!is_chuanma())whatever=hupaioneplayer(x[i]);
+        else whatever=hupaioneplayer_chuanma(x[i]);
+        ret.push(whatever);
+        inserthules_history(whatever);
+      }
+      if(is_chuanma()&&juc==-1)juc=x[0];
+      if(!is_xueliu())for(let i=0;i<x.length;i++)hupaied[x[i]]=true;
+      let old_scores=[].concat(scores);
+      for(let i=0;i<playercnt;i++)scores[i]=scores[i]+delta_scores[i];
+      if(!is_xueliu())addHuleXueZhanMid(ret,[].concat(old_scores),[].concat(delta_scores),[].concat(scores));
+      else addHuleXueLiu(ret,[].concat(old_scores),[].concat(delta_scores),[].concat(scores));
+      delta_scores=[0,0,0,0];
+    } 
+    else if((is_xuezhandaodi()||is_chuanma()||is_xueliu())&&type!=undefined&&type!=false){
+      let ret=[];
+      for(let i=0;i<x.length;i++){
+        let whatever;
+        if(!is_chuanma())whatever=hupaioneplayer(x[i]);
+        else whatever=hupaioneplayer_chuanma(x[i]);
+        ret.push(whatever);
+        inserthules_history(whatever);
+      }
+      if(is_chuanma()&&juc==-1)juc=x[0];
+      if(!is_xueliu())for(let i=0;i<x.length;i++)hupaied[x[i]]=true;
+      let old_scores=[].concat(scores);
+      for(let i=0;i<playercnt;i++)scores[i]=scores[i]+delta_scores[i];
+      if(!is_xueliu())addHuleXueZhanEnd(ret,[].concat(old_scores),[].concat(delta_scores),[].concat(scores),hules_history);
+      else addHuleXueLiuEnd(ret,[].concat(old_scores),[].concat(delta_scores),[].concat(scores),hules_history);
+      delta_scores=[0,0,0,0];
+      if(!is_chuanma())ju++;
     }
+    if(is_chuanma()&&!hupaied[0]&&!hupaied[1]&&!hupaied[2]&&!hupaied[3])ju=x[0];
+    saveproject();
+  }catch(e){
+    throw(e);
+    loadproject(lstscene);
   }
-  else if((is_xuezhandaodi()||is_chuanma()||is_xueliu())&&(type==undefined||type==false)){
-    let ret=[];
-    for(let i=0;i<x.length;i++){
-      let whatever;
-      if(!is_chuanma())whatever=hupaioneplayer(x[i]);
-      else whatever=hupaioneplayer_chuanma(x[i]);
-      ret.push(whatever);
-      inserthules_history(whatever);
-    }
-    if(is_chuanma()&&juc==-1)juc=x[0];
-    if(!is_xueliu())for(let i=0;i<x.length;i++)hupaied[x[i]]=true;
-    let old_scores=[].concat(scores);
-    for(let i=0;i<playercnt;i++)scores[i]=scores[i]+delta_scores[i];
-    if(!is_xueliu())addHuleXueZhanMid(ret,[].concat(old_scores),[].concat(delta_scores),[].concat(scores));
-    else addHuleXueLiu(ret,[].concat(old_scores),[].concat(delta_scores),[].concat(scores));
-    delta_scores=[0,0,0,0];
-  } 
-  else if((is_xuezhandaodi()||is_chuanma()||is_xueliu())&&type!=undefined&&type!=false){
-    let ret=[];
-    for(let i=0;i<x.length;i++){
-      let whatever;
-      if(!is_chuanma())whatever=hupaioneplayer(x[i]);
-      else whatever=hupaioneplayer_chuanma(x[i]);
-      ret.push(whatever);
-      inserthules_history(whatever);
-    }
-    if(is_chuanma()&&juc==-1)juc=x[0];
-    if(!is_xueliu())for(let i=0;i<x.length;i++)hupaied[x[i]]=true;
-    let old_scores=[].concat(scores);
-    for(let i=0;i<playercnt;i++)scores[i]=scores[i]+delta_scores[i];
-    if(!is_xueliu())addHuleXueZhanEnd(ret,[].concat(old_scores),[].concat(delta_scores),[].concat(scores),hules_history);
-    else addHuleXueLiuEnd(ret,[].concat(old_scores),[].concat(delta_scores),[].concat(scores),hules_history);
-    delta_scores=[0,0,0,0];
-    if(!is_chuanma())ju++;
-  }
-  if(is_chuanma()&&!hupaied[0]&&!hupaied[1]&&!hupaied[2]&&!hupaied[3])ju=x[0];
 }
 function addChangeTile(change_tile_infos,change_type,doras){
   for(let seat=0;seat<playercnt;seat++){
@@ -2049,24 +2701,31 @@ function addChangeTile(change_tile_infos,change_type,doras){
     'seat':3
   }];
   actions.push(ret);
+  edit_online();
 }
 //0:逆时针  1:对家   2:顺时针 
 function huansanzhang(tiles0,tiles1,tiles2,tiles3,type){
-  if(typeof(tiles0)=="string")tiles0=separatetile(tiles0);
-  if(typeof(tiles1)=="string")tiles1=separatetile(tiles1);
-  if(typeof(tiles2)=="string")tiles2=separatetile(tiles2);
-  if(typeof(tiles3)=="string")tiles3=separatetile(tiles3);
-  let ret=[];
-  let tiles=[tiles0,tiles1,tiles2,tiles3];
-  for(let seat=0;seat<playercnt;seat++){
-    ret.push({
-      'out_tiles':tiles[seat],
-      'in_tile_states':[0,0,0],
-      'in_tiles':tiles[(seat-type-1+playercnt*2)%playercnt],
-      'out_tile_states':[0,0,0],
-    })
+  try{
+    if(typeof(tiles0)=="string")tiles0=separatetile(tiles0);
+    if(typeof(tiles1)=="string")tiles1=separatetile(tiles1);
+    if(typeof(tiles2)=="string")tiles2=separatetile(tiles2);
+    if(typeof(tiles3)=="string")tiles3=separatetile(tiles3);
+    let ret=[];
+    let tiles=[tiles0,tiles1,tiles2,tiles3];
+    for(let seat=0;seat<playercnt;seat++){
+      ret.push({
+        'out_tiles':tiles[seat],
+        'in_tile_states':[0,0,0],
+        'in_tiles':tiles[(seat-type-1+playercnt*2)%playercnt],
+        'out_tile_states':[0,0,0],
+      })
+    }
+    addChangeTile(ret,type,calcdoras());
+    saveproject();
+  }catch(e){
+    throw(e);
+    loadproject(lstscene);
   }
-  addChangeTile(ret,type,calcdoras());
 }
 function addSelectGap(gap_types){
   let ret={
@@ -2082,19 +2741,26 @@ function addSelectGap(gap_types){
   }
   if(tingpais.length!=0)ret.data.tingpai=tingpais;
   actions.push(ret);
+  edit_online();
 }
 //1m2s0p
 function dingque(x){
-  if(typeof(x)=="number")x=x.toString();
-  if(typeof(x)=="string")x=x.split('');
-  let ret=[];
-  for(let i=0;i<x.length;i++){
-    if(x[i]=="wan"||x[i]=="m"||x[i]=="1")ret.push(1);
-    if(x[i]=="bing"||x[i]=="p"||x[i]=="0")ret.push(0);
-    if(x[i]=="suo"||x[i]=="s"||x[i]=="2")ret.push(2);
+  try{
+    if(typeof(x)=="number")x=x.toString();
+    if(typeof(x)=="string")x=x.split('');
+    let ret=[];
+    for(let i=0;i<x.length;i++){
+      if(x[i]=="wan"||x[i]=="m"||x[i]=="1")ret.push(1);
+      if(x[i]=="bing"||x[i]=="p"||x[i]=="0")ret.push(0);
+      if(x[i]=="suo"||x[i]=="s"||x[i]=="2")ret.push(2);
+    }
+    gaps=ret;
+    addSelectGap(ret);
+    saveproject();
+  }catch(e){
+    throw(e);
+    loadproject(lstscene);
   }
-  gaps=ret;
-  addSelectGap(ret);
 }
 function addGangResult(gang_infos){
   actions.push({
@@ -2103,6 +2769,7 @@ function addGangResult(gang_infos){
       'gang_infos':gang_infos,
     }
   });
+  edit_online();
 }
 function addGangResultEnd(gang_infos){
   actions.push({
@@ -2111,30 +2778,37 @@ function addGangResultEnd(gang_infos){
       'gang_infos':gang_infos,
     }
   });
+  edit_online();
 }
 function calcgangpoint(type){
-  let ret={
-    'delta_scores':[],
-    'old_scores':[].concat(scores),
-    'scores':[]
-  }
-  if(chuanmagangs.notover.length==0)return;
-  for(let i=chuanmagangs.notover.length-1;i>=0;i--){
-    chuanmagangs.over.push(chuanmagangs.notover[i]);
-    delta_scores[chuanmagangs.notover[i].from]-=chuanmagangs.notover[i].val;
-    delta_scores[chuanmagangs.notover[i].to]+=chuanmagangs.notover[i].val;
-    chuanmagangs.notover.length--;
-  }
-  ret.delta_scores=[].concat(delta_scores);
-  for(let i=0;i<playercnt;i++){
-    scores[i]=scores[i]+delta_scores[i];
-    delta_scores[i]=0;
-  }
-  ret.scores=[].concat(scores);
-  if(type==undefined||type==false)addGangResult(ret);
-  else {
-    ret.hules_history=hules_history;
-    addGangResultEnd(ret);
+  try{
+    let ret={
+      'delta_scores':[],
+      'old_scores':[].concat(scores),
+      'scores':[]
+    }
+    if(chuanmagangs.notover.length==0)return;
+    for(let i=chuanmagangs.notover.length-1;i>=0;i--){
+      chuanmagangs.over.push(chuanmagangs.notover[i]);
+      delta_scores[chuanmagangs.notover[i].from]-=chuanmagangs.notover[i].val;
+      delta_scores[chuanmagangs.notover[i].to]+=chuanmagangs.notover[i].val;
+      chuanmagangs.notover.length--;
+    }
+    ret.delta_scores=[].concat(delta_scores);
+    for(let i=0;i<playercnt;i++){
+      scores[i]=scores[i]+delta_scores[i];
+      delta_scores[i]=0;
+    }
+    ret.scores=[].concat(scores);
+    if(type==undefined||type==false)addGangResult(ret);
+    else {
+      ret.hules_history=hules_history;
+      addGangResultEnd(ret);
+    }
+    saveproject();
+  }catch(e){
+    throw(e);
+    loadproject(lstscene);
   }
 }
 function endNoTile(liujumanguan,players,scores){
@@ -2149,539 +2823,581 @@ function endNoTile(liujumanguan,players,scores){
   };
   if(hules_history.length!=0)ret.data.hules_history=hules_history;
   actions.push(ret);
+  edit_online();
 }
 function mopai(seat){
-  if(is_chuanma())calcgangpoint();
-  let lstaction=getlstaction();
-  if(lstaction.name=="RecordChiPengGang"||lstaction.name=="RecordBaBei"||lstaction.name=="RecordAnGangAddGang")seat=lstaction.data.seat;
-  if(lstaction.name=="RecordNewRound"||lstaction.name=="RecordChangeTile"||lstaction.name=="RecordSelectGap")seat=ju;
-  if(lstaction.name=="RecordDiscardTile"||lstaction.name=="RecordHuleXueZhanMid"||lstaction.name=="RecordHuleXueLiu"){
-    if(lstaction.name=="RecordDiscardTile")seat=(lstaction.data.seat+1)%playercnt;
-    else seat=(lstaction.data.hules[lstaction.data.hules.length-1].seat+1)%playercnt;
-    while(hupaied[seat])seat=(seat+1)%playercnt;
-  }
-  if(doracnt.lsttype==2){
-    doracnt.lsttype=0;
-    doracnt.cnt++;
-  }
-  for(let i=0;i<playercnt;i++)if(liqiinfo[i].yifa==2)liqiinfo[i].yifa=0;
-  let drawcard,liqi;
-  if(lstliqi!=0&&scores[lstliqi.seat]>=1000){
-    liqibang=liqibang+1;
-    scores[lstliqi.seat]=scores[lstliqi.seat]-1000;
-    liqiinfo[lstliqi.seat]={'liqi':lstliqi.type,'yifa':1,'kai':lstliqi.kai};
-    liqi={
-      'liqibang':liqibang,
-      'score':scores[lstliqi.seat],
-      'seat':lstliqi.seat
-    }
-  }
-  lstliqi=0;
-  let tile_state;
-  if(is_openhand(seat)||liqiinfo[seat].kai)tile_state=1;
-  if(drawtype==1){
-    if(!is_chuanma())addDealTile(calcdoras(),paishan.length/2-15,seat,paishan.substring(0,2),liqi,tile_state);
-    else addDealTile(calcdoras(),paishan.length/2-1,seat,paishan.substring(0,2),liqi,tile_state);
-    drawcard=paishan.substring(0,2);
-    paishan=paishan.substring(2);
-    lstdrawtype=1;
-  }
-  else{
-    addDealTile(calcdoras(),paishan.length/2-15,seat,paishan.substring(paishan.length-2),liqi,tile_state);
-    drawcard=paishan.substring(paishan.length-2);
-    paishan=paishan.substring(0,paishan.length-2);
-    lstdrawtype=0;
-  }
-  drawtype=1;
-  return drawcard;
-}
-function qiepai(seat,kind,is_liqi){
-  if(typeof(seat)=="boolean"||seat=="liqi"||seat=="kailiqi"){kind=seat;seat=undefined;}
-  if(typeof(kind)=="boolean"||kind=="liqi"||kind=="kailiqi"){is_liqi=kind;kind=undefined;}
-  if(seat!=0&&seat!=1&&seat!=2&&seat!=playercnt-1&&seat!=undefined){kind=seat;seat=undefined;}
-  if(seat==undefined){
+  try{
+    if(is_chuanma())calcgangpoint();
     let lstaction=getlstaction();
+    if(lstaction.name=="RecordChiPengGang"||lstaction.name=="RecordBaBei"||lstaction.name=="RecordAnGangAddGang")seat=lstaction.data.seat;
     if(lstaction.name=="RecordNewRound"||lstaction.name=="RecordChangeTile"||lstaction.name=="RecordSelectGap")seat=ju;
-    else seat=lstaction.data.seat;
-  }
-  if(kind==undefined){
-    if(discardtiles[seat].length!=0){
-      kind=discardtiles[seat].substring(0,2);
-      discardtiles[seat]=discardtiles[seat].substring(2);
-      if(kind==".."||kind=="  ")kind="moqie";
+    if(lstaction.name=="RecordDiscardTile"||lstaction.name=="RecordHuleXueZhanMid"||lstaction.name=="RecordHuleXueLiu"){
+      if(lstaction.name=="RecordDiscardTile")seat=(lstaction.data.seat+1)%playercnt;
+      else seat=(lstaction.data.hules[lstaction.data.hules.length-1].seat+1)%playercnt;
+      while(hupaied[seat])seat=(seat+1)%playercnt;
     }
-    else kind="moqie";
-  }
-  if(is_liqi==true)is_liqi="liqi";
-  if(is_liqi==undefined)is_liqi=false;
-  let is_wliqi=false,is_kailiqi=false;
-  if(is_liqi!=false&&liqiinfo[seat].yifa!=0)is_wliqi=true;
-  if(is_liqi=="liqi"){is_liqi=true;}
-  else if(is_liqi=="kailiqi"){is_liqi=true;is_kailiqi=true;}
-  if(is_wliqi)lstliqi={'seat':seat,'type':2,'kai':0};
-  else if(is_liqi!=false)lstliqi={'seat':seat,'type':1,'kai':0};
-  if(is_kailiqi)lstliqi.kai=1;
-  if(doracnt.lsttype==1){
-    doracnt.lsttype=0;
-    doracnt.cnt++;
-  }
-  let flag=0,tile;
-  if(kind=="moqie")flag=2;
-  else if(typeof(kind)=="string")kind=[kind];
-  function swap(x){
-    playertiles[seat][x]=playertiles[seat][playertiles[seat].length-1];
-    playertiles[seat][playertiles[seat].length-1]=tile;
-    if(x==playertiles[seat].length-1)flag=2;
-    else flag=1;
-  }
-  function intiles(x,tile){
-    let cnt=[];
-    for(let i=1;i<=37;i++)cnt[i]=0;
-    for(let i=0;i<x.length;i++)cnt[tiletoint(x[i],1)]++;
-    if(cnt[tiletoint(tile,1)]>=1)return true;
-    else return false;
-  }
-  for(let i=0;i<playertiles[seat].length;i++){
-    tile=playertiles[seat][i];
-    if(intiles(kind,tile)){swap(i);break;}
-  }
-  let lstactionname=getlstaction().name;
-  let tile_state;
-  if(is_openhand(seat))tile_state=1;
-  if(flag==0&&kind[0]>='0'&&kind[0]<='9'){
-    if(is_peipaimingpai()){tile_state=erasemingpai(kind,seat);}
-    paihe[seat].tiles.push(kind);
-    let abc=tiletoint(kind);
-    if(abc!=1&&abc!=9&&abc!=10&&abc!=18&&abc!=19&&abc!=27&&abc<=27)paihe[seat].liujumanguan=false;
-    liqiinfo[seat].yifa=0;
-    if(playertiles[seat][playertiles[seat].length-1]==kind&&lstactionname!="RecordNewRound"&&lstactionname!="RecordChiPengGang")addDiscardTile(is_liqi,is_wliqi,calcdoras(),true,seat,kind,tingpai(seat),tile_state);
-    else addDiscardTile(is_liqi,is_wliqi,calcdoras(),false,seat,kind,tingpai(seat),tile_state,is_kailiqi);
-    return 1;
-  }    
-  if(flag==1||lstactionname=="RecordNewRound"||lstactionname=="RecordChiPengGang"){
-    let tile=playertiles[seat][playertiles[seat].length-1];
-    if(is_peipaimingpai()){tile_state=erasemingpai(tile,seat);}
-    paihe[seat].tiles.push(tile);
-    let abc=tiletoint(tile);
-    if(abc!=1&&abc!=9&&abc!=10&&abc!=18&&abc!=19&&abc!=27&&abc<=27)paihe[seat].liujumanguan=false;
-    liqiinfo[seat].yifa=0;
-    addDiscardTile(is_liqi,is_wliqi,calcdoras(),false,seat,tile,tingpai(seat),tile_state,is_kailiqi);
-    return 1;
-  }
-  else if(flag==2&&lstactionname!="RecordNewRound"&&lstactionname!="RecordChiPengGang"){
-    let tile=playertiles[seat][playertiles[seat].length-1];
-    if(is_peipaimingpai()){tile_state=erasemingpai(tile,seat);}
-    paihe[seat].tiles.push(tile);
-    let abc=tiletoint(tile);
-    if(abc!=1&&abc!=9&&abc!=10&&abc!=18&&abc!=19&&abc!=27&&abc<=27)paihe[seat].liujumanguan=false;
-    liqiinfo[seat].yifa=0;
-    addDiscardTile(is_liqi,is_wliqi,calcdoras(),true,seat,tile,tingpai(seat),tile_state,is_kailiqi);
-    return 1;
-  } 
-  else return 0;
-}
-function mingpai(seat,tiles){
-  function changedora(x){
-    if(x[0]=='0')return "5"+x[1];
-    if(x[0]=='5'&&x[1]!='z')return "0"+x[1];
-    return x;
-  }
-  function intiles(x,y){
-    let cnt=[],cnt2=[];
-    for(let i=1;i<=37;i++)cnt[i]=cnt2[i]=0;
-    for(let i=0;i<x.length;i++)cnt[tiletoint(x[i],1)]++;
-    for(let i=0;i<y.length;i++)cnt2[tiletoint(y[i],1)]++;
-    for(let i=1;i<=37;i++)if(cnt[i]>cnt2[i])return false;
-    return true;
-  }
-  function trying(x,seat){
-    for(let seat2=0;seat2<playercnt;seat2++){
-      if((seat==seat2||seat==undefined)&&intiles(x,playertiles[seat2])){
-        if(error_detector==false)mingpai(seat2,x);
-        return true;
-      }
+    if(doracnt.lsttype==2){
+      doracnt.lsttype=0;
+      doracnt.cnt++;
     }
-    return false;
-  }
-  if(seat!=0&&seat!=1&&seat!=2&&seat!=playercnt-1){tiles=seat;seat=undefined;}
-  if(seat==undefined){
-    if(tiles!=undefined&&!equaltile(tiles[0],getlstaction().data.tile))seat=(getlstaction().data.seat+1)%playercnt;
-    else if(tiles!=undefined){
-      for(let seat2=0;seat2<playercnt;seat2++){
-        if(seat2==getlstaction().data.seat)continue;
-        let cnt=[];
-        for(let i=0;i<=36;i++)cnt[i]=0;
-        for(let i=0;i<playertiles[seat2].length;i++)cnt[tiletoint(playertiles[seat2][i])]++;
-        if(tiles.length==3&&cnt[tiletoint(tiles[0])]>=3)seat=seat2;
-        if(tiles.length==2&&cnt[tiletoint(tiles[0])]>=2)seat=seat2;
-      }
-    }
-  }
-  if(typeof(tiles)=="string")tiles=separatetile(tiles);
-  if(tiles==undefined){
-    let lsttile=getlstaction().data.tile;
-    lsttile=inttotile(tiletoint(lsttile));
-    if(trying([lsttile,lsttile,lsttile],seat))return;
-    if(lsttile[0]=='5'&&lsttile[1]!='z'){
-      if(trying(["0"+lsttile[1],lsttile,lsttile],seat))return;
-      if(trying(["0"+lsttile[1],"0"+lsttile[1],lsttile],seat))return;
-    }
-    if(trying([lsttile,lsttile],seat))return;
-    if(lsttile[0]=='5'&&lsttile[1]!='z'){
-      if(trying(["0"+lsttile[1],lsttile],seat))return;
-      if(trying(["0"+lsttile[1],"0"+lsttile[1]],seat))return;
-    }
-    seat=(getlstaction().data.seat+1)%playercnt;
-    if(lsttile[1]!='z'&&lsttile[0]!='1'&&lsttile[0]!='2'){
-      if(trying([inttotile(tiletoint(lsttile)-2),inttotile(tiletoint(lsttile)-1)],seat))return;
-      if(trying([changedora(inttotile(tiletoint(lsttile)-2)),inttotile(tiletoint(lsttile)-1)],seat))return;
-      if(trying([inttotile(tiletoint(lsttile)-2),changedora(inttotile(tiletoint(lsttile)-1))],seat))return;
-    }
-    if(lsttile[1]!='z'&&lsttile[0]!='1'&&lsttile[0]!='9'){
-      if(trying([inttotile(tiletoint(lsttile)-1),inttotile(tiletoint(lsttile)+1)],seat))return;
-      if(trying([changedora(inttotile(tiletoint(lsttile)-1)),inttotile(tiletoint(lsttile)+1)],seat))return;
-      if(trying([inttotile(tiletoint(lsttile)-1),changedora(inttotile(tiletoint(lsttile)+1))],seat))return;
-    }
-    if(lsttile[1]!='z'&&lsttile[0]!='8'&&lsttile[0]!='9'){
-      if(trying([inttotile(tiletoint(lsttile)+1),inttotile(tiletoint(lsttile)+2)],seat))return;
-      if(trying([changedora(inttotile(tiletoint(lsttile)+1)),inttotile(tiletoint(lsttile)+2)],seat))return;
-      if(trying([inttotile(tiletoint(lsttile)+1),changedora(inttotile(tiletoint(lsttile)+2))],seat))return;
-    }
-    return;
-  }
-  for(let i=0;i<playercnt;i++)liqiinfo[i].yifa=0;
-  let lstaction=getlstaction();
-  paihe[lstaction.data.seat].liujumanguan=false;
-  let from=getlstaction().data.seat,lsttile=getlstaction().data.tile;
-  let liqi=0;
-  if(lstliqi!=0&&scores[lstliqi.seat]>=1000){
-    liqibang=liqibang+1;
-    scores[lstliqi.seat]=scores[lstliqi.seat]-1000;
-    liqiinfo[lstliqi.seat]={'liqi':lstliqi.type,'yifa':1,'kai':lstliqi.kai};
-    liqi={
-      'liqibang':liqibang,
-      'score':scores[lstliqi.seat],
-      'seat':lstliqi.seat
-    }
-  }
-  lstliqi=0;
-  let tile_states=[];
-  if(is_peipaimingpai())for(let i=0;i<tiles.length;i++)tile_states.push(erasemingpai(tiles[i],seat));
-  if(!equaltile(tiles[0],lsttile)){
-    fulu[seat].push({'type':0,'tile':[tiles[0],tiles[1],lsttile],'from':from});
-    addChiPengGang([from,seat,seat],seat,[lsttile,tiles[0],tiles[1]],0,liqi,tile_states);
-  }
-  else if(tiles.length==3){
-    doracnt.lsttype=1;
-    if(!is_chuanma())drawtype=0;
-    else chuanmagangs.notover.push({'from':from,'to':seat,'val':2000});
-    fulu[seat].push({'type':2,'tile':[tiles[0],tiles[1],tiles[2],lsttile],'from':from});
-    if(from==(seat+3)%4)addChiPengGang([from,seat,seat,seat],seat,[lsttile,tiles[0],tiles[1],tiles[2]],2,liqi,tile_states);
-    if(from==(seat+2)%4)addChiPengGang([seat,from,seat,seat],seat,[tiles[0],lsttile,tiles[1],tiles[2]],2,liqi,tile_states);
-    if(from==(seat+1)%4)addChiPengGang([seat,seat,seat,from],seat,[tiles[0],tiles[1],tiles[2],lsttile],2,liqi,tile_states);
-  }
-  else{
-    fulu[seat].push({'type':1,'tile':[tiles[0],tiles[1],lsttile],'from':from});
-    if(from==(seat+3)%4)addChiPengGang([from,seat,seat],seat,[lsttile,tiles[0],tiles[1]],1,liqi,tile_states);
-    if(from==(seat+2)%4)addChiPengGang([seat,from,seat],seat,[tiles[0],lsttile,tiles[1]],1,liqi,tile_states);
-    if(from==(seat+1)%4)addChiPengGang([seat,seat,from],seat,[tiles[0],tiles[1],lsttile],1,liqi,tile_states);
-  }
-} 
-function leimingpai(seat,tile,type){
-  if(seat=="babei"||seat=="angang"||seat=="jiagang"){tile=seat;seat=undefined;}
-  if(tile=="babei"||tile=="angang"||tile=="jiagang"){type=tile;tile=undefined;}
-  if(seat!=0&&seat!=1&&seat!=2&&seat!=playercnt-1){tile=seat;seat=undefined;}
-  if(tile==undefined){
-    if(leimingpai("4z","babei"))return true;
-    for(let i=1;i<=34;i++)if(leimingpai(inttotile(i),"angang"))return true;
-    for(let i=1;i<=34;i++)if(leimingpai(inttotile(i),"jiagang"))return true;
-    return false;
-  }
-  if(seat==undefined){
-    let lstaction=getlstaction();
-    if(lstaction.name=="RecordNewRound"||lstaction.name=="RecordChangeTile")seat=ju;
-    else seat=lstaction.data.seat;
-  }
-  if(doracnt.lsttype==1){
-    doracnt.lsttype=0;
-    doracnt.cnt++;
-  }
-  let tile_states=[];
-  let tilecnt=0,jiagangflag=false;
-  for(let i=0;i<playertiles[seat].length;i++)if(equaltile(tile,playertiles[seat][i]))tilecnt++;
-  if(playercnt==3&&tilecnt>=1&&tile=="4z"&&(type==undefined||type=="babei")){
-    if(is_peipaimingpai())tile_states.push(erasemingpai(tile,seat));
-    for(let i=0;i<playercnt;i++)if(liqiinfo[i].yifa==1)liqiinfo[i].yifa=2;
-    fulu[seat].push({'type':4,'tile':[tile]});
-    drawtype=0;
-    addBaBei(calcdoras(),seat,tile,tile_states);
-    return true;
-  }
-  for(let i=0;i<fulu[seat].length;i++)if(equaltile(fulu[seat][i].tile[0],tile)&&fulu[seat][i].type==1)jiagangflag=true;
-  if(tilecnt>=4&&(type==undefined||type=="angang")){
-    for(let i=0;i<playercnt;i++)if(liqiinfo[i].yifa==1)liqiinfo[i].yifa=2;
-    doracnt.lsttype=2;
-    fulu[seat].push({'type':3,'tile':[]});
-    for(let i=0;i<playertiles[seat].length;i++){
-      if(equaltile(tile,playertiles[seat][i])){
-        if(is_peipaimingpai())tile_states.push(erasemingpai(playertiles[seat][i],seat));
-        fulu[seat][fulu[seat].length-1].tile.push(playertiles[seat][i]);
-      }
-    }
-    fulu[seat][fulu[seat].length-1].tile.sort();
-    let tmptile=fulu[seat][fulu[seat].length-1].tile[2];
-    fulu[seat][fulu[seat].length-1].tile[2]=fulu[seat][fulu[seat].length-1].tile[1];
-    fulu[seat][fulu[seat].length-1].tile[1]=fulu[seat][fulu[seat].length-1].tile[0];
-    fulu[seat][fulu[seat].length-1].tile[0]=tmptile;
-    if(!is_chuanma())drawtype=0;
-    else{
-      for(let i=0;i<playercnt;i++){
-        if(i==seat||hupaied[i])continue;
-        chuanmagangs.notover.push({'from':i,'to':seat,'val':2000});
-      }
-    }
-    addAnGangAddGang(calcdoras(),seat,tile,3,tile_states);
-    return true;
-  }
-  if(jiagangflag&&tilecnt>=1&&(type==undefined||type=="jiagang")){
-    for(let i=0;i<playercnt;i++)if(liqiinfo[i].yifa==1)liqiinfo[i].yifa=2;
-    doracnt.lsttype=1;
-    for(let i=0;i<fulu[seat].length;i++){
-      if(fulu[seat][i].type==1&&equaltile(fulu[seat][i].tile[0],tile)){
-          fulu[seat][i].type=2;
-          for(let j=0;j<playertiles[seat].length;j++){
-            if(equaltile(tile,playertiles[seat][j])){
-              if(is_peipaimingpai())tile_states.push(erasemingpai(playertiles[seat][i],seat));
-              fulu[seat][i].tile.push(playertiles[seat][j]);
-            }
-          }
-          fulu[seat][i].tile.push(tile);
-          break;
-      }
-    }
-    if(!is_chuanma())drawtype=0;
-    else{
-      if(playertiles[seat][playertiles[seat].length-1]==tile){
-        for(let i=0;i<playercnt;i++){
-          if(i==seat||hupaied[i])continue;
-          chuanmagangs.notover.push({'from':i,'to':seat,'val':1000});
-        }
-      }
-    }
-    addAnGangAddGang(calcdoras(),seat,tile,2,tile_states);
-    return true;
-  }
-  return false;
-}
-function notileliuju(){
-  let playerleft=0;
-  for(let seat=0;seat<playercnt;seat++)if(!hupaied[seat])playerleft++;
-  let tingcnt=0;
-  let liujumanguan=false;
-  let ret=[];
-  for(let i=0;i<playercnt;i++){
-    let tings=tingpai(i);
-    if(tings.length==0||hupaied[i]){
-      ret.push({
-        'tingpai':false,
-        'hand':[],
-        'tings':[]
-      });
-    }
-    else{
-      tingcnt++;
-      playertiles[i].sort(cmp);
-      ret.push({
-        'tingpai':true,
-        'hand':[].concat(playertiles[i]),
-        'tings':tings
-      });
-    }
-  }
-  let ret2=[];
-  for(let i=ju;i<playercnt+ju;i++){
-    if(is_chuanma())break;
-    seat=i%playercnt;
-    if(!paihe[seat].liujumanguan||hupaied[seat])continue;
-    liujumanguan=true;
-    let score=0;
-    playertiles[seat].sort(cmp);
-    for(let i=0;i<playercnt;i++){
-      if(seat==i||hupaied[i])continue;
-      if(seat==ju||i==ju){
-        delta_scores[i]-=4000;
-        delta_scores[seat]+=4000;
-        score+=4000;
-      }
-      else{
-        delta_scores[i]-=2000;
-        delta_scores[seat]+=2000;
-        score+=2000;
-      }
-    }
-    let ming=[];
-    for(let i=0;i<fulu[seat].length;i++){
-      let tiles=fulu[seat][i].tile;
-      if(fulu[seat][i].type==0)ming.push("shunzi("+tiles[0]+","+tiles[1]+","+tiles[2]+")");
-      else if(fulu[seat][i].type==1)ming.push("kezi("+tiles[0]+","+tiles[1]+","+tiles[2]+")");
-      else if(fulu[seat][i].type==2)ming.push("minggang("+tiles[0]+","+tiles[1]+","+tiles[2]+","+tiles[3]+")");
-      else if(fulu[seat][i].type==3)ming.push("angang("+tiles[0]+","+tiles[1]+","+tiles[2]+","+tiles[3]+")");
-    }
-    ret2.push({
-      'delta_scores':[].concat(delta_scores),
-      'doras':calcdoras(),
-      'hand':[].concat(playertiles[seat]),
-      'ming':ming,
-      'old_scores':[].concat(scores),
-      'score':score,
-      'seat':seat
-    });
-    for(let i=0;i<playercnt;i++){
-      scores[i]=scores[i]+delta_scores[i];
-      delta_scores[i]=0;
-    }
-  }
-  if(liujumanguan&&!is_chuanma()){
-    endNoTile(true,ret,ret2);
-    if(!is_xuezhandaodi()&&!is_xueliu())ben++;
-    if(ret[ju].tingpai==false||is_xuezhandaodi())ju++;
-    return;
-  }
-  ret2=[{'delta_scores':[],'old_scores':[]}];
-  if(tingcnt!=0&&tingcnt!=playerleft){
-    if(!is_chuanma()){
-      for(let seat=0;seat<playercnt;seat++){
-        if(hupaied[seat])continue;
-        if(ret[seat].tingpai==true)delta_scores[seat]+=(playerleft-1)*1000/tingcnt;
-        else delta_scores[seat]-=(playerleft-1)*1000/(playerleft-tingcnt);
-      }
-    }
-    else{
-      for(let seat=0;seat<playercnt;seat++){
-        for(let i=0;i<playercnt;i++){
-          if(hupaied[seat]||hupaied[i]||i==seat)continue;
-          if(huazhu(i)&&ret[seat].tingpai==true){
-            delta_scores[seat]+=Math.max(calcsudian_chuanma(calcfan_chuanma(playertiles[seat],seat,false)),8000);
-            delta_scores[i]-=Math.max(calcsudian_chuanma(calcfan_chuanma(playertiles[seat],seat,false)),8000);
-          }
-          else if(huazhu(i)){
-            delta_scores[seat]+=8000;
-            delta_scores[i]-=8000;
-          }
-          else if(ret[i].tingpai==false&&ret[seat].tingpai==true){
-            delta_scores[seat]+=calcsudian_chuanma(calcfan_chuanma(playertiles[seat],seat,false));
-            delta_scores[i]-=calcsudian_chuanma(calcfan_chuanma(playertiles[seat],seat,false));
-          }
-        }
-      }
-    }
-  }
-  ret2[0].old_scores=[].concat(scores);
-  ret2[0].delta_scores=[].concat(delta_scores);
-  if(is_chuanma()){
-    let taxes=[0,0,0,0];
-    for(let i=0;i<chuanmagangs.over.length;i++){
-      let from=chuanmagangs.over[i].from,to=chuanmagangs.over[i].to,val=chuanmagangs.over[i].val;
-      if(ret[to].tingpai==false){
-        taxes[to]-=val;
-        taxes[from]+=val;
-      }
-    }
-    ret2[0].taxes=taxes;
-    for(let seat=0;seat<playercnt;seat++)scores[seat]=scores[seat]+taxes[seat];
-  }
-  for(let seat=0;seat<playercnt;seat++)scores[seat]=scores[seat]+delta_scores[seat];
-  endNoTile(false,ret,ret2);
-  if(!is_xuezhandaodi()&&!is_chuanma())ben++;
-  if((ret[ju].tingpai==false||is_xuezhandaodi())&&!is_chuanma())ju++;
-}
-function liuju(){
-  let ret;
-  for(let seat=0;seat<playercnt;seat++){
-    let cnt=[],yaojiutype=0;
-    for(let i=0;i<=36;i++)cnt[i]=0;
-    for(let i=0;i<playertiles[seat].length;i++)cnt[tiletoint(playertiles[seat][i])]++;
-    if(cnt[1]>=1)yaojiutype++;if(cnt[9]>=1)yaojiutype++;
-    if(cnt[10]>=1)yaojiutype++;if(cnt[18]>=1)yaojiutype++;
-    if(cnt[19]>=1)yaojiutype++;if(cnt[27]>=1)yaojiutype++;
-    if(cnt[28]>=1)yaojiutype++;if(cnt[29]>=1)yaojiutype++;
-    if(cnt[30]>=1)yaojiutype++;if(cnt[31]>=1)yaojiutype++;
-    if(cnt[32]>=1)yaojiutype++;if(cnt[33]>=1)yaojiutype++;
-    if(cnt[34]>=1)yaojiutype++;
-    if(yaojiutype>=9&&liqiinfo[seat].liqi==0&&liqiinfo[seat].yifa==1&&playertiles[seat].length==14){
-      let lsttile=playertiles[seat][playertiles[seat].length-1];
-      playertiles[seat].length=playertiles[seat].length-1;
-      playertiles[seat].sort(cmp);
-      playertiles[seat].push(lsttile);
-      if(ret==undefined)ret={
-        'name':"RecordLiuJu",
-        'data':{
-          'seat':seat,
-          'tiles':[].concat(playertiles[seat]),
-          'type':1
-        }
-      };
-    }
-  }
-  if(playercnt==4&&paihe[0].tiles.length==1&&paihe[1].tiles.length==1&&paihe[2].tiles.length==1&&paihe[3].tiles.length==1&&paihe[0].tiles[0]==paihe[1].tiles[0]&&paihe[1].tiles[0]==paihe[2].tiles[0]&&paihe[2].tiles[0]==paihe[3].tiles[0]&&tiletoint(paihe[0].tiles[0])>=28&&tiletoint(paihe[0].tiles[0])<=31){
-    if(ret==undefined)ret={
-      'name':"RecordLiuJu",
-      'data':{
-        'type':2
-      }
-    };
-  }
-  let havegang=[0,0,0,0],havegangcnt=0;
-  for(let seat=0;seat<playercnt;seat++){
-    for(let i=0;i<fulu[seat].length;i++)if(fulu[seat][i].type==2||fulu[seat][i].type==3)havegang[seat]=1;
-    havegangcnt+=havegang[seat];
-  }
-  if(doracnt.cnt==5&&havegangcnt>=2){
-    if(ret==undefined)ret={
-      'name':"RecordLiuJu",
-      'data':{
-        'type':3
-      }
-    };
-  }
-  if(playercnt==4&&ret==undefined){
-    let liqiplayercnt=0;
-    if(liqiinfo[0].liqi!=0)liqiplayercnt++;
-    if(liqiinfo[1].liqi!=0)liqiplayercnt++;
-    if(liqiinfo[2].liqi!=0)liqiplayercnt++;
-    if(liqiinfo[3].liqi!=0)liqiplayercnt++;
-    if(liqiplayercnt==3&&lstliqi!=0&&scores[lstliqi.seat]>=1000){
+    for(let i=0;i<playercnt;i++)if(liqiinfo[i].yifa==2)liqiinfo[i].yifa=0;
+    let drawcard,liqi;
+    if(lstliqi!=0&&scores[lstliqi.seat]>=1000){
       liqibang=liqibang+1;
       scores[lstliqi.seat]=scores[lstliqi.seat]-1000;
       liqiinfo[lstliqi.seat]={'liqi':lstliqi.type,'yifa':1,'kai':lstliqi.kai};
-      let allplayertiles=["","","",""];
-      for(let seat=0;seat<playercnt;seat++){
-        playertiles[seat].sort(cmp);
-        for(let i=0;i<playertiles[seat].length;i++){
-          allplayertiles[seat]+=playertiles[seat][i];
-          if(i!=playertiles[seat].length-1)allplayertiles[seat]+="|";
+      liqi={
+        'liqibang':liqibang,
+        'score':scores[lstliqi.seat],
+        'seat':lstliqi.seat
+      }
+    }
+    lstliqi=0;
+    let tile_state;
+    if(is_openhand(seat)||liqiinfo[seat].kai)tile_state=1;
+    if(drawtype==1){
+      if(!is_chuanma())addDealTile(calcdoras(),paishan.length/2-15,seat,paishan.substring(0,2),liqi,tile_state);
+      else addDealTile(calcdoras(),paishan.length/2-1,seat,paishan.substring(0,2),liqi,tile_state);
+      drawcard=paishan.substring(0,2);
+      paishan=paishan.substring(2);
+      lstdrawtype=1;
+    }
+    else{
+      addDealTile(calcdoras(),paishan.length/2-15,seat,paishan.substring(paishan.length-2),liqi,tile_state);
+      drawcard=paishan.substring(paishan.length-2);
+      paishan=paishan.substring(0,paishan.length-2);
+      lstdrawtype=0;
+    }
+    drawtype=1;
+    saveproject();
+    return drawcard;
+  }catch(e){
+    throw(e);
+    loadproject(lstscene);
+  }
+}
+function qiepai(seat,kind,is_liqi){
+  try{
+    if(typeof(seat)=="boolean"||seat=="liqi"||seat=="kailiqi"){kind=seat;seat=undefined;}
+    if(typeof(kind)=="boolean"||kind=="liqi"||kind=="kailiqi"){is_liqi=kind;kind=undefined;}
+    if(seat!=0&&seat!=1&&seat!=2&&seat!=playercnt-1&&seat!=undefined){kind=seat;seat=undefined;}
+    if(seat==undefined){
+      let lstaction=getlstaction();
+      if(lstaction.name=="RecordNewRound"||lstaction.name=="RecordChangeTile"||lstaction.name=="RecordSelectGap")seat=ju;
+      else seat=lstaction.data.seat;
+    }
+    if(kind==undefined){
+      if(discardtiles[seat].length!=0){
+        kind=discardtiles[seat].substring(0,2);
+        discardtiles[seat]=discardtiles[seat].substring(2);
+        if(kind==".."||kind=="  ")kind="moqie";
+      }
+      else kind="moqie";
+    }
+    if(is_liqi==true)is_liqi="liqi";
+    if(is_liqi==undefined)is_liqi=false;
+    let is_wliqi=false,is_kailiqi=false;
+    if(is_liqi!=false&&liqiinfo[seat].yifa!=0)is_wliqi=true;
+    if(is_liqi=="liqi"){is_liqi=true;}
+    else if(is_liqi=="kailiqi"){is_liqi=true;is_kailiqi=true;}
+    if(is_wliqi)lstliqi={'seat':seat,'type':2,'kai':0};
+    else if(is_liqi!=false)lstliqi={'seat':seat,'type':1,'kai':0};
+    if(is_kailiqi)lstliqi.kai=1;
+    if(doracnt.lsttype==1){
+      doracnt.lsttype=0;
+      doracnt.cnt++;
+    }
+    let flag=0,tile;
+    if(kind=="moqie")flag=2;
+    else if(typeof(kind)=="string")kind=[kind];
+    function swap(x){
+      playertiles[seat][x]=playertiles[seat][playertiles[seat].length-1];
+      playertiles[seat][playertiles[seat].length-1]=tile;
+      if(x==playertiles[seat].length-1)flag=2;
+      else flag=1;
+    }
+    function intiles(x,tile){
+      let cnt=[];
+      for(let i=1;i<=37;i++)cnt[i]=0;
+      for(let i=0;i<x.length;i++)cnt[tiletoint(x[i],1)]++;
+      if(cnt[tiletoint(tile,1)]>=1)return true;
+      else return false;
+    }
+    for(let i=playertiles[seat].length-1;i>=0;i--){
+      tile=playertiles[seat][i];
+      if(intiles(kind,tile)){swap(i);break;}
+    }
+    let lstactionname=getlstaction().name;
+    let tile_state;
+    if(is_openhand(seat))tile_state=1;
+    if(flag==0&&kind[0]>='0'&&kind[0]<='9'){
+      if(is_peipaimingpai()){tile_state=erasemingpai(kind,seat);}
+      paihe[seat].tiles.push(kind);
+      let abc=tiletoint(kind);
+      if(abc!=1&&abc!=9&&abc!=10&&abc!=18&&abc!=19&&abc!=27&&abc<=27)paihe[seat].liujumanguan=false;
+      liqiinfo[seat].yifa=0;
+      if(playertiles[seat][playertiles[seat].length-1]==kind&&lstactionname!="RecordNewRound"&&lstactionname!="RecordChiPengGang")addDiscardTile(is_liqi,is_wliqi,calcdoras(),true,seat,kind,tingpai(seat),tile_state);
+      else addDiscardTile(is_liqi,is_wliqi,calcdoras(),false,seat,kind,tingpai(seat),tile_state,is_kailiqi);
+      saveproject();
+      return 1;
+    }    
+    if(flag==1||lstactionname=="RecordNewRound"||lstactionname=="RecordChiPengGang"){
+      let tile=playertiles[seat][playertiles[seat].length-1];
+      if(is_peipaimingpai()){tile_state=erasemingpai(tile,seat);}
+      paihe[seat].tiles.push(tile);
+      let abc=tiletoint(tile);
+      if(abc!=1&&abc!=9&&abc!=10&&abc!=18&&abc!=19&&abc!=27&&abc<=27)paihe[seat].liujumanguan=false;
+      liqiinfo[seat].yifa=0;
+      addDiscardTile(is_liqi,is_wliqi,calcdoras(),false,seat,tile,tingpai(seat),tile_state,is_kailiqi);
+      saveproject();
+      return 1;
+    }
+    else if(flag==2&&lstactionname!="RecordNewRound"&&lstactionname!="RecordChiPengGang"){
+      let tile=playertiles[seat][playertiles[seat].length-1];
+      if(is_peipaimingpai()){tile_state=erasemingpai(tile,seat);}
+      paihe[seat].tiles.push(tile);
+      let abc=tiletoint(tile);
+      if(abc!=1&&abc!=9&&abc!=10&&abc!=18&&abc!=19&&abc!=27&&abc<=27)paihe[seat].liujumanguan=false;
+      liqiinfo[seat].yifa=0;
+      addDiscardTile(is_liqi,is_wliqi,calcdoras(),true,seat,tile,tingpai(seat),tile_state,is_kailiqi);
+      saveproject();
+      return 1;
+    } 
+    else return 0;
+  }catch(e){
+    throw(e);
+    loadproject(lstscene);
+  }
+}
+function mingpai(seat,tiles){
+  try{
+    function changedora(x){
+      if(x[0]=='0')return "5"+x[1];
+      if(x[0]=='5'&&x[1]!='z')return "0"+x[1];
+      return x;
+    }
+    function intiles(x,y){
+      let cnt=[],cnt2=[];
+      for(let i=1;i<=37;i++)cnt[i]=cnt2[i]=0;
+      for(let i=0;i<x.length;i++)cnt[tiletoint(x[i],1)]++;
+      for(let i=0;i<y.length;i++)cnt2[tiletoint(y[i],1)]++;
+      for(let i=1;i<=37;i++)if(cnt[i]>cnt2[i])return false;
+      return true;
+    }
+    function trying(x,seat){
+      for(let seat2=0;seat2<playercnt;seat2++){
+        if((seat==seat2||seat==undefined)&&intiles(x,playertiles[seat2])){
+          mingpai(seat2,x);
+          return true;
         }
       }
+      return false;
+    }
+    if(seat!=0&&seat!=1&&seat!=2&&seat!=playercnt-1){tiles=seat;seat=undefined;}
+    if(seat==undefined){
+      if(tiles!=undefined&&!equaltile(tiles[0],getlstaction().data.tile))seat=(getlstaction().data.seat+1)%playercnt;
+      else if(tiles!=undefined){
+        for(let seat2=0;seat2<playercnt;seat2++){
+          if(seat2==getlstaction().data.seat)continue;
+          let cnt=[];
+          for(let i=0;i<=36;i++)cnt[i]=0;
+          for(let i=0;i<playertiles[seat2].length;i++)cnt[tiletoint(playertiles[seat2][i])]++;
+          if(tiles.length==3&&cnt[tiletoint(tiles[0])]>=3)seat=seat2;
+          if(tiles.length==2&&cnt[tiletoint(tiles[0])]>=2)seat=seat2;
+        }
+      }
+    }
+    if(typeof(tiles)=="string")tiles=separatetile(tiles);
+    if(tiles==undefined){
+      let lsttile=getlstaction().data.tile;
+      lsttile=inttotile(tiletoint(lsttile));
+      if(trying([lsttile,lsttile,lsttile],seat))return;
+      if(lsttile[0]=='5'&&lsttile[1]!='z'){
+        if(trying(["0"+lsttile[1],lsttile,lsttile],seat))return;
+        if(trying(["0"+lsttile[1],"0"+lsttile[1],lsttile],seat))return;
+      }
+      if(trying([lsttile,lsttile],seat))return;
+      if(lsttile[0]=='5'&&lsttile[1]!='z'){
+        if(trying(["0"+lsttile[1],lsttile],seat))return;
+        if(trying(["0"+lsttile[1],"0"+lsttile[1]],seat))return;
+      }
+      seat=(getlstaction().data.seat+1)%playercnt;
+      if(lsttile[1]!='z'&&lsttile[0]!='1'&&lsttile[0]!='2'){
+        if(trying([inttotile(tiletoint(lsttile)-2),inttotile(tiletoint(lsttile)-1)],seat))return;
+        if(trying([changedora(inttotile(tiletoint(lsttile)-2)),inttotile(tiletoint(lsttile)-1)],seat))return;
+        if(trying([inttotile(tiletoint(lsttile)-2),changedora(inttotile(tiletoint(lsttile)-1))],seat))return;
+      }
+      if(lsttile[1]!='z'&&lsttile[0]!='1'&&lsttile[0]!='9'){
+        if(trying([inttotile(tiletoint(lsttile)-1),inttotile(tiletoint(lsttile)+1)],seat))return;
+        if(trying([changedora(inttotile(tiletoint(lsttile)-1)),inttotile(tiletoint(lsttile)+1)],seat))return;
+        if(trying([inttotile(tiletoint(lsttile)-1),changedora(inttotile(tiletoint(lsttile)+1))],seat))return;
+      }
+      if(lsttile[1]!='z'&&lsttile[0]!='8'&&lsttile[0]!='9'){
+        if(trying([inttotile(tiletoint(lsttile)+1),inttotile(tiletoint(lsttile)+2)],seat))return;
+        if(trying([changedora(inttotile(tiletoint(lsttile)+1)),inttotile(tiletoint(lsttile)+2)],seat))return;
+        if(trying([inttotile(tiletoint(lsttile)+1),changedora(inttotile(tiletoint(lsttile)+2))],seat))return;
+      }
+      return;
+    }
+    for(let i=0;i<playercnt;i++)liqiinfo[i].yifa=0;
+    let lstaction=getlstaction();
+    paihe[lstaction.data.seat].liujumanguan=false;
+    let from=getlstaction().data.seat,lsttile=getlstaction().data.tile;
+    let liqi=0;
+    if(lstliqi!=0&&scores[lstliqi.seat]>=1000){
+      liqibang=liqibang+1;
+      scores[lstliqi.seat]=scores[lstliqi.seat]-1000;
+      liqiinfo[lstliqi.seat]={'liqi':lstliqi.type,'yifa':1,'kai':lstliqi.kai};
+      liqi={
+        'liqibang':liqibang,
+        'score':scores[lstliqi.seat],
+        'seat':lstliqi.seat
+      }
+    }
+    lstliqi=0;
+    let tile_states=[];
+    if(is_peipaimingpai())for(let i=0;i<tiles.length;i++)tile_states.push(erasemingpai(tiles[i],seat));
+    if(!equaltile(tiles[0],lsttile)){
+      fulu[seat].push({'type':0,'tile':[tiles[0],tiles[1],lsttile],'from':from});
+      addChiPengGang([from,seat,seat],seat,[lsttile,tiles[0],tiles[1]],0,liqi,tile_states);
+    }
+    else if(tiles.length==3){
+      doracnt.lsttype=1;
+      if(!is_chuanma())drawtype=0;
+      else chuanmagangs.notover.push({'from':from,'to':seat,'val':2000});
+      fulu[seat].push({'type':2,'tile':[tiles[0],tiles[1],tiles[2],lsttile],'from':from});
+      if(from==(seat+3)%4)addChiPengGang([from,seat,seat,seat],seat,[lsttile,tiles[0],tiles[1],tiles[2]],2,liqi,tile_states);
+      if(from==(seat+2)%4)addChiPengGang([seat,from,seat,seat],seat,[tiles[0],lsttile,tiles[1],tiles[2]],2,liqi,tile_states);
+      if(from==(seat+1)%4)addChiPengGang([seat,seat,seat,from],seat,[tiles[0],tiles[1],tiles[2],lsttile],2,liqi,tile_states);
+    }
+    else{
+      fulu[seat].push({'type':1,'tile':[tiles[0],tiles[1],lsttile],'from':from});
+      if(from==(seat+3)%4)addChiPengGang([from,seat,seat],seat,[lsttile,tiles[0],tiles[1]],1,liqi,tile_states);
+      if(from==(seat+2)%4)addChiPengGang([seat,from,seat],seat,[tiles[0],lsttile,tiles[1]],1,liqi,tile_states);
+      if(from==(seat+1)%4)addChiPengGang([seat,seat,from],seat,[tiles[0],tiles[1],lsttile],1,liqi,tile_states);
+    }
+    saveproject();
+  }catch(e){
+    throw(e);
+    loadproject(lstscene);
+  }
+} 
+function leimingpai(seat,tile,type){
+  try{
+    if(seat=="babei"||seat=="angang"||seat=="jiagang"){tile=seat;seat=undefined;}
+    if(tile=="babei"||tile=="angang"||tile=="jiagang"){type=tile;tile=undefined;}
+    if(seat!=0&&seat!=1&&seat!=2&&seat!=playercnt-1){tile=seat;seat=undefined;}
+    if(tile==undefined){
+      if(leimingpai("4z","babei"))return true;
+      for(let i=1;i<=34;i++)if(leimingpai(inttotile(i),"angang"))return true;
+      for(let i=1;i<=34;i++)if(leimingpai(inttotile(i),"jiagang"))return true;
+      return false;
+    }
+    if(seat==undefined){
+      let lstaction=getlstaction();
+      if(lstaction.name=="RecordNewRound"||lstaction.name=="RecordChangeTile")seat=ju;
+      else seat=lstaction.data.seat;
+    }
+    if(doracnt.lsttype==1){
+      doracnt.lsttype=0;
+      doracnt.cnt++;
+    }
+    let tile_states=[];
+    let tilecnt=0,jiagangflag=false;
+    for(let i=0;i<playertiles[seat].length;i++)if(equaltile(tile,playertiles[seat][i]))tilecnt++;
+    if(playercnt==3&&tilecnt>=1&&tile=="4z"&&(type==undefined||type=="babei")){
+      if(is_peipaimingpai())tile_states.push(erasemingpai(tile,seat));
+      for(let i=0;i<playercnt;i++)if(liqiinfo[i].yifa==1)liqiinfo[i].yifa=2;
+      fulu[seat].push({'type':4,'tile':[tile]});
+      drawtype=0;
+      addBaBei(calcdoras(),seat,tile,tile_states);
+      saveproject();
+      return true;
+    }
+    for(let i=0;i<fulu[seat].length;i++)if(equaltile(fulu[seat][i].tile[0],tile)&&fulu[seat][i].type==1)jiagangflag=true;
+    if(tilecnt>=4&&(type==undefined||type=="angang")){
+      for(let i=0;i<playercnt;i++)if(liqiinfo[i].yifa==1)liqiinfo[i].yifa=2;
+      doracnt.lsttype=2;
+      fulu[seat].push({'type':3,'tile':[]});
+      for(let i=0;i<playertiles[seat].length;i++){
+        if(equaltile(tile,playertiles[seat][i])){
+          if(is_peipaimingpai())tile_states.push(erasemingpai(playertiles[seat][i],seat));
+          fulu[seat][fulu[seat].length-1].tile.push(playertiles[seat][i]);
+        }
+      }
+      fulu[seat][fulu[seat].length-1].tile.sort();
+      let tmptile=fulu[seat][fulu[seat].length-1].tile[2];
+      fulu[seat][fulu[seat].length-1].tile[2]=fulu[seat][fulu[seat].length-1].tile[1];
+      fulu[seat][fulu[seat].length-1].tile[1]=fulu[seat][fulu[seat].length-1].tile[0];
+      fulu[seat][fulu[seat].length-1].tile[0]=tmptile;
+      if(!is_chuanma())drawtype=0;
+      else{
+        for(let i=0;i<playercnt;i++){
+          if(i==seat||hupaied[i])continue;
+          chuanmagangs.notover.push({'from':i,'to':seat,'val':2000});
+        }
+      }
+      addAnGangAddGang(calcdoras(),seat,tile,3,tile_states);
+      saveproject();
+      return true;
+    }
+    if(jiagangflag&&tilecnt>=1&&(type==undefined||type=="jiagang")){
+      for(let i=0;i<playercnt;i++)if(liqiinfo[i].yifa==1)liqiinfo[i].yifa=2;
+      doracnt.lsttype=1;
+      for(let i=0;i<fulu[seat].length;i++){
+        if(fulu[seat][i].type==1&&equaltile(fulu[seat][i].tile[0],tile)){
+            fulu[seat][i].type=2;
+            for(let j=0;j<playertiles[seat].length;j++){
+              if(equaltile(tile,playertiles[seat][j])){
+                if(is_peipaimingpai())tile_states.push(erasemingpai(playertiles[seat][i],seat));
+                fulu[seat][i].tile.push(playertiles[seat][j]);
+              }
+            }
+            fulu[seat][i].tile.push(tile);
+            break;
+        }
+      }
+      if(!is_chuanma())drawtype=0;
+      else{
+        if(playertiles[seat][playertiles[seat].length-1]==tile){
+          for(let i=0;i<playercnt;i++){
+            if(i==seat||hupaied[i])continue;
+            chuanmagangs.notover.push({'from':i,'to':seat,'val':1000});
+          }
+        }
+      }
+      addAnGangAddGang(calcdoras(),seat,tile,2,tile_states);
+      saveproject();
+      return true;
+    }
+    return false;
+  }catch(e){
+    throw(e);
+    loadproject(lstscene);
+  }
+}
+function notileliuju(){
+  try{
+    let playerleft=0;
+    for(let seat=0;seat<playercnt;seat++)if(!hupaied[seat])playerleft++;
+    let tingcnt=0;
+    let liujumanguan=false;
+    let ret=[];
+    for(let i=0;i<playercnt;i++){
+      let tings=tingpai(i);
+      if(tings.length==0||hupaied[i]){
+        ret.push({
+          'tingpai':false,
+          'hand':[],
+          'tings':[]
+        });
+      }
+      else{
+        tingcnt++;
+        playertiles[i].sort(cmp);
+        ret.push({
+          'tingpai':true,
+          'hand':[].concat(playertiles[i]),
+          'tings':tings
+        });
+      }
+    }
+    let ret2=[];
+    for(let i=ju;i<playercnt+ju;i++){
+      if(is_chuanma())break;
+      seat=i%playercnt;
+      if(!paihe[seat].liujumanguan||hupaied[seat])continue;
+      liujumanguan=true;
+      let score=0;
+      playertiles[seat].sort(cmp);
+      for(let i=0;i<playercnt;i++){
+        if(seat==i||hupaied[i])continue;
+        if(seat==ju||i==ju){
+          delta_scores[i]-=4000;
+          delta_scores[seat]+=4000;
+          score+=4000;
+        }
+        else{
+          delta_scores[i]-=2000;
+          delta_scores[seat]+=2000;
+          score+=2000;
+        }
+      }
+      let ming=[];
+      for(let i=0;i<fulu[seat].length;i++){
+        let tiles=fulu[seat][i].tile;
+        if(fulu[seat][i].type==0)ming.push("shunzi("+tiles[0]+","+tiles[1]+","+tiles[2]+")");
+        else if(fulu[seat][i].type==1)ming.push("kezi("+tiles[0]+","+tiles[1]+","+tiles[2]+")");
+        else if(fulu[seat][i].type==2)ming.push("minggang("+tiles[0]+","+tiles[1]+","+tiles[2]+","+tiles[3]+")");
+        else if(fulu[seat][i].type==3)ming.push("angang("+tiles[0]+","+tiles[1]+","+tiles[2]+","+tiles[3]+")");
+      }
+      ret2.push({
+        'delta_scores':[].concat(delta_scores),
+        'doras':calcdoras(),
+        'hand':[].concat(playertiles[seat]),
+        'ming':ming,
+        'old_scores':[].concat(scores),
+        'score':score,
+        'seat':seat
+      });
+      for(let i=0;i<playercnt;i++){
+        scores[i]=scores[i]+delta_scores[i];
+        delta_scores[i]=0;
+      }
+    }
+    if(liujumanguan&&!is_chuanma()){
+      endNoTile(true,ret,ret2);
+      if(!is_xuezhandaodi()&&!is_xueliu())ben++;
+      if(ret[ju].tingpai==false||is_xuezhandaodi())ju++;
+      return;
+    }
+    ret2=[{'delta_scores':[],'old_scores':[]}];
+    if(tingcnt!=0&&tingcnt!=playerleft){
+      if(!is_chuanma()){
+        for(let seat=0;seat<playercnt;seat++){
+          if(hupaied[seat])continue;
+          if(ret[seat].tingpai==true)delta_scores[seat]+=(playerleft-1)*1000/tingcnt;
+          else delta_scores[seat]-=(playerleft-1)*1000/(playerleft-tingcnt);
+        }
+      }
+      else{
+        for(let seat=0;seat<playercnt;seat++){
+          for(let i=0;i<playercnt;i++){
+            if(hupaied[seat]||hupaied[i]||i==seat)continue;
+            if(huazhu(i)&&ret[seat].tingpai==true){
+              delta_scores[seat]+=Math.max(calcsudian_chuanma(calcfan_chuanma(playertiles[seat],seat,false)),8000);
+              delta_scores[i]-=Math.max(calcsudian_chuanma(calcfan_chuanma(playertiles[seat],seat,false)),8000);
+            }
+            else if(huazhu(i)){
+              delta_scores[seat]+=8000;
+              delta_scores[i]-=8000;
+            }
+            else if(ret[i].tingpai==false&&ret[seat].tingpai==true){
+              delta_scores[seat]+=calcsudian_chuanma(calcfan_chuanma(playertiles[seat],seat,false));
+              delta_scores[i]-=calcsudian_chuanma(calcfan_chuanma(playertiles[seat],seat,false));
+            }
+          }
+        }
+      }
+    }
+    ret2[0].old_scores=[].concat(scores);
+    ret2[0].delta_scores=[].concat(delta_scores);
+    if(is_chuanma()){
+      let taxes=[0,0,0,0];
+      for(let i=0;i<chuanmagangs.over.length;i++){
+        let from=chuanmagangs.over[i].from,to=chuanmagangs.over[i].to,val=chuanmagangs.over[i].val;
+        if(ret[to].tingpai==false){
+          taxes[to]-=val;
+          taxes[from]+=val;
+        }
+      }
+      ret2[0].taxes=taxes;
+      for(let seat=0;seat<playercnt;seat++)scores[seat]=scores[seat]+taxes[seat];
+    }
+    for(let seat=0;seat<playercnt;seat++)scores[seat]=scores[seat]+delta_scores[seat];
+    endNoTile(false,ret,ret2);
+    if(!is_xuezhandaodi()&&!is_chuanma())ben++;
+    if((ret[ju].tingpai==false||is_xuezhandaodi())&&!is_chuanma())ju++;
+    saveproject();
+  }catch(e){
+    throw(e);
+    loadproject(lstscene);
+  }
+}
+function liuju(){
+  try{
+    let ret;
+    for(let seat=0;seat<playercnt;seat++){
+      let cnt=[],yaojiutype=0;
+      for(let i=0;i<=36;i++)cnt[i]=0;
+      for(let i=0;i<playertiles[seat].length;i++)cnt[tiletoint(playertiles[seat][i])]++;
+      if(cnt[1]>=1)yaojiutype++;if(cnt[9]>=1)yaojiutype++;
+      if(cnt[10]>=1)yaojiutype++;if(cnt[18]>=1)yaojiutype++;
+      if(cnt[19]>=1)yaojiutype++;if(cnt[27]>=1)yaojiutype++;
+      if(cnt[28]>=1)yaojiutype++;if(cnt[29]>=1)yaojiutype++;
+      if(cnt[30]>=1)yaojiutype++;if(cnt[31]>=1)yaojiutype++;
+      if(cnt[32]>=1)yaojiutype++;if(cnt[33]>=1)yaojiutype++;
+      if(cnt[34]>=1)yaojiutype++;
+      if(yaojiutype>=9&&liqiinfo[seat].liqi==0&&liqiinfo[seat].yifa==1&&playertiles[seat].length==14){
+        let lsttile=playertiles[seat][playertiles[seat].length-1];
+        playertiles[seat].length=playertiles[seat].length-1;
+        playertiles[seat].sort(cmp);
+        playertiles[seat].push(lsttile);
+        if(ret==undefined)ret={
+          'name':"RecordLiuJu",
+          'data':{
+            'seat':seat,
+            'tiles':[].concat(playertiles[seat]),
+            'type':1
+          }
+        };
+      }
+    }
+    if(playercnt==4&&paihe[0].tiles.length==1&&paihe[1].tiles.length==1&&paihe[2].tiles.length==1&&paihe[3].tiles.length==1&&paihe[0].tiles[0]==paihe[1].tiles[0]&&paihe[1].tiles[0]==paihe[2].tiles[0]&&paihe[2].tiles[0]==paihe[3].tiles[0]&&tiletoint(paihe[0].tiles[0])>=28&&tiletoint(paihe[0].tiles[0])<=31){
       if(ret==undefined)ret={
         'name':"RecordLiuJu",
         'data':{
-          'type':4,
-          'liqi':{
-            'liqibang':liqibang,
-            'score':scores[lstliqi.seat],
-            'seat':lstliqi.seat
-          },
-          'allplayertiles':allplayertiles
+          'type':2
         }
       };
-    } 
+    }
+    let havegang=[0,0,0,0],havegangcnt=0;
+    for(let seat=0;seat<playercnt;seat++){
+      for(let i=0;i<fulu[seat].length;i++)if(fulu[seat][i].type==2||fulu[seat][i].type==3)havegang[seat]=1;
+      havegangcnt+=havegang[seat];
+    }
+    if(doracnt.cnt==5&&havegangcnt>=2){
+      if(ret==undefined)ret={
+        'name':"RecordLiuJu",
+        'data':{
+          'type':3
+        }
+      };
+    }
+    if(playercnt==4&&ret==undefined){
+      let liqiplayercnt=0;
+      if(liqiinfo[0].liqi!=0)liqiplayercnt++;
+      if(liqiinfo[1].liqi!=0)liqiplayercnt++;
+      if(liqiinfo[2].liqi!=0)liqiplayercnt++;
+      if(liqiinfo[3].liqi!=0)liqiplayercnt++;
+      if(liqiplayercnt==3&&lstliqi!=0&&scores[lstliqi.seat]>=1000){
+        liqibang=liqibang+1;
+        scores[lstliqi.seat]=scores[lstliqi.seat]-1000;
+        liqiinfo[lstliqi.seat]={'liqi':lstliqi.type,'yifa':1,'kai':lstliqi.kai};
+        let allplayertiles=["","","",""];
+        for(let seat=0;seat<playercnt;seat++){
+          playertiles[seat].sort(cmp);
+          for(let i=0;i<playertiles[seat].length;i++){
+            allplayertiles[seat]+=playertiles[seat][i];
+            if(i!=playertiles[seat].length-1)allplayertiles[seat]+="|";
+          }
+        }
+        if(ret==undefined)ret={
+          'name':"RecordLiuJu",
+          'data':{
+            'type':4,
+            'liqi':{
+              'liqibang':liqibang,
+              'score':scores[lstliqi.seat],
+              'seat':lstliqi.seat
+            },
+            'allplayertiles':allplayertiles
+          }
+        };
+      } 
+    }
+    if(hules_history.length!=0)ret.data.hules_history=hules_history;
+    actions.push(ret);
+    edit_online();
+    if(!is_xuezhandaodi()&&!is_chuanma())ben++;
+    saveproject();
+  }catch(e){
+    throw(e);
+    loadproject(lstscene);
   }
-  if(hules_history.length!=0)ret.data.hules_history=hules_history;
-  actions.push(ret);
-  if(!is_xuezhandaodi()&&!is_chuanma())ben++;
 }
-function roundend(){
-  if(is_chuanma()&&chuanmagangs.notover.length!=0&&getlstaction().name!="RecordNoTile"&&getlstaction().name!="RecordHuleXueZhanEnd")calcgangpoint(true);
+function roundend(type){
+  if(type==undefined&&is_chuanma()&&chuanmagangs.notover.length!=0&&getlstaction().name!="RecordNoTile"&&getlstaction().name!="RecordHuleXueZhanEnd")calcgangpoint(true);
   discardtiles=["","","",""];
   tiles0=null;tiles1=null;tiles2=null;tiles3=null;paishan=null;
   muyuseats="";
@@ -2690,7 +3406,7 @@ function roundend(){
   xun=[[],[],[],[]];
   actions=[];
 }
-function gameend(){
+function gameend(noedit){
   function cmp2(x,y){
     if(y.part_point_1>x.part_point_1)return 1;
     if(y.part_point_1<x.part_point_1)return -1;
@@ -2718,7 +3434,7 @@ function gameend(){
     players[0].total_point=-players[1].total_point-players[2].total_point-players[3].total_point;
   }
   editdata.players=players;
-  edit();
+  if(noedit!=true)edit();
 }
 function randompaishan(paishan,paishanback,reddora){
   if(typeof(tiles0)=="string")tiles0=separatetile(tiles0);
@@ -2767,13 +3483,13 @@ function randompaishan(paishan,paishanback,reddora){
   return paishan;
 }
 function loadreplay(){
-  clear();
+  loadproject();
   let rounds=uiscript.UI_Replay.Inst.rounds;
   editdata.config=uiscript.UI_Replay.Inst.gameResult.config;
-  if(uiscript.UI_Replay.Inst.gameResult.accounts[0])editdata.player_datas[0]=uiscript.UI_Replay.Inst.gameResult.accounts[0];
-  if(uiscript.UI_Replay.Inst.gameResult.accounts[1])editdata.player_datas[1]=uiscript.UI_Replay.Inst.gameResult.accounts[1];
-  if(uiscript.UI_Replay.Inst.gameResult.accounts[2])editdata.player_datas[2]=uiscript.UI_Replay.Inst.gameResult.accounts[2];
-  if(uiscript.UI_Replay.Inst.gameResult.accounts[3])editdata.player_datas[3]=uiscript.UI_Replay.Inst.gameResult.accounts[3];
+  //if(uiscript.UI_Replay.Inst.gameResult.accounts[0])editdata.player_datas[0]=uiscript.UI_Replay.Inst.gameResult.accounts[0];
+  //if(uiscript.UI_Replay.Inst.gameResult.accounts[1])editdata.player_datas[1]=uiscript.UI_Replay.Inst.gameResult.accounts[1];
+  //if(uiscript.UI_Replay.Inst.gameResult.accounts[2])editdata.player_datas[2]=uiscript.UI_Replay.Inst.gameResult.accounts[2];
+  //if(uiscript.UI_Replay.Inst.gameResult.accounts[3])editdata.player_datas[3]=uiscript.UI_Replay.Inst.gameResult.accounts[3];
   gamebegin();
   for(let i=0;i<rounds.length;i++){
     let tt=rounds[i].actions;
@@ -2798,10 +3514,23 @@ function loadreplay(){
       if(tt[j].name=="RecordBaBei")leimingpai("4z","babei");
       if(tt[j].name=="RecordLiuJu")liuju();
       if(tt[j].name=="RecordNoTile")notileliuju();
-      if(tt[j].name=="RecordHule"){
+      if(tt[j].name=="RecordHule"||tt[j].name=="RecordHuleXueZhanMid"||tt[j].name=="RecordHuleXueZhanEnd"){
         let tmp=[];
         for(let k=0;k<tt[j].data.hules.length;k++)tmp.push(tt[j].data.hules[k].seat);
-        hupai(tmp);
+        if(tt[j].name=="RecordHuleXueZhanEnd")hupai(tmp,true);
+        else hupai(tmp);
+      }
+      if(tt[j].name=="RecordChangeTile"){
+        huansanzhang(tt[j].data.change_tile_infos[0].out_tiles,tt[j].data.change_tile_infos[1].out_tiles,tt[j].data.change_tile_infos[2].out_tiles,tt[j].data.change_tile_infos[3].out_tiles,tt[j].data.change_type);
+      }
+      if(tt[j].name=="RecordSelectGap"){
+        let tmp="";
+        for(let k=0;k<tt[j].data.gap_types.length;k++){
+          if(tt[j].data.gap_types[k]==0)tmp+="p";
+          if(tt[j].data.gap_types[k]==1)tmp+="m";
+          if(tt[j].data.gap_types[k]==2)tmp+="s";
+        }
+        dingque(tmp);
       }
     }
     roundend();
