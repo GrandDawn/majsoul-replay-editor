@@ -287,12 +287,12 @@ var specialtiles={
   'hunyise_pin':separatetile("0123456789m0123456789s"),
   'hunyise_sou':separatetile("0123456789m0123456789p"),
 }
+var settings={};
 var editdata={
   'actions':[],
   'xun':[],
   'players':[],
   'config':{},
-  'settings':{},
   'player_datas':[{'avatar_frame':0,'avatar_id':400101,'nickname':"电脑(简单)",'title':600001,'views':[]},
                   {'avatar_frame':0,'avatar_id':400101,'nickname':"电脑(简单)",'title':600001,'views':[]},
                   {'avatar_frame':0,'avatar_id':400101,'nickname':"电脑(简单)",'title':600001,'views':[]},
@@ -340,6 +340,7 @@ function saveproject(){
   tmp.discardtiles=JSON.parse(JSON.stringify(discardtiles));
   tmp.gaps=JSON.parse(JSON.stringify(gaps));
   tmp.juc=JSON.parse(JSON.stringify(juc));
+  tmp.settings=JSON.parse(JSON.stringify(settings));
   tmp.editdata=JSON.parse(JSON.stringify(editdata));
   lstscene=tmp;
 }
@@ -384,6 +385,7 @@ function loadproject(x){
     discardtiles=JSON.parse(JSON.stringify(x.discardtiles));
     gaps=JSON.parse(JSON.stringify(x.gaps));
     juc=JSON.parse(JSON.stringify(x.juc));
+    settings=JSON.parse(JSON.stringify(x.settings));
     editdata=JSON.parse(JSON.stringify(x.editdata));
     return;
   }
@@ -396,7 +398,6 @@ function loadproject(x){
     'xun':[],
     'players':null,
     'config':{},
-    'settings':{},
     'player_datas':[{'avatar_frame':0,'avatar_id':400101,'nickname':"电脑(简单)",'title':600001,'views':[]},
                     {'avatar_frame':0,'avatar_id':400101,'nickname':"电脑(简单)",'title':600001,'views':[]},
                     {'avatar_frame':0,'avatar_id':400101,'nickname':"电脑(简单)",'title':600001,'views':[]},
@@ -850,7 +851,7 @@ function calcfan_chuanma(tls,seat,zimo,type){
         if(i!=2&&i!=5&&i!=8&&i!=11&&i!=14&&i!=17&&i!=20&&i!=23&&i!=26&&cnt2[i]>0)jiangdui=false;
       }
       //---------------------------
-      if(editdata.settings.chuanma_points_method){
+      if(settings.chuanma_points_method){
         ans.push({'val':1,'id':1003});
         ans.push({'val':0,'id':1000});
         for(let i=1;i<=34;i++)if(cnt2[i]==4)ans[1].val++;
@@ -1099,6 +1100,11 @@ function calcfan(tls,seat,zimo,fangchong){
       for(let i=0;i<fulu[seat].length;i++)
         for(let j=0;j<fulu[seat][i].tile.length;j++)if(fulu[seat][i].tile[j][0]=='0')alldoras[1]++;
       let lstaction=getlstaction();
+      for(let i=0;i<fulu[seat].length;i++){
+        if(fulu[seat][i].type==4){
+          cnt2[tiletoint(fulu[seat][i].tile[0])]--;
+        }
+      }
       //------------------------------------
       if(liqiinfo[seat].yifa!=0&&liqiinfo[seat].liqi==0&&seat==ju&&zimo){ans.fans.push({'val':1,'id':35});tianhu=true;}//天和 
       if(liqiinfo[seat].yifa!=0&&liqiinfo[seat].liqi==0&&seat!=ju&&zimo)ans.fans.push({'val':1,'id':36});//地和 
@@ -1344,8 +1350,7 @@ function gamebegin(){
         'mode':1,
       }
     }
-  if(editdata.settings==undefined)editdata.settings={};
-  if(editdata.settings.chuanma_points_method==undefined)editdata.settings.chuanma_points_method=0;
+  if(settings.chuanma_points_method==undefined)settings.chuanma_points_method=0;
   if(editdata.player_datas==undefined)editdata.player_datas=[];
   config=editdata.config;
   if(config.mode.mode==11){
@@ -1462,6 +1467,7 @@ function addNewRound(chang,ju,ben,doras,left_tile_count,liqibang,md5,paishan,sco
 }
 function roundbegin(){
   try{
+    if(editdata.actions.length==0)gamebegin();
     if(is_chuanma()&&juc!=-1){ju=juc;juc=-1;}
     if(ju==playercnt){chang++;ju=0;}
     if(chang==playercnt)chang=0;
@@ -2977,11 +2983,13 @@ function loadreplay(){
   loadproject();
   let rounds=uiscript.UI_Replay.Inst.rounds;
   editdata.config=uiscript.UI_Replay.Inst.gameResult.config;
-  //if(uiscript.UI_Replay.Inst.gameResult.accounts[0])editdata.player_datas[0]=uiscript.UI_Replay.Inst.gameResult.accounts[0];
-  //if(uiscript.UI_Replay.Inst.gameResult.accounts[1])editdata.player_datas[1]=uiscript.UI_Replay.Inst.gameResult.accounts[1];
-  //if(uiscript.UI_Replay.Inst.gameResult.accounts[2])editdata.player_datas[2]=uiscript.UI_Replay.Inst.gameResult.accounts[2];
-  //if(uiscript.UI_Replay.Inst.gameResult.accounts[3])editdata.player_datas[3]=uiscript.UI_Replay.Inst.gameResult.accounts[3];
-  gamebegin();
+  if(uiscript.UI_Replay.Inst.gameResult.accounts[0])editdata.player_datas[0]=uiscript.UI_Replay.Inst.gameResult.accounts[0];
+  if(uiscript.UI_Replay.Inst.gameResult.accounts[1])editdata.player_datas[1]=uiscript.UI_Replay.Inst.gameResult.accounts[1];
+  if(uiscript.UI_Replay.Inst.gameResult.accounts[2])editdata.player_datas[2]=uiscript.UI_Replay.Inst.gameResult.accounts[2];
+  if(uiscript.UI_Replay.Inst.gameResult.accounts[3])editdata.player_datas[3]=uiscript.UI_Replay.Inst.gameResult.accounts[3];
+  editdata.player_datas[0].views=[];editdata.player_datas[1].views=[];
+  editdata.player_datas[2].views=[];editdata.player_datas[3].views=[];
+  //gamebegin();
   for(let i=0;i<rounds.length;i++){
     let tt=rounds[i].actions;
     tiles0=rounds[i].actions[0].data.tiles0;
@@ -3026,7 +3034,7 @@ function loadreplay(){
     }
     roundend();
   }
-  gameend();
+  //gameend();
 }
 //该部分朝下 
 editdata.player_datas[0].nickname="电脑(简单)";
@@ -3037,7 +3045,7 @@ editdata.player_datas[0].avatar_id=400101;
 editdata.player_datas[1].avatar_id=400101;
 editdata.player_datas[2].avatar_id=400101;
 editdata.player_datas[3].avatar_id=400101;
-editdata.settings.chuanma_points_method=0;
+settings.chuanma_points_method=0;
 editdata.config={
   'category':2,
   'meta':{'mode_id':11},
