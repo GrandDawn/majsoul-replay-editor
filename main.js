@@ -3057,4 +3057,4 @@ function loadreplay(){
   }
   gameend();
 }
-try{unsafeWindow.RS=new Replay_Storage;}catch(e){}
+try{unsafeWindow.MRE=new Majsoul_Replay_Editor;}catch(e){}
