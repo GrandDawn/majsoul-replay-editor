@@ -196,9 +196,6 @@ function md5(string){
 }
 var initData,initRoom,show;
 //uiscript.UI_ScoreChange.prototype.setBaopai=function(){}
-if(initData==undefined)initData=uiscript.UI_Replay.prototype.initData;
-if(initRoom==undefined)initRoom=view.DesktopMgr.prototype.initRoom;
-if(show==undefined)show=uiscript.UI_GameEnd.prototype.show;
 function editgame(editdata){
   try{
     let UI_Replay=uiscript.UI_Replay.Inst;
@@ -223,9 +220,13 @@ function editgame(editdata){
   }
 }
 function edit(x){
+  if(initData==undefined)initData=uiscript.UI_Replay.prototype.initData;
+  if(initRoom==undefined)initRoom=view.DesktopMgr.prototype.initRoom;
+  if(show==undefined)show=uiscript.UI_GameEnd.prototype.show;
+  try{editfunction();}catch(e){};
   function player_datas(a){
     let ret=[];
-    for(let seat=0;seat<4;seat++){
+    for(let seat=0;seat<x.player_datas.length;seat++){
       ret[seat]={
         'nickname':x.player_datas[seat].nickname,
         'avatar_id':x.player_datas[seat].avatar_id,
@@ -241,7 +242,7 @@ function edit(x){
         'charid':cfg.item_definition.skin.map_[x.player_datas[seat].avatar_id].character_id,
         'seat':seat,
         'views':x.player_datas[seat].views,
-        'title':editdata.player_datas[seat].title,
+        'title':x.player_datas[seat].title,
       }
       if(a[seat].account_id!=undefined)ret[seat].account_id=a[seat].account_id;
     }
@@ -2934,6 +2935,7 @@ function gameend(noedit){
   if(noedit!=true)edit();
 }
 function randompaishan(paishan,paishanback,reddora){
+  if(editdata.actions.length==0)gamebegin();
   if(typeof(tiles0)=="string")tiles0=separatetile(tiles0);
   if(typeof(tiles1)=="string")tiles1=separatetile(tiles1);
   if(typeof(tiles2)=="string")tiles2=separatetile(tiles2);
@@ -2989,7 +2991,7 @@ function loadreplay(){
   if(uiscript.UI_Replay.Inst.gameResult.accounts[3])editdata.player_datas[3]=uiscript.UI_Replay.Inst.gameResult.accounts[3];
   editdata.player_datas[0].views=[];editdata.player_datas[1].views=[];
   editdata.player_datas[2].views=[];editdata.player_datas[3].views=[];
-  //gamebegin();
+  gamebegin();
   for(let i=0;i<rounds.length;i++){
     let tt=rounds[i].actions;
     tiles0=rounds[i].actions[0].data.tiles0;
@@ -3034,7 +3036,7 @@ function loadreplay(){
     }
     roundend();
   }
-  //gameend();
+  gameend();
 }
 //该部分朝下 
 editdata.player_datas[0].nickname="电脑(简单)";
@@ -3068,7 +3070,7 @@ editdata.config={
     }
   }
 }
-gamebegin();
+//gamebegin();
 //第一局（流局满贯，作弊） 
 tiles0=["1m","1m","1m","2m","3m","4m","0m","6m","7m","8m","9m","9m","9m","5z"];
 tiles1=["1p","1p","1p","2p","3p","4p","0p","6p","7p","8p","9p","9p","9p"];
@@ -3236,4 +3238,4 @@ hupai();
 roundend();
 //第十局
 //... 
-gameend();
+//gameend();
