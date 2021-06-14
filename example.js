@@ -1,5 +1,3 @@
-try{unsafeWindow.RS=new Replay_Storage;}catch(e){}
-//该部分朝下 
 try{RS.open();}catch(e){};
 editdata.player_datas[0].nickname="电脑(简单)";
 editdata.player_datas[1].nickname="电脑(简单)";
