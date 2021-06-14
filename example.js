@@ -20,6 +20,7 @@ editdata.config={
       'dora_count':3,
       'fanfu':1,
       'guyi_mode':0,
+      'have_zimosun':true,
       'huansanzhang':0,
       'open_hand':0,
       'init_point':25000,
