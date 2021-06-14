@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         replay editor
+// @name         雀魂回放编辑器Replay_Editor
 // @namespace    http://tampermonkey.net/
-// @version      0.1
-// @description  replay editor on tampermonkey
+// @version      0.1.2
+// @description  雀魂自制回放
 // @author       xiaolan16
 // @homepageURL  https://github.com/xiaolan16/make-a-replay-in-maj-soul
 // @match        https://game.maj-soul.com/1/
@@ -13,7 +13,7 @@
 // @grant        GM_setValue
 // @license      Apache-2.0 License
 // ==/UserScript==
-class Replay_Storage{
+class Majsoul_Replay_Editor{
     save(name){
         let allreplay=GM_getValue('allreplay',{});
         saveproject();
