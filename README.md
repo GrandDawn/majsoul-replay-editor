@@ -2,7 +2,15 @@
 ## 功能：自己造一个雀魂的回放
 ## 使用方法
 
-请访问[这里](https://github.com/xiaolan16/make-a-replay-in-maj-soul/wiki/%E7%BC%96%E8%BE%91%E6%AF%8F%E4%B8%80%E5%9C%BA%E6%B8%B8%E6%88%8F%E7%9A%84%E6%96%B9%E6%B3%95)
+1.油猴脚本：请下载`tampermonkey_header.js`、`add_function.js`和`main.js`，并在一起放入油猴脚本。
+
+[点击前往GreasyFork安装](https://greasyfork.org/zh-CN/scripts/427921-replay-editor)
+
+[点击前往Github](https://github.com/xiaolan16/make-a-replay-in-maj-soul)
+
+2.正常输入：请下载`add_function.js`和`main.js`。
+
+文字版说明：请访问[这里](https://github.com/xiaolan16/make-a-replay-in-maj-soul/wiki/%E7%BC%96%E8%BE%91%E6%AF%8F%E4%B8%80%E5%9C%BA%E6%B8%B8%E6%88%8F%E7%9A%84%E6%96%B9%E6%B3%95)
 
 ## 注意事项
 
