@@ -1,3 +1,4 @@
+try{MRE.open();}catch(e){};
 editdata.player_datas[0].nickname="电脑(简单)";
 editdata.player_datas[1].nickname="电脑(简单)";
 editdata.player_datas[2].nickname="电脑(简单)";
@@ -26,8 +27,6 @@ editdata.config={
     }
   }
 }
-
-gamebegin();
 tiles0=["1m","1m","1m","2m","3m","4p","0p","6p","7m","8m","9m","9m","9m","5z"];
 tiles1=["1s","1s","1s","2s","3s","5s","5s","5s","7s","8s","9s","9s","9s"];
 tiles2=["1p","1p","1p","2p","3p","4m","0m","6m","7p","8p","9p","9p","9p"];  
@@ -89,4 +88,4 @@ roundbegin();
 huansanzhang(["7p","8p","8s"],["3z","3z","3z"],["9p","7s","9s"],["3s","3s","3s"],1);
 hupai(true);
 roundend();
-gameend();
+try{MRE.close();}catch(e){};
