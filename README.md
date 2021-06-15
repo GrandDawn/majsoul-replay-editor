@@ -10,7 +10,7 @@
 
 2.正常输入：请下载`add_function.js`和`main.js`。
 
-文字版说明：请访问[这里](https://github.com/xiaolan16/make-a-replay-in-maj-soul/wiki/%E7%BC%96%E8%BE%91%E6%AF%8F%E4%B8%80%E5%9C%BA%E6%B8%B8%E6%88%8F%E7%9A%84%E6%96%B9%E6%B3%95)，并配有`example.js`作样例。
+文字版说明：请访问[这里](https://github.com/xiaolan16/make-a-replay-in-maj-soul/wiki/%E7%BC%96%E8%BE%91%E6%AF%8F%E4%B8%80%E5%9C%BA%E6%B8%B8%E6%88%8F%E7%9A%84%E6%96%B9%E6%B3%95)，并配有[example](https://github.com/xiaolan16/majsoul-replay-editor/wiki/examples%E6%96%87%E4%BB%B6%E8%A7%A3%E9%87%8A)作样例。
 
 ## 注意事项
 
