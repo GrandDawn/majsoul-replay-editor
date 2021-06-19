@@ -2150,6 +2150,7 @@ function hupai(x,type){
         }
       }
     }
+    if(x.length==0)return;
     if(!is_xuezhandaodi()&&!is_chuanma()&&!is_xueliu()){
       let ret=[],baopait=0;
       for(let i=0;i<x.length;i++)ret.push(hupaioneplayer(x[i]));
@@ -2164,6 +2165,7 @@ function hupai(x,type){
         ju++;
         ben=0;
       }
+      roundend();
     }
     else if((is_xuezhandaodi()||is_chuanma()||is_xueliu())&&(type==undefined||type==false)){
       let ret=[];
@@ -2199,6 +2201,7 @@ function hupai(x,type){
       else addHuleXueLiuEnd(ret,[].concat(old_scores),[].concat(delta_scores),[].concat(scores),hules_history);
       delta_scores=[0,0,0,0];
       if(!is_chuanma())ju++;
+      roundend();
     }
     if(is_chuanma()&&!hupaied[0]&&!hupaied[1]&&!hupaied[2]&&!hupaied[3])ju=x[0];
     saveproject();
@@ -2875,6 +2878,7 @@ function notileliuju(){
     endNoTile(false,ret,ret2);
     if(!is_xuezhandaodi()&&!is_chuanma())ben++;
     if((ret[ju].tingpai==false||is_xuezhandaodi())&&!is_chuanma())ju++;
+    roundend();
     saveproject();
   }catch(e){
     throw(e);
@@ -2967,6 +2971,7 @@ function liuju(){
     actions.push(ret);
     edit_online();
     if(!is_xuezhandaodi()&&!is_chuanma())ben++;
+    roundend();
     saveproject();
   }catch(e){
     throw(e);
@@ -2974,6 +2979,7 @@ function liuju(){
   }
 }
 function roundend(type){
+  if(actions.length==0)return;
   if(type==undefined&&is_chuanma()&&chuanmagangs.notover.length!=0&&getlstaction().name!="RecordNoTile"&&getlstaction().name!="RecordHuleXueZhanEnd")calcgangpoint(true);
   discardtiles=["","","",""];
   tiles0=null;tiles1=null;tiles2=null;tiles3=null;paishan=null;
