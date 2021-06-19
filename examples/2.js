@@ -23,7 +23,7 @@ editdata.config={
       'have_zimosun':false,
       'huansanzhang':0,
       'open_hand':0,
-      'init_point':35000,
+      'init_point':100000,
       'muyu_mode':0,
       'shiduan':1,
       'xuezhandaodi':0,
@@ -35,7 +35,7 @@ tiles0=["1s","1s","1s","1z","1z","1z","5z","5z","6z","6z","7z","7z","7z","2z"];
 tiles1=["1m","2s","2s","2s","3s","3s","3s","4s","4s","4s","6s","8s","8s"];
 tiles2=["1m","1p","1p","1p","2p","2p","2p","3p","3p","3p","6s","8s","8s"];
 tiles3=[];
-paishan=randompaishan("6s6s4z","2s4s5z2p3p6z9s3z9s3z3z9s6z9s3z5z1m7z1z1s4z4z4z");
+paishan=randompaishan("6s6s4z","7z1z1s4z4z4z");
 roundbegin();
 qiepai("2z",true);
 mopai();
@@ -57,21 +57,23 @@ leimingpai();
 mopai();
 leimingpai();
 mopai();
-qiepai();
-for(let i=1;i<=14;i++){
-  mopai();
+if(hule(getlstaction().data.seat))hupai();
+else{
   qiepai();
-  mopai();
-  qiepai();
-  mopai();
-  qiepai();
+  while(paishan.length/2>=15){
+    mopai();
+    let seat=getlstaction().data.seat,tile=getlstaction().data.tile;
+    if(tile=="5z"||tile=="6z"){
+      if(seat!=0)qiepai();
+      hupai();
+      break;
+    }
+    else qiepai();
+    if(paishan.length/2==14){
+      notileliuju();
+    }
+  }
 }
-mopai();
-leimingpai();
-mopai();
-qiepai();
-hupai();
-roundend();
 
 tiles0="1s1s2s2s3s3s4s5s6s7s8s9s9s4z";
 tiles1=["1m","2s","2s","2s","3s","3s","3s","4s","4s","4s","6s","8s","8s"];
@@ -82,5 +84,38 @@ roundbegin();
 leimingpai();
 mopai();
 hupai();
-roundend();
+
+tiles0="123456789p1199m4z";
+tiles1="2223334448888s";
+tiles2="123456789p1199m";
+tiles3=[];
+paishan=randompaishan("");
+roundbegin();
+qiepai("4z",true);
+mopai();
+qiepai("8s",true);
+let tingpais=tingpai(1);
+function hule(t){
+  for(let i=0;i<tingpais.length;i++)if(tingpais[i].tile==t)return true;
+  return false;
+}
+mopai();
+qiepai(true);
+if(hule(getlstaction().data.seat))hupai();
+else{
+  while(paishan.length/2>=15){
+    mopai();
+    let seat=getlstaction().data.seat,tile=getlstaction().data.tile;
+    if(hule(tile)){
+      if(seat!=1)qiepai();
+      hupai();
+      break;
+    }
+    else qiepai();
+    if(paishan.length/2==14){
+      notileliuju();
+    }
+  }
+}
+
 try{MRE.close();}catch(e){};
