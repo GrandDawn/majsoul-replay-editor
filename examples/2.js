@@ -57,7 +57,7 @@ leimingpai();
 mopai();
 leimingpai();
 mopai();
-if(hule(getlstaction().data.seat))hupai();
+if(getlstaction().data.tile=="5z"||getlstaction().data.tile=="6z")hupai();
 else{
   qiepai();
   while(paishan.length/2>=15){
@@ -95,18 +95,18 @@ qiepai("4z",true);
 mopai();
 qiepai("8s",true);
 let tingpais=tingpai(1);
-function hule(t){
+function hule(t,tingpais){
   for(let i=0;i<tingpais.length;i++)if(tingpais[i].tile==t)return true;
   return false;
 }
 mopai();
 qiepai(true);
-if(hule(getlstaction().data.seat))hupai();
+if(hule(getlstaction().data.tile,tingpais))hupai();
 else{
   while(paishan.length/2>=15){
     mopai();
     let seat=getlstaction().data.seat,tile=getlstaction().data.tile;
-    if(hule(tile)){
+    if(hule(tile,tingpais)){
       if(seat!=1)qiepai();
       hupai();
       break;
