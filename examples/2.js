@@ -71,6 +71,7 @@ else{
     else qiepai();
     if(paishan.length/2==14){
       notileliuju();
+      break;
     }
   }
 }
@@ -114,6 +115,7 @@ else{
     else qiepai();
     if(paishan.length/2==14){
       notileliuju();
+      break;
     }
   }
 }
