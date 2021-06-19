@@ -45,7 +45,7 @@ for(let i=69;i>=1;i--){
   qiepai();
 }
 notileliuju();
-roundend();
+//roundend();
 //第二局
 tiles0=["1m","1m","1m","2m","3m","4m","0m","6m","7m","8m","9m","9m","9m","1z"];
 tiles1=["1p","1p","1p","2p","3p","4p","0p","6p","7p","8p","9p","9p","9p"];
@@ -72,7 +72,7 @@ leimingpai();
 mopai();
 qiepai();
 liuju();
-roundend();
+//roundend();
 //第三局（每局的dora可能不一样哦）
 tiles0=["1s","1s","1s","2s","3s","4s","0s","6s","7s","8s","9s","9s","9s","1p"];
 tiles1=["1p","1p","2p","3p","7m","7m","7m","8m","8m","8m","9m","9m","9m"];
@@ -82,7 +82,7 @@ paishan=randompaishan("4p");
 roundbegin();
 qiepai("1p",true);
 hupai();
-roundend();
+//roundend();
 //第四局（诈和示范） 
 tiles1="1112340678999m6z";
 tiles2="238s55p12556677z";
@@ -91,7 +91,7 @@ tiles0="346s59p11223344z";
 paishan=randompaishan("3s");
 roundbegin();
 hupai();
-roundend();
+//roundend();
 //第五局 
 tiles1=["4m","5m","6m","4p","5p","6p","2s","2s","6z","5s","5s","8s","8s","6z"];
 tiles2=["1z","1z","1z","2z","2z","2z","3z","3z","3z","4z","4z","4z","7z"];
@@ -107,7 +107,7 @@ qiepai("6z");
 mopai();
 qiepai();
 hupai();
-roundend();
+//roundend();
 //第六局
 tiles1=["3m","4m","5m","3p","4p","5p","4s","7s","1z","1z","1z","5z","5z","5z"];
 tiles2=["3s","1m","1m","1m","2m","3m","4m","0m","6m","7m","8m","9m","9m"];
@@ -132,7 +132,7 @@ qiepai();
 mopai();
 leimingpai();
 hupai();
-roundend();
+//roundend();
 //第七局
 tiles1=["2s","2s","4s","4s","8s","8s","1z","1z","2z","2z","3z","3z","4z","7z"];
 tiles2=["1m","1m","1m","2m","3m","4m","0m","6m","7m","8m","9m","9m","9m"];
@@ -144,7 +144,7 @@ qiepai("7z",true);
 mopai();
 qiepai("4z",true);
 hupai();
-roundend();
+//roundend();
 //第八局
 tiles1="1m1m1m2m3m4m0m6m7m8m9m9m9m1z";
 tiles2="1p1p1p2p3p4p0p6p7p8p9p9p9p";
@@ -160,7 +160,7 @@ qiepai(true);
 mopai();
 qiepai(true);
 liuju();
-roundend();
+//roundend();
 //第九局
 tiles1=["1m","1m","1m","2m","3m","4m","0m","6m","7m","8m","9m","9m","9m","6z"];
 tiles2=["2s","3s","8s","5p","5p","1z","2z","5z","5z","6z","6z","7z","7z"];
@@ -196,7 +196,7 @@ qiepai("9p");
 mopai();
 qiepai();
 hupai();
-roundend();
+//roundend();
 //第十局
 //... 
 //gameend();
