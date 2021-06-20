@@ -748,14 +748,14 @@ function calcsudian(x,type){
   if(type==undefined)type=0;
   let val=0;
   for(let i=0;i<x.fans.length;i++)val=val+x.fans[i].val;
-  if(x.yiman==true)return 8000*val+type*val;
+  if(x.yiman==true)return 8000*val+type*val+type*x.fu/5*0.01;
   else if(val<fanfu())return -2000;
-  else if(val==5)return 2000+type*val;
-  else if(val==6||val==7)return 3000+type*val;
-  else if(val>=8&&val<=10)return 4000+type*val;
-  else if(val==11||val==12)return 6000+type*val;
-  else if(val>=13)return 8000+type*val;
-  else return Math.min(Math.pow(2,val+2)*x.fu,2000)+type*val;
+  else if(val==5)return 2000+type*val+type*x.fu/5*0.01;
+  else if(val==6||val==7)return 3000+type*val+type*x.fu/5*0.01;
+  else if(val>=8&&val<=10)return 4000+type*val+type*x.fu/5*0.01;
+  else if(val==11||val==12)return 6000+type*val+type*x.fu/5*0.01;
+  else if(val>=13)return 8000+type*val+type*x.fu/5*0.01;
+  else return Math.min(Math.pow(2,val+2)*x.fu,2000)+type*val+type*x.fu/5*0.01;
 }
 //0：副露的顺子   1：副露的刻子  2：明杠
 //3：暗杠         4：拔北宝牌    5：未副露的顺子 
