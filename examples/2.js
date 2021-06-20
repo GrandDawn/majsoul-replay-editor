@@ -93,7 +93,9 @@ tiles2="123456789p1199m";
 tiles3=[];
 paishan=randompaishan("");
 roundbegin();
-qiepai("4z",true);
+leimingpai();
+mopai();
+qiepai(true);
 mopai();
 qiepai("8s",true);
 let tingpais=tingpai(1);
@@ -101,24 +103,42 @@ function hule(t,tingpais){
   for(let i=0;i<tingpais.length;i++)if(tingpais[i].tile==t)return true;
   return false;
 }
-mopai();
-qiepai(true);
-if(hule(getlstaction().data.tile,tingpais))hupai();
-else{
-  while(paishan.length/2>=15){
-    mopai();
-    let seat=getlstaction().data.seat,tile=getlstaction().data.tile;
-    if(hule(tile,tingpais)){
-      if(seat!=1)qiepai();
-      hupai();
-      break;
+try{
+  mopai();
+  if(getlstaction().data.tile!="4z")qiepai(true);
+  else leimingpai();
+  if(hule(getlstaction().data.tile,tingpais))hupai();
+  else{
+    if(getlstaction().name=="RecordBaBei"){
+      mopai();
+      if(getlstaction().data.tile!="4z")qiepai(true);
+      else leimingpai();
+      if(hule(getlstaction().data.tile,tingpais))hupai();
+      if(getlstaction().name=="RecordBaBei"){
+        mopai();
+        if(getlstaction().data.tile!="4z")qiepai(true);
+        else leimingpai();
+        if(hule(getlstaction().data.tile,tingpais))hupai();
+      }
     }
-    else qiepai();
-    if(paishan.length/2==14){
-      notileliuju();
-      break;
+    else{
+      while(paishan.length/2>=15){
+        mopai();
+        let seat=getlstaction().data.seat,tile=getlstaction().data.tile;
+        if(hule(tile,tingpais)){
+          if(seat!=1&&tile!="4z")qiepai();
+          else if(tile!=1)leimingpai();
+          hupai();
+          break;
+        }
+        else if(tile=="4z")leimingpai();
+        else qiepai();
+        if(paishan.length/2==14){
+          notileliuju();
+          break;
+        }
+      }
     }
   }
-}
-
+}catch(e){}
 try{MRE.close();}catch(e){};
