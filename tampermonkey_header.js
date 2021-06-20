@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         雀魂回放编辑器Replay_Editor
 // @namespace    http://tampermonkey.net/
-// @version      0.1.2
+// @version      0.1.5
 // @description  雀魂自制回放
 // @author       xiaolan16
 // @homepageURL  https://github.com/xiaolan16/make-a-replay-in-maj-soul
@@ -37,6 +37,7 @@ class Majsoul_Replay_Editor{
         loadproject(JSON.parse(project[name]));
     }
     open(){
+        unsafeWindow.loadproject=loadproject;
         unsafeWindow.editdata=editdata;
         unsafeWindow.settings=settings;
         unsafeWindow.gamebegin=gamebegin;
@@ -68,6 +69,7 @@ class Majsoul_Replay_Editor{
     }
     close(){
         try{
+            delete unsafeWindow.loadproject;
             delete unsafeWindow.editdata;
             delete unsafeWindow.settings;
             delete unsafeWindow.gamebegin;
