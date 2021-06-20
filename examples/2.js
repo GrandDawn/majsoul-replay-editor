@@ -1,5 +1,5 @@
-loadproject();
 try{MRE.open();}catch(e){};
+loadproject();
 editdata.player_datas[0].nickname="电脑(简单)";
 editdata.player_datas[1].nickname="电脑(简单)";
 editdata.player_datas[2].nickname="电脑(简单)";
