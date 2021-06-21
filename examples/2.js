@@ -61,7 +61,7 @@ mopai();
 if(getlstaction().data.tile=="5z"||getlstaction().data.tile=="6z")hupai();
 else{
   qiepai();
-  while(paishan.length/2>=15){
+  while(getlstaction(2).data.left_tile_count>=1){
     mopai();
     let seat=getlstaction().data.seat,tile=getlstaction().data.tile;
     if(tile=="5z"||tile=="6z"){
@@ -70,7 +70,7 @@ else{
       break;
     }
     else qiepai();
-    if(paishan.length/2==14){
+    if(getlstaction(2).data.left_tile_count==0){
       notileliuju();
       break;
     }
@@ -122,7 +122,7 @@ try{
       }
     }
     else{
-      while(paishan.length/2>=15){
+      while(getlstaction(2).data.left_tile_count>=1){
         mopai();
         let seat=getlstaction().data.seat,tile=getlstaction().data.tile;
         if(hule(tile,tingpais)){
@@ -133,7 +133,7 @@ try{
         }
         else if(tile=="4z")leimingpai();
         else qiepai();
-        if(paishan.length/2==14){
+        if(getlstaction(2).data.left_tile_count==0){
           notileliuju();
           break;
         }
