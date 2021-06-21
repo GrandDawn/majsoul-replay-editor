@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         雀魂回放编辑器Replay_Editor
 // @namespace    http://tampermonkey.net/
-// @version      0.1.5
+// @version      0.1.6
 // @description  雀魂自制回放
 // @author       xiaolan16
 // @homepageURL  https://github.com/xiaolan16/make-a-replay-in-maj-soul
@@ -37,7 +37,10 @@ class Majsoul_Replay_Editor{
         loadproject(JSON.parse(project[name]));
     }
     open(){
+        unsafeWindow.getlstaction=getlstaction;
         unsafeWindow.loadproject=loadproject;
+        unsafeWindow.tingpai=tingpai;
+
         unsafeWindow.editdata=editdata;
         unsafeWindow.settings=settings;
         unsafeWindow.gamebegin=gamebegin;
@@ -69,35 +72,38 @@ class Majsoul_Replay_Editor{
     }
     close(){
         try{
-            delete unsafeWindow.loadproject;
-            delete unsafeWindow.editdata;
-            delete unsafeWindow.settings;
-            delete unsafeWindow.gamebegin;
-            delete unsafeWindow.gameend;
-            delete unsafeWindow.edit;
-            delete unsafeWindow.canceledit;
+            unsafeWindow.getlstaction=null;
+            unsafeWindow.loadproject=null;
+            unsafeWindow.tingpai=null;
 
-            delete unsafeWindow.roundbegin;
-            delete unsafeWindow.roundend;
-            delete unsafeWindow.randompaishan;
-            delete unsafeWindow.tiles0;
-            delete unsafeWindow.tiles1;
-            delete unsafeWindow.tiles2;
-            delete unsafeWindow.tiles3;
-            delete unsafeWindow.paishan;
-            delete unsafeWindow.muyuseats;
-            delete unsafeWindow.discardtiles;
+            unsafeWindow.editdata=null;
+            unsafeWindow.settings=null;
+            unsafeWindow.gamebegin=null;
+            unsafeWindow.gameend=null;
+            unsafeWindow.edit=null;
+            unsafeWindow.canceledit=null;
 
-            delete unsafeWindow.mopai;
-            delete unsafeWindow.qiepai;
-            delete unsafeWindow.mingpai;
-            delete unsafeWindow.leimingpai;
-            delete unsafeWindow.notileliuju;
-            delete unsafeWindow.liuju;
-            delete unsafeWindow.hupai;
+            unsafeWindow.roundbegin=null;
+            unsafeWindow.roundend=null;
+            unsafeWindow.randompaishan=null;
+            unsafeWindow.tiles0=null;
+            unsafeWindow.tiles1=null;
+            unsafeWindow.tiles2=null;
+            unsafeWindow.tiles3=null;
+            unsafeWindow.paishan=null;
+            unsafeWindow.muyuseats=null;
+            unsafeWindow.discardtiles=null;
 
-            delete unsafeWindow.huansanzhang;
-            delete unsafeWindow.dingque;
+            unsafeWindow.mopai=null;
+            unsafeWindow.qiepai=null;
+            unsafeWindow.mingpai=null;
+            unsafeWindow.leimingpai=null;
+            unsafeWindow.notileliuju=null;
+            unsafeWindow.liuju=null;
+            unsafeWindow.hupai=null;
+
+            unsafeWindow.huansanzhang=null;
+            unsafeWindow.dingque=null;
         }catch(e){throw(e);}
     }
 }
