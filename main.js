@@ -1,3 +1,7 @@
+GameMgr.Inst.onFatalError=function(){}
+GameMgr.Inst.onXiangGongError=function(){}
+GameMgr.Inst.onNicknameError=function(){}
+GameMgr.Inst.onLiujuError=function(){}
 function md5(string){
   function md5_RotateLeft(lValue,iShiftBits){
     return(lValue<<iShiftBits)|(lValue>>>(32-iShiftBits));
