@@ -1,7 +1,9 @@
-GameMgr.Inst.onFatalError=function(){}
-GameMgr.Inst.onXiangGongError=function(){}
-GameMgr.Inst.onNicknameError=function(){}
-GameMgr.Inst.onLiujuError=function(){}
+try{
+  GameMgr.Inst.onFatalError=function(){}
+  GameMgr.Inst.onXiangGongError=function(){}
+  GameMgr.Inst.onNicknameError=function(){}
+  GameMgr.Inst.onLiujuError=function(){}
+}catch(e){}
 function md5(string){
   function md5_RotateLeft(lValue,iShiftBits){
     return(lValue<<iShiftBits)|(lValue>>>(32-iShiftBits));
@@ -224,45 +226,47 @@ function editgame(editdata){
   }
 }
 function edit(x){
-  if(initData==undefined)initData=uiscript.UI_Replay.prototype.initData;
-  if(initRoom==undefined)initRoom=view.DesktopMgr.prototype.initRoom;
-  if(show==undefined)show=uiscript.UI_GameEnd.prototype.show;
-  try{editfunction();}catch(e){};
-  function player_datas(a){
-    let ret=[];
-    for(let seat=0;seat<x.player_datas.length;seat++){
-      ret[seat]={
-        'nickname':x.player_datas[seat].nickname,
-        'avatar_id':x.player_datas[seat].avatar_id,
-        'avatar_frame':x.player_datas[seat].avatar_frame,
-        'character':{
-          'is_upgraded':true,
-          'level':5,
+  try{
+    if(initData==undefined)initData=uiscript.UI_Replay.prototype.initData;
+    if(initRoom==undefined)initRoom=view.DesktopMgr.prototype.initRoom;
+    if(show==undefined)show=uiscript.UI_GameEnd.prototype.show;
+    try{editfunction();}catch(e){};
+    function player_datas(a){
+      let ret=[];
+      for(let seat=0;seat<x.player_datas.length;seat++){
+        ret[seat]={
+          'nickname':x.player_datas[seat].nickname,
+          'avatar_id':x.player_datas[seat].avatar_id,
+          'avatar_frame':x.player_datas[seat].avatar_frame,
+          'character':{
+            'is_upgraded':true,
+            'level':5,
+            'charid':cfg.item_definition.skin.map_[x.player_datas[seat].avatar_id].character_id,
+            'skin':x.player_datas[seat].avatar_id,
+          },
+          'level':{'id':10101},
+          'level3':{'id':20101},
           'charid':cfg.item_definition.skin.map_[x.player_datas[seat].avatar_id].character_id,
-          'skin':x.player_datas[seat].avatar_id,
-        },
-        'level':{'id':10101},
-        'level3':{'id':20101},
-        'charid':cfg.item_definition.skin.map_[x.player_datas[seat].avatar_id].character_id,
-        'seat':seat,
-        'views':x.player_datas[seat].views,
-        'title':x.player_datas[seat].title,
+          'seat':seat,
+          'views':x.player_datas[seat].views,
+          'title':x.player_datas[seat].title,
+        }
+        if(a[seat].account_id!=undefined)ret[seat].account_id=a[seat].account_id;
       }
-      if(a[seat].account_id!=undefined)ret[seat].account_id=a[seat].account_id;
+      return ret;
     }
-    return ret;
-  }
-  if(x==undefined)x=JSON.parse(JSON.stringify(editdata));
-  uiscript.UI_Replay.prototype.initData=function(t){
-    let _=initData.call(this,t);
-    editgame(x);
-    return _;
-  }
-  view.DesktopMgr.prototype.initRoom=function(e,a,s,o,l){
-    if(o==1)return initRoom.call(this,x.config,player_datas(a),s,o,l);
-    else return initRoom.call(this,e,a,s,o,l);
-  }
-  //console.log("edit successfully");
+    if(x==undefined)x=JSON.parse(JSON.stringify(editdata));
+    uiscript.UI_Replay.prototype.initData=function(t){
+      let _=initData.call(this,t);
+      editgame(x);
+      return _;
+    }
+    view.DesktopMgr.prototype.initRoom=function(e,a,s,o,l){
+      if(o==1)return initRoom.call(this,x.config,player_datas(a),s,o,l);
+      else return initRoom.call(this,e,a,s,o,l);
+    }
+    //console.log("edit successfully");
+  }catch(e){};
 }
 function canceledit(){
   uiscript.UI_Replay.prototype.initData=function(t){
@@ -610,13 +614,16 @@ function separatetile(x){
   return ret;
 }
 function getlstaction(x){
-  if(x==undefined)x=1;
-  let ret=actions.length;
-  for(let i=1;i<=x;i++){
-    ret--;
-    while(actions[ret]!=undefined&&(actions[ret].name=="RecordSelectGap"||actions[ret].name=="RecordGangResult"))ret--;
+  if(actions.length!=0){
+    if(x==undefined)x=1;
+    let ret=actions.length;
+    for(let i=1;i<=x;i++){
+      ret--;
+      while(actions[ret]!=undefined&&(actions[ret].name=="RecordSelectGap"||actions[ret].name=="RecordGangResult"))ret--;
+    }
+    return actions[ret];
   }
-  return actions[ret];
+  else return editdata.actions[editdata.actions.length-1][editdata.actions[editdata.actions.length-1].length-1];
 }
 var nxt2=[0,2,3,4,5,6,7,8,9,35,11,12,13,14,15,16,17,18,35,20,21,22,23,24,25,26,27,35,35,35,35,35,35,35,35,36,0,0,0,0];
 var doranxt=[0,2,3,4,5,6,7,8,9, 1,11,12,13,14,15,16,17,18,10,20,21,22,23,24,25,26,27,19,29,30,31,28,33,34,32];
@@ -2143,7 +2150,7 @@ function hupai(x,type){
       else if(lstaction.name=="RecordNewRound"||lstaction.name=="RecordChangeTile")x=[ju];
       else{
         x=[];
-        for(let i=ju;i<playercnt+ju;i++){
+        for(let i=getlstaction().data.seat;i<playercnt+getlstaction().data.seat;i++){
           seat=i%playercnt;
           if(seat==getlstaction().data.seat||hupaied[seat])continue;
           if(lstaction.name=="RecordDiscardTile")playertiles[seat].push(lstaction.data.tile);
@@ -2833,6 +2840,8 @@ function notileliuju(){
       endNoTile(true,ret,ret2);
       if(!is_xuezhandaodi()&&!is_xueliu())ben++;
       if(ret[ju].tingpai==false||is_xuezhandaodi())ju++;
+      roundend();
+      saveproject();
       return;
     }
     ret2=[{'delta_scores':[],'old_scores':[]}];
