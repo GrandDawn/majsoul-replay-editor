@@ -2069,7 +2069,7 @@ function endHule(HuleInfo,old_scores,delta_scores,scores,baopai){
   edit_online();
 }
 function addHuleXueZhanMid(HuleInfo,old_scores,delta_scores,scores){
-  for(let seat=0;seat<playercnt;seat++)liqiinfo[seat].yifa=0;//?????
+  if(!is_chuanma())for(let seat=0;seat<playercnt;seat++)liqiinfo[seat].yifa=0;//?????
   actions.push({
     'name':"RecordHuleXueZhanMid",
     'data':{
@@ -2094,7 +2094,7 @@ function addHuleXueZhanEnd(HuleInfo,old_scores,delta_scores,scores,hules_history
   });
 }
 function addHuleXueLiu(HuleInfo,old_scores,delta_scores,scores){
-  for(let seat=0;seat<playercnt;seat++)liqiinfo[seat].yifa=0;
+  if(!is_chuanma())for(let seat=0;seat<playercnt;seat++)liqiinfo[seat].yifa=0;
   actions.push({
     'name':"RecordHuleXueLiu",
     'data':{
