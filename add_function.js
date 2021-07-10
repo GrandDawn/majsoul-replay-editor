@@ -42,8 +42,8 @@ function editfunction(){
           s = !1;
         if(e.is_kailiqi){
           if(e.seat!=view.DesktopMgr.Inst.seat){
-            for(let i=0;i<view.DesktopMgr.Inst.players[(4+e.seat-view.DesktopMgr.Inst.seat)%4].hand.length;i++)view.DesktopMgr.Inst.players[(4+e.seat-view.DesktopMgr.Inst.seat)%4].hand[i].DoAnim_FullDown();
-            for(let i=0;i<view.DesktopMgr.Inst.players[(4+e.seat-view.DesktopMgr.Inst.seat)%4].hand.length;i++)view.DesktopMgr.Inst.players[(4+e.seat-view.DesktopMgr.Inst.seat)%4].hand[i].is_open=true;
+            for(let i=0;i<view.DesktopMgr.Inst.players[view.DesktopMgr.Inst.seat2LocalPosition(e.seat)].hand.length;i++)view.DesktopMgr.Inst.players[view.DesktopMgr.Inst.seat2LocalPosition(e.seat)].hand[i].DoAnim_FullDown();
+            for(let i=0;i<view.DesktopMgr.Inst.players[view.DesktopMgr.Inst.seat2LocalPosition(e.seat)].hand.length;i++)view.DesktopMgr.Inst.players[view.DesktopMgr.Inst.seat2LocalPosition(e.seat)].hand[i].is_open=true;
           }
           /*else{
             for (o = 0; o < view.DesktopMgr.Inst.players[0].hand.length; o++) view.DesktopMgr.Inst.players[0].hand[o].Hule();
@@ -66,8 +66,8 @@ function editfunction(){
           s = !1;
         if(e.is_kailiqi){
           if(e.seat!=view.DesktopMgr.Inst.seat){
-            for(let i=0;i<view.DesktopMgr.Inst.players[(4+e.seat-view.DesktopMgr.Inst.seat)%4].hand.length;i++)view.DesktopMgr.Inst.players[(4+e.seat-view.DesktopMgr.Inst.seat)%4].hand[i].DoAnim_FullDown();
-            for(let i=0;i<view.DesktopMgr.Inst.players[(4+e.seat-view.DesktopMgr.Inst.seat)%4].hand.length;i++)view.DesktopMgr.Inst.players[(4+e.seat-view.DesktopMgr.Inst.seat)%4].hand[i].is_open=true;
+            for(let i=0;i<view.DesktopMgr.Inst.players[view.DesktopMgr.Inst.seat2LocalPosition(e.seat)].hand.length;i++)view.DesktopMgr.Inst.players[view.DesktopMgr.Inst.seat2LocalPosition(e.seat)].hand[i].DoAnim_FullDown();
+            for(let i=0;i<view.DesktopMgr.Inst.players[view.DesktopMgr.Inst.seat2LocalPosition(e.seat)].hand.length;i++)view.DesktopMgr.Inst.players[view.DesktopMgr.Inst.seat2LocalPosition(e.seat)].hand[i].is_open=true;
           }
           /*else{
             for (o = 0; o < view.DesktopMgr.Inst.players[0].hand.length; o++) view.DesktopMgr.Inst.players[0].hand[o].Hule();
@@ -507,5 +507,92 @@ function editfunction(){
         return 500;
     }
     return 0
+  }
+  let seat2LocalPosition=view.DesktopMgr.prototype.seat2LocalPosition;
+  let localPosition2Seat=view.DesktopMgr.prototype.localPosition2Seat;
+  view.ERuleMode[view.ERuleMode.Liqi2=2]="Liqi2";
+  //view.DesktopMgr.prototype.rule_mode=2;
+  view.DesktopMgr.prototype.seat2LocalPosition=function(t){
+    if(this.rule_mode==view.ERuleMode.Liqi2){
+      if(t==this.seat)return 0;
+      else return 2;
+    } 
+    return seat2LocalPosition.call(this,t);
+  }
+  view.DesktopMgr.prototype.localPosition2Seat=function(t){
+    if(this.rule_mode==view.ERuleMode.Liqi2){
+      if(t==1||t==3)return -1;
+      if(t==0)return this.seat;
+      if(t==2)return 1-this.seat;
+    } 
+    return localPosition2Seat.call(this,t);
+  }
+  view.ViewPlayer.prototype.RefreshDir=function(){
+    if (-1!=this.seat){
+      var e=new Laya.Vector4,i=0;
+      if(view.DesktopMgr.Inst.rule_mode==view.ERuleMode.Liqi3)i=(this.seat-view.DesktopMgr.Inst.index_ju+3)%3;
+      if(view.DesktopMgr.Inst.rule_mode==view.ERuleMode.Liqi2)i=(this.seat-view.DesktopMgr.Inst.index_ju+2)%2;
+      if(view.DesktopMgr.Inst.rule_mode==view.ERuleMode.Liqi4)i=(this.seat-view.DesktopMgr.Inst.index_ju+4)%4;
+      e.z = .25 * i, e.w = 0, e.x = .25, e.y = 1, this.trans_dir.meshRender.material.tilingOffset = e
+    }
+  }
+  Object.defineProperty(view.DesktopMgr.prototype, "player_count", {
+    get: function() {
+      if(this.rule_mode==view.ERuleMode.Liqi2)return 2;
+      return this.rule_mode == view.ERuleMode.Liqi3 ? 3 : 4
+    },
+    enumerable: !0,
+    configurable: !0
+  })
+  mjcore.MJPai.DoraMet=function(t,i){
+    if(t.type!=i.type)return !1;
+    var n=i.index+1;
+    if(view.DesktopMgr.Inst.rule_mode==view.ERuleMode.Liqi2){
+      if(i.type==3&&n==5)n=1;
+      else if(i.type==3&&n==8)n=5;
+      else if(i.type==1&&n==2)n=9;
+      else if(i.type==0&&n==2)n=9;
+      else if(n==10)n=1;
+    }
+    if(view.DesktopMgr.Inst.rule_mode==view.ERuleMode.Liqi3){
+      if(i.type==3&&n==5)n=1;
+      else if(i.type==3&&n==8)n=5;
+      else if(i.type==1&&n==2)n=9;
+      else if(n==10)n=1;
+    }
+    if(view.DesktopMgr.Inst.rule_mode==view.ERuleMode.Liqi4){
+      if(i.type==3&&n==5)n=1;
+      else if(i.type==3&&n==8)n=5;
+      else if(n==10)n=1;
+    }
+    return n==t.index;
+  }
+}
+function editfunction2(){
+  uiscript.UI_Replay.Inst.page_paishan.setInfo=function() {
+    if (!this.noinfo) {
+      var t = view.DesktopMgr.Inst.left_tile_count,
+        e = view.DesktopMgr.Inst.dora.length,
+        i = view.DesktopMgr.Inst.get_gang_count() + view.DesktopMgr.Inst.get_babei_count();
+      i > 0 && view.DesktopMgr.Inst.waiting_lingshang_deal_tile && i--;
+      var n = 14;
+      if(view.DesktopMgr.Inst.rule_mode == view.ERuleMode.Liqi2) n=18;
+      view.DesktopMgr.Inst.is_chuanma_mode() && (i = 0, n = 0);
+      var a = this.tile_count - i - n;
+      a < 0 && (a = 0);
+      for (var r = this.tiles[0].width, s = this.tiles[0].height + 10, o = 0; o < a; o++) {
+        var l = 0;
+        view.DesktopMgr.Inst.rule_mode == view.ERuleMode.Liqi3 ? l = o % 12 * r + 5 * Math.floor(o % 12 / 3) : l += 2 + o % 12 * r + 5 * Math.floor(o % 12 / 4), this.tiles[o].x = l, this.tiles[o].y = Math.floor(o / 12) * s, this.tiles[o].filters = a - o <= t ? [] : [this.gray_filter]
+      }
+      for (var h = Math.ceil(a / 12) * s + 20, o = a; o < this.tile_count; o++) {
+        var c = this.tiles[o];
+        c.x = (o - a) % 12 * r, c.y = Math.floor((o - a) / 12) * s + h, c.filters = []
+      }
+      var _ = view.DesktopMgr.Inst.rule_mode == view.ERuleMode.Liqi3 ? 8 : 4;
+      if(view.DesktopMgr.Inst.rule_mode == view.ERuleMode.Liqi2) _=12;
+      for (var o = 0; o < e; o++) this.tiles[this.tile_count - _ - 1 - 2 * o].filters = [this.dora_filter], this.tiles[this.tile_count - _ - 2 - 2 * o].filters = [this.lidora_filter];
+      for (o = 0; o < i; o++) this.tiles[this.tile_count - 1 - o].filters = [this.gray_filter];
+      h += Math.ceil((this.tile_count - a) / 12) * s, this.container_input.y = h + 80, this.content.refresh()
+    }
   }
 }
