@@ -8,7 +8,7 @@
 
 1.油猴脚本：请下载`tampermonkey_header.js`、`add_function.js`和`main.js`，并在一起放入油猴脚本。
 
-[点击前往GreasyFork安装](https://greasyfork.org/zh-CN/scripts/427921-replay-editor)
+[GreasyFork已停止安装，修复时间暂定](https://greasyfork.org/zh-CN/scripts/427921-replay-editor)
 
 [点击前往Github](https://github.com/xiaolan16/make-a-replay-in-maj-soul)
 
