@@ -2095,8 +2095,17 @@ function hupaioneplayer(seat){
   }
   let dadian=Math.max(delta_scores[seat],-delta_scores[seat]);
   if(baopai[seat]!=undefined){
-    delta_scores[baopai[seat].seat]-=(playercnt-1)*100*benchangbang;
-    delta_scores[seat]+=(playercnt-1)*100*benchangbang;
+    if(zimo&&val-baopai[seat].val!=0){
+      for(let i=0;i<playercnt;i++){
+        if(i==seat||hupaied[i])continue;
+        delta_scores[i]-=100*benchangbang;
+        delta_scores[seat]+=100*benchangbang;
+      }
+    }
+    else{
+      delta_scores[baopai[seat].seat]-=(playercnt-1)*100*benchangbang;
+      delta_scores[seat]+=(playercnt-1)*100*benchangbang;
+    }
   }
   else if(zimo){
     for(let i=0;i<playercnt;i++){
