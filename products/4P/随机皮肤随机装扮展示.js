@@ -1,0 +1,32 @@
+clearProject();
+
+// 皮肤随机范围为所有实装皮肤
+// 装扮随机范围包括立直棒, 和牌特效, 立直特效, 头像框, 桌布, 牌背, 称号, 牌面
+// 由于包含桌布, 牌背和牌面, 根据回放显示的算法, 没有在 detail_rule 中设置对应项的话, 最终会显示为东起玩家的数据
+// 其中部分头像框和称号在国际中文服无法加载, 在 main.js 中作为'黑名单'去掉了
+
+player_datas[0].nickname = '东邪黄药师';
+player_datas[1].nickname = '南帝段智兴';
+player_datas[2].nickname = '西毒欧阳锋';
+player_datas[3].nickname = '北丐洪七公';
+
+setConfig({
+    category: 1,
+    meta: {mode_id: 0},
+    mode: {
+        mode: 1,
+        detail_rule: {
+            _random_views: true,
+            _random_skin: true,
+        }
+    }
+});
+
+begin_tiles[0] = '2223444666888s5z';
+begin_tiles[1] = '1112340678999m';
+begin_tiles[2] = '1112340678999p';
+begin_tiles[3] = '1112340678999s';
+randomPaishan('555z');
+qiepai(true);
+moqieLiqi(3);
+liuju();

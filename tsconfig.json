@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "target": "es2016",
+    "module": "esnext",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "noImplicitAny": false,
+    "lib": ["es2016", "dom"],
+    "outDir": ".",
+    "declaration": false,
+  },
+  "include": ["src/main.ts", "src/core/*.ts", "src/types/*.d.ts"],
+  "exclude": ["node_modules", "src/products"]
+}

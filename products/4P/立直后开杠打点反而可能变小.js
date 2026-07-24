@@ -1,0 +1,49 @@
+clearProject();
+
+// 11m77888999p123s 摸 8p 开暗杠(雀魂规则下, 不影响听牌面就可以暗杠), 荣和 7p 直接少了一杯口, 纯全带幺九总共4番
+
+player_datas[0].nickname = '一姬-契约';
+player_datas[1].nickname = '新年初诣';
+player_datas[2].nickname = '一姬当千';
+player_datas[3].nickname = '绮春歌';
+player_datas[0].avatar_id = 400102;
+player_datas[1].avatar_id = 400104;
+player_datas[2].avatar_id = 400105;
+player_datas[3].avatar_id = 400106;
+
+setConfig({
+    category: 1,
+    meta: {mode_id: 0},
+    mode: {
+        mode: 1,
+        detail_rule: {}
+    }
+});
+
+// 亲荣和, 立直, 一杯口, 纯全带幺九, 5番40符, 12000
+begin_tiles[0] = '119m77888999p237s';
+begin_tiles[1] = '222340567888m7p';
+begin_tiles[2] = '2222333346666p';
+begin_tiles[3] = '2233405677999s';
+randomPaishan('1s', '11z....');
+qiepai();
+mingQiepai('9s');
+moqieLiqi('9m');
+mingQiepai('7p');
+hupai();
+
+// 亲荣和, 立直nomi, 1番60符, 2900
+begin_tiles[0] = '11m77888999p2237s';
+begin_tiles[1] = '222340567888m7p';
+begin_tiles[2] = '2222333346666p';
+begin_tiles[3] = '2233405677999s';
+randomPaishan('1s8p', '1111z...9m');
+qiepai();
+mingQiepai('9s');
+moqieLiqi('2s');
+mingQiepai('9s');
+mopai();
+zimingpai();
+normalMoqie();
+mingQiepai('7p');
+hupai();

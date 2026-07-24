@@ -1,0 +1,53 @@
+clearProject();
+
+// 要做到和牌却被飞, 那就只能是役满的包牌和一炮多响导致的, 下面分别用大三元和大四喜作为例子
+
+player_datas[0].nickname = '一姬-契约';
+player_datas[1].nickname = '新年初诣';
+player_datas[2].nickname = '一姬当千';
+player_datas[3].nickname = '绮春歌';
+player_datas[0].avatar_id = 400102;
+player_datas[1].avatar_id = 400104;
+player_datas[2].avatar_id = 400105;
+player_datas[3].avatar_id = 400106;
+
+setConfig({
+    category: 1,
+    meta: {mode_id: 0},
+    mode: {
+        mode: 1,
+        detail_rule: {
+            _scores_: [55000, 21000, 24000, 0],
+        }
+    }
+});
+
+// 大三元包牌
+begin_tiles[0] = '238999p11z556677z';
+begin_tiles[1] = '11345678m23456p';
+begin_tiles[2] = '2223405567888m';
+begin_tiles[3] = '2223405567888s';
+randomPaishan('5677z1p', '1z....');
+qiepai('8p');
+for (let i = 0; i < 3; i++) {
+    normalMoqie();
+    mingQiepai('9p');
+}
+normalMoqie(2);
+hupai();
+
+// 大四喜包牌
+setRound(0, 0, 0);
+setScores([7000, 45000, 48000, 0]);
+begin_tiles[0] = '19999p112233445z';
+begin_tiles[1] = '11345678m23456p';
+begin_tiles[2] = '2223405567888m';
+begin_tiles[3] = '2223405567888s';
+randomPaishan('12344z1p', '5z....');
+qiepai();
+for (let i = 0; i < 4; i++) {
+    normalMoqie();
+    mingQiepai('9p');
+}
+normalMoqie(2);
+hupai();

@@ -1,0 +1,93 @@
+clearProject();
+
+player_datas[0].nickname = '天江衣-契约';
+player_datas[1].nickname = '天江衣';
+player_datas[2].nickname = '凛然花开';
+player_datas[3].nickname = '兔耳派对';
+player_datas[0].avatar_id = 403602;
+player_datas[1].avatar_id = 403601;
+player_datas[2].avatar_id = 403603;
+player_datas[3].avatar_id = 403604;
+
+// 头像框-大小姐发带
+player_datas[0].avatar_frame = player_datas[1].avatar_frame = player_datas[2].avatar_frame = player_datas[3].avatar_frame = 305552;
+player_datas[0].views = player_datas[1].views = player_datas[2].views = player_datas[3].views = [
+    {slot: 0, item_id: 308003}, // 立直棒-墨西哥卷饼
+    {slot: 1, item_id: 308001}, // 和牌-龙卷雷霆
+    {slot: 2, item_id: 308002}, // 立直-花天月地
+    {slot: 5, item_id: 305552}, // 头像框-大小姐发带
+    {slot: 6, item_id: 308004}, // 桌布-赛间小憩
+    {slot: 7, item_id: 308005}, // 牌背-艾托企鹅
+];
+
+setConfig({
+    category: 1,
+    meta: {mode_id: 0},
+    mode: {
+        mode: 1,
+        detail_rule: {
+            init_point: 500000,
+        }
+    }
+});
+
+// 第1局: 东亲, 东起 天和, 大三元, 字一色, 四暗刻单骑
+begin_tiles[0] = '11122555666777z';
+begin_tiles[1] = '1112340678999m';
+begin_tiles[2] = '1112340678999p';
+begin_tiles[3] = '1112340678999s';
+randomPaishan();
+hupai();
+
+// 第2局: 东亲, 东起 天和, 字一色, 小四喜, 四暗刻单骑
+begin_tiles[0] = '11122233344555z';
+begin_tiles[1] = '1112340678999m';
+begin_tiles[2] = '1112340678999p';
+begin_tiles[3] = '1112340678999s';
+randomPaishan();
+hupai();
+
+// 第3局: 东亲, 南起 地和, 大三元, 字一色, 四暗刻单骑
+begin_tiles[0] = '1112340678999m4z';
+begin_tiles[1] = '1112555666777z';
+begin_tiles[2] = '1112340678999p';
+begin_tiles[3] = '1112340678999s';
+randomPaishan('2z');
+qiepai();
+zimoHu();
+
+// 第4局: 南亲, 西起 地和, 四暗刻, 字一色, 大四喜
+begin_tiles[1] = '1112340678999m7z';
+begin_tiles[2] = '1112223334455z';
+begin_tiles[3] = '1112340678999p';
+begin_tiles[0] = '1112340678999s';
+randomPaishan('4z');
+qiepai();
+zimoHu();
+
+// 第5局: 西亲, 北起 地和, 字一色, 小四喜, 四暗刻单骑
+begin_tiles[2] = '1112340678999m7z';
+begin_tiles[3] = '1112223334555z';
+begin_tiles[0] = '1112340678999p';
+begin_tiles[1] = '1112340678999s';
+randomPaishan('4z');
+qiepai();
+zimoHu();
+
+// 第6局: 北亲, 北起 大三元, 字一色, 四杠子, 四暗刻单骑
+begin_tiles[3] = '11112555666777z';
+begin_tiles[0] = '1112340678999m';
+begin_tiles[1] = '1112340678999p';
+begin_tiles[2] = '1112340678999s';
+randomPaishan('', '2567z');
+comboMopai(4);
+hupai();
+
+// 第7局: 北亲, 北起 字一色, 小四喜, 四杠子, 四暗刻单骑
+begin_tiles[3] = '11112223334555z';
+begin_tiles[0] = '1112340678999m';
+begin_tiles[1] = '1112340678999p';
+begin_tiles[2] = '1112340678999s';
+randomPaishan('', '4532z');
+comboMopai(4);
+hupai();

@@ -1,0 +1,34 @@
+clearProject();
+
+player_datas[0].nickname = '伊莉雅-契约';
+player_datas[1].nickname = '伊莉雅';
+player_datas[2].nickname = '伊莉雅-契约';
+player_datas[3].nickname = 'Prism Live';
+player_datas[0].avatar_id = 407902;
+player_datas[1].avatar_id = 407901;
+player_datas[2].avatar_id = 407902;
+player_datas[3].avatar_id = 407903;
+
+player_datas[0].views = player_datas[1].views = player_datas[2].views = player_datas[3].views = [
+    {slot: 0, item_id: 308033}, // 立直棒-红晖的魔杖
+    {slot: 1, item_id: 308031}, // 和牌-魔力的迸发
+    {slot: 2, item_id: 308032}, // 立直-英灵的典仪
+    {slot: 6, item_id: 308034}, // 桌布-星夜的羁绊
+    {slot: 7, item_id: 308035}, // 牌背-苍蓝的星辰
+];
+
+setConfig({
+    category: 2,
+    meta: {mode_id: 13},
+    mode: {
+        mode: 1,
+        detail_rule: {
+            _report_yakus: true,
+            init_point: 300000,
+            _chang_ju_ben_num_: [2, 0, 0],
+        }
+    }
+});
+
+// 具体内容在 src/core/sample.ts 的 reportYaku 函数中
+reportYaku();

@@ -1,0 +1,69 @@
+clearProject();
+
+player_datas[0].nickname = '二之宫花-契约';
+player_datas[1].nickname = '命运之夏';
+player_datas[2].nickname = '馥郁满室';
+player_datas[3].nickname = '冬日心愿簿';
+player_datas[0].avatar_id = 401702;
+player_datas[1].avatar_id = 401707;
+player_datas[2].avatar_id = 401708;
+player_datas[3].avatar_id = 401709;
+
+// 头像框-豆芽
+player_datas[0].avatar_frame = player_datas[1].avatar_frame = player_datas[2].avatar_frame = player_datas[3].avatar_frame = 305500;
+player_datas[0].views = player_datas[1].views = player_datas[2].views = player_datas[3].views = [
+    {slot: 0, item_id: 305621}, // 立直棒-盆栽
+    {slot: 5, item_id: 305500}, // 头像框-豆芽
+    {slot: 6, item_id: 305801}, // 桌布-锦鲤游
+    {slot: 7, item_id: 305715}, // 牌背-新手报到
+];
+
+setConfig({
+    category: 1,
+    meta: {mode_id: 0},
+    mode: {
+        mode: 1,
+        detail_rule: {
+            init_point: 200000,
+        }
+    }
+});
+
+// 第1局: 东亲, 南起 纯正九莲宝灯
+begin_tiles[0] = '0m123456789p1114z';
+begin_tiles[1] = '1112345678999m';
+begin_tiles[2] = '1112340678999p';
+begin_tiles[3] = '1112340678999s';
+randomPaishan();
+qiepai('0m');
+hupai();
+
+// 第2局: 南亲, 南起 四暗刻单骑
+begin_tiles[1] = '222p222s11122267z';
+begin_tiles[2] = '1112340678999m';
+begin_tiles[3] = '1112340678999p';
+begin_tiles[0] = '1112340678999s';
+randomPaishan('6z');
+qiepai();
+normalMoqie();
+hupai();
+
+// 第3局: 南亲, 南起 国士无双十三面
+begin_tiles[1] = '139m19p19s1234567z';
+begin_tiles[2] = '2223405567888m';
+begin_tiles[3] = '1112340678999p';
+begin_tiles[0] = '1112340678999s';
+randomPaishan('1z');
+qiepai('3m');
+normalMoqie();
+hupai();
+
+// 第4局: 南亲, 南起 大四喜
+begin_tiles[1] = '22m111222333445z';
+begin_tiles[2] = '1112340678999m';
+begin_tiles[3] = '1112340678999p';
+begin_tiles[0] = '1112340678999s';
+randomPaishan('54z');
+qiepai();
+normalMoqie(2);
+hupai();

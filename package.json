@@ -1,0 +1,20 @@
+{
+  "name": "majsoul-replay-editor",
+  "type": "module",
+  "scripts": {
+    "build": "rollup -c",
+    "watch": "rollup -c -w",
+    "dev": "rollup -c -w --environment NODE_ENV:development",
+    "prod": "rollup -c --environment NODE_ENV:production"
+  },
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^25.0.0",
+    "@rollup/plugin-node-resolve": "^15.0.0",
+    "@rollup/plugin-terser": "^0.4.0",
+    "@rollup/plugin-typescript": "^11.0.0",
+    "rollup": "4.59.0",
+    "rollup-plugin-dts": "^6.3.0",
+    "tslib": "^2.5.0",
+    "typescript": "^5.0.0"
+  }
+}

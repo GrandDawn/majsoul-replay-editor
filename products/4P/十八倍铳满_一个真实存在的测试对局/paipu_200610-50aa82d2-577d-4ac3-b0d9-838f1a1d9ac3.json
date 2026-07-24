@@ -1,0 +1,693 @@
+{
+  "head": {
+    "uuid": "200610-50aa82d2-577d-4ac3-b0d9-838f1a1d9ac3",
+    "start_time": 1591784868,
+    "end_time": 1591784889,
+    "config": {
+      "category": 1,
+      "mode": {
+        "mode": 4,
+        "ai": true,
+        "detail_rule": {
+          "time_fixed": 5,
+          "time_add": 20,
+          "dora_count": 3,
+          "shiduan": 1,
+          "init_point": 200000,
+          "fandian": 200000,
+          "bianjietishi": true,
+          "ai_level": 1,
+          "fanfu": 1,
+          "guyi_mode": 1,
+          "open_hand": 1
+        },
+        "testing_environment": {
+          "paixing": 3
+        }
+      },
+      "meta": {
+        "room_id": 63031
+      }
+    },
+    "accounts": [
+      {
+        "account_id": 13293748,
+        "seat": 0,
+        "nickname": "宫永五峰",
+        "avatar_id": 400101,
+        "character": {
+          "charid": 200001,
+          "level": 0,
+          "exp": 0,
+          "skin": 400101,
+          "is_upgraded": false
+        },
+        "title": 0,
+        "level": {
+          "id": 10101,
+          "score": 0
+        },
+        "level3": {
+          "id": 20101,
+          "score": 0
+        },
+        "avatar_frame": 0,
+        "verified": 0
+      },
+      {
+        "account_id": 1000933,
+        "seat": 1,
+        "nickname": "仓木幽魂　",
+        "avatar_id": 400101,
+        "character": {
+          "charid": 200001,
+          "level": 0,
+          "exp": 0,
+          "skin": 400101,
+          "is_upgraded": false
+        },
+        "title": 0,
+        "level": {
+          "id": 10101,
+          "score": 0
+        },
+        "level3": {
+          "id": 20101,
+          "score": 0
+        },
+        "avatar_frame": 0,
+        "verified": 0,
+        "views": [
+          {
+            "slot": 0,
+            "item_id": 305018
+          },
+          {
+            "slot": 2,
+            "item_id": 305033
+          }
+        ]
+      },
+      {
+        "account_id": 1200590,
+        "seat": 2,
+        "nickname": "lyuris",
+        "avatar_id": 400201,
+        "character": {
+          "charid": 200002,
+          "level": 3,
+          "exp": 4595,
+          "skin": 400201,
+          "is_upgraded": false
+        },
+        "title": 600027,
+        "level": {
+          "id": 10201,
+          "score": 0
+        },
+        "level3": {
+          "id": 20201,
+          "score": 0
+        },
+        "avatar_frame": 0,
+        "verified": 0
+      },
+      {
+        "account_id": 75611,
+        "seat": 3,
+        "nickname": "手柄",
+        "avatar_id": 402401,
+        "character": {
+          "charid": 200024,
+          "level": 1,
+          "exp": 1000,
+          "skin": 402401,
+          "is_upgraded": false
+        },
+        "title": 600012,
+        "level": {
+          "id": 10301,
+          "score": 905
+        },
+        "level3": {
+          "id": 20201,
+          "score": 392
+        },
+        "avatar_frame": 0,
+        "verified": 0,
+        "views": [
+          {
+            "slot": 0,
+            "item_id": 305002
+          },
+          {
+            "slot": 1,
+            "item_id": 305036
+          },
+          {
+            "slot": 2,
+            "item_id": 305303
+          },
+          {
+            "slot": 3,
+            "item_id": 305011
+          },
+          {
+            "slot": 4,
+            "item_id": 305025
+          },
+          {
+            "slot": 6,
+            "item_id": 305046
+          },
+          {
+            "slot": 8,
+            "item_id": 307003
+          }
+        ]
+      }
+    ],
+    "result": {
+      "players": [
+        {
+          "seat": 1,
+          "total_point": 207000,
+          "part_point_1": 392000,
+          "part_point_2": 0,
+          "grading_score": 0,
+          "gold": 0
+        },
+        {
+          "seat": 2,
+          "total_point": 197000,
+          "part_point_1": 392000,
+          "part_point_2": 0,
+          "grading_score": 0,
+          "gold": 0
+        },
+        {
+          "seat": 3,
+          "total_point": 187000,
+          "part_point_1": 392000,
+          "part_point_2": 0,
+          "grading_score": 0,
+          "gold": 0
+        },
+        {
+          "seat": 0,
+          "total_point": -591000,
+          "part_point_1": -376000,
+          "part_point_2": 0,
+          "grading_score": 0,
+          "gold": 0
+        }
+      ]
+    }
+  },
+  "data": {
+    "name": ".lq.GameDetailRecords",
+    "data": {
+      "records": [
+        {
+          "name": ".lq.RecordNewRound",
+          "data": {
+            "chang": 0,
+            "ju": 0,
+            "ben": 0,
+            "scores": [
+              200000,
+              200000,
+              200000,
+              200000
+            ],
+            "liqibang": 0,
+            "begin_tiles[0]": [
+              "1z",
+              "1z",
+              "1z",
+              "2z",
+              "2z",
+              "2z",
+              "3z",
+              "3z",
+              "3z",
+              "4z",
+              "4z",
+              "4z",
+              "6z",
+              "7z"
+            ],
+            "begin_tiles[1]": [
+              "1z",
+              "1z",
+              "1z",
+              "2z",
+              "2z",
+              "2z",
+              "3z",
+              "3z",
+              "3z",
+              "4z",
+              "4z",
+              "4z",
+              "6z"
+            ],
+            "begin_tiles[2]": [
+              "1z",
+              "1z",
+              "1z",
+              "2z",
+              "2z",
+              "2z",
+              "3z",
+              "3z",
+              "3z",
+              "4z",
+              "4z",
+              "4z",
+              "6z"
+            ],
+            "begin_tiles[3]": [
+              "1z",
+              "1z",
+              "1z",
+              "2z",
+              "2z",
+              "2z",
+              "3z",
+              "3z",
+              "3z",
+              "4z",
+              "4z",
+              "4z",
+              "6z"
+            ],
+            "tingpai": [
+              {
+                "seat": 0,
+                "tingpais1": [
+                  {
+                    "tile": "6z",
+                    "haveyi": true,
+                    "yiman": true,
+                    "count": 5,
+                    "fu": 70,
+                    "biao_dora_count": 0,
+                    "yiman_zimo": true,
+                    "count_zimo": 5,
+                    "fu_zimo": 60
+                  }
+                ]
+              },
+              {
+                "seat": 1,
+                "tingpais1": [
+                  {
+                    "tile": "6z",
+                    "haveyi": true,
+                    "yiman": true,
+                    "count": 5,
+                    "fu": 70,
+                    "biao_dora_count": 0,
+                    "yiman_zimo": true,
+                    "count_zimo": 5,
+                    "fu_zimo": 60
+                  }
+                ]
+              },
+              {
+                "seat": 2,
+                "tingpais1": [
+                  {
+                    "tile": "6z",
+                    "haveyi": true,
+                    "yiman": true,
+                    "count": 5,
+                    "fu": 70,
+                    "biao_dora_count": 0,
+                    "yiman_zimo": true,
+                    "count_zimo": 5,
+                    "fu_zimo": 60
+                  }
+                ]
+              },
+              {
+                "seat": 3,
+                "tingpais1": [
+                  {
+                    "tile": "6z",
+                    "haveyi": true,
+                    "yiman": true,
+                    "count": 5,
+                    "fu": 70,
+                    "biao_dora_count": 0,
+                    "yiman_zimo": true,
+                    "count_zimo": 5,
+                    "fu_zimo": 60
+                  }
+                ]
+              }
+            ],
+            "operation": {
+              "seat": 0,
+              "operation_list": [
+                {
+                  "type": 1
+                },
+                {
+                  "type": 7,
+                  "combination": [
+                    "7z",
+                    "6z"
+                  ]
+                }
+              ],
+              "time_add": 20000,
+              "time_fixed": 8000
+            },
+            "md5": "34505b6382092be768a56e659c3a7a3a",
+            "paishan": "2z4z2z4s6p9p4m4s7z3s6s2p2s8m4p7s1z9p6m2p3z7p7p3s3m9s6z8m1z9m3p3z4z7m3m1p3z2m9m0p3p1m0s8m5s8p7m3p8m6z3s5z4m3m9s2m5p6p2m3m1s6p5z9s3p9p1z1p1p1m5z1p5s7z2z6s9m1s7p7m1z1p1p",
+            "left_tile_count": 69,
+            "doras": [
+              "7p"
+            ],
+            "opens": [
+              {
+                "seat": 0,
+                "tiles": [
+                  "1z",
+                  "2z",
+                  "3z",
+                  "4z",
+                  "6z",
+                  "7z"
+                ],
+                "count": [
+                  3,
+                  3,
+                  3,
+                  3,
+                  1,
+                  1
+                ]
+              },
+              {
+                "seat": 1,
+                "tiles": [
+                  "1z",
+                  "2z",
+                  "3z",
+                  "4z",
+                  "6z"
+                ],
+                "count": [
+                  3,
+                  3,
+                  3,
+                  3,
+                  1
+                ]
+              },
+              {
+                "seat": 2,
+                "tiles": [
+                  "1z",
+                  "2z",
+                  "3z",
+                  "4z",
+                  "6z"
+                ],
+                "count": [
+                  3,
+                  3,
+                  3,
+                  3,
+                  1
+                ]
+              },
+              {
+                "seat": 3,
+                "tiles": [
+                  "1z",
+                  "2z",
+                  "3z",
+                  "4z",
+                  "6z"
+                ],
+                "count": [
+                  3,
+                  3,
+                  3,
+                  3,
+                  1
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": ".lq.RecordDiscardTile",
+          "data": {
+            "seat": 0,
+            "tile": "6z",
+            "is_liqi": true,
+            "moqie": false,
+            "zhenting": [
+              false,
+              true,
+              true,
+              true
+            ],
+            "tingpais": [
+              {
+                "tile": "7z",
+                "haveyi": true,
+                "yiman": true,
+                "count": 5,
+                "fu": 70,
+                "biao_dora_count": 0,
+                "yiman_zimo": true,
+                "count_zimo": 5,
+                "fu_zimo": 60
+              }
+            ],
+            "is_wliqi": true,
+            "operations": [
+              {
+                "seat": 1,
+                "operation_list": [
+                  {
+                    "type": 9
+                  }
+                ],
+                "time_add": 20000,
+                "time_fixed": 5000
+              },
+              {
+                "seat": 2,
+                "operation_list": [
+                  {
+                    "type": 9
+                  }
+                ],
+                "time_add": 20000,
+                "time_fixed": 5000
+              },
+              {
+                "seat": 3,
+                "operation_list": [
+                  {
+                    "type": 9
+                  }
+                ],
+                "time_add": 20000,
+                "time_fixed": 5000
+              }
+            ],
+            "tile_state": 1
+          }
+        },
+        {
+          "name": ".lq.RecordHule",
+          "data": {
+            "hules": [
+              {
+                "hand": [
+                  "1z",
+                  "1z",
+                  "1z",
+                  "2z",
+                  "2z",
+                  "2z",
+                  "3z",
+                  "3z",
+                  "3z",
+                  "4z",
+                  "4z",
+                  "4z",
+                  "6z"
+                ],
+                "hu_tile": "6z",
+                "seat": 1,
+                "zimo": false,
+                "qinjia": false,
+                "liqi": false,
+                "doras": [
+                  "7p"
+                ],
+                "yiman": true,
+                "count": 6,
+                "fans": [
+                  {
+                    "val": 2,
+                    "id": 48
+                  },
+                  {
+                    "val": 2,
+                    "id": 50
+                  },
+                  {
+                    "val": 1,
+                    "id": 39
+                  },
+                  {
+                    "val": 1,
+                    "id": 59
+                  }
+                ],
+                "fu": 70,
+                "point_rong": 192000,
+                "point_zimo_qin": 96000,
+                "point_zimo_xian": 48000,
+                "title_id": 10,
+                "point_sum": 192000
+              },
+              {
+                "hand": [
+                  "1z",
+                  "1z",
+                  "1z",
+                  "2z",
+                  "2z",
+                  "2z",
+                  "3z",
+                  "3z",
+                  "3z",
+                  "4z",
+                  "4z",
+                  "4z",
+                  "6z"
+                ],
+                "hu_tile": "6z",
+                "seat": 2,
+                "zimo": false,
+                "qinjia": false,
+                "liqi": false,
+                "doras": [
+                  "7p"
+                ],
+                "yiman": true,
+                "count": 6,
+                "fans": [
+                  {
+                    "val": 2,
+                    "id": 48
+                  },
+                  {
+                    "val": 2,
+                    "id": 50
+                  },
+                  {
+                    "val": 1,
+                    "id": 39
+                  },
+                  {
+                    "val": 1,
+                    "id": 59
+                  }
+                ],
+                "fu": 70,
+                "point_rong": 192000,
+                "point_zimo_qin": 96000,
+                "point_zimo_xian": 48000,
+                "title_id": 10,
+                "point_sum": 192000
+              },
+              {
+                "hand": [
+                  "1z",
+                  "1z",
+                  "1z",
+                  "2z",
+                  "2z",
+                  "2z",
+                  "3z",
+                  "3z",
+                  "3z",
+                  "4z",
+                  "4z",
+                  "4z",
+                  "6z"
+                ],
+                "hu_tile": "6z",
+                "seat": 3,
+                "zimo": false,
+                "qinjia": false,
+                "liqi": false,
+                "doras": [
+                  "7p"
+                ],
+                "yiman": true,
+                "count": 6,
+                "fans": [
+                  {
+                    "val": 2,
+                    "id": 48
+                  },
+                  {
+                    "val": 2,
+                    "id": 50
+                  },
+                  {
+                    "val": 1,
+                    "id": 39
+                  },
+                  {
+                    "val": 1,
+                    "id": 59
+                  }
+                ],
+                "fu": 70,
+                "point_rong": 192000,
+                "point_zimo_qin": 96000,
+                "point_zimo_xian": 48000,
+                "title_id": 10,
+                "point_sum": 192000
+              }
+            ],
+            "old_scores": [
+              200000,
+              200000,
+              200000,
+              200000
+            ],
+            "delta_scores": [
+              -576000,
+              192000,
+              192000,
+              192000
+            ],
+            "wait_timeout": 0,
+            "scores": [
+              -376000,
+              392000,
+              392000,
+              392000
+            ],
+            "gameend": {}
+          }
+        }
+      ]
+    }
+  }
+}

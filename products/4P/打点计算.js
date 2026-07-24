@@ -1,0 +1,196 @@
+clearProject();
+
+// 这个主要是在算点的时候有歧义的选择(即选择最大的)
+// 在熟悉番种的情况下, 打点计算上出难题基本围绕 符数的计算 和 役种的选择 两方面, 下面都是后者
+
+// 第1局, 123m777888999p1z 荣和1z
+// 一杯口, 混全 (or 三暗刻)
+// 第2局, 777888999p1z 123m 荣和1z
+// 三暗刻 (or 混全)
+// 第3局, 123m77888999p11z 自摸7p
+// 自摸, 一杯口, 混全 (or 自摸, 三暗刻)
+// 第4局, 77888999p11z 123m 自摸7p
+// 三暗刻 (or 混全)
+// 第5局, 111m77888999p11z 荣和7p
+// 对对和, 三暗刻 (or 一杯口, 混全)
+
+// 第6局, 1239m777888999p 荣和9m
+// 一杯口, 纯全 (or 三暗刻)
+// 第7局, 9m777888999p 123m 荣和9m
+// 三暗刻 (or 纯全)
+// 第8局, 11123m77888999p 自摸7p
+// 自摸, 一杯口, 纯全 (or 自摸, 三暗刻)
+// 第9局, 11m77888999p 789m 自摸7p
+// 三暗刻 (or 纯全)
+// 第10局, 11199m77888999p 荣和7p
+// 对对和, 三暗刻 (or 一杯口, 纯全)
+
+// 第11局, 11122233378m11p 荣和6m
+// 三暗刻 (or 平和, 一杯口)
+
+// 第12局, 123m123p1123344s 荣和2s; 和 第13局, 123m123p1122334s 荣和4s
+// 一杯口, 三色同顺 (or 平和, 一杯口 or 平和, 一杯口, 三色同顺)
+
+player_datas[0].nickname = '一姬-契约';
+player_datas[1].nickname = '新年初诣';
+player_datas[2].nickname = '一姬当千';
+player_datas[3].nickname = '绮春歌';
+player_datas[0].avatar_id = 400102;
+player_datas[1].avatar_id = 400104;
+player_datas[2].avatar_id = 400105;
+player_datas[3].avatar_id = 400106;
+
+setConfig({
+    category: 1,
+    meta: {mode_id: 0},
+    mode: {
+        mode: 1,
+        detail_rule: {
+            init_point: 100000,
+        }
+    }
+});
+
+// 第1局, 123m777888999p1z 荣和1z
+begin_tiles[0] = '123m777888999p15z';
+begin_tiles[1] = '2223334445557z';
+begin_tiles[2] = '1112340678999s';
+begin_tiles[3] = '2223455567888s';
+randomPaishan('1z', '7z....');
+qiepai();
+normalMoqie();
+hupai();
+
+// 第2局, 777888999p1z 123m 荣和1z
+begin_tiles[0] = '12m777888999p2s15z';
+begin_tiles[1] = '2223334445557z';
+begin_tiles[2] = '888m3666777999s';
+begin_tiles[3] = '2223455567888s';
+randomPaishan('1z', '7z.7z...3m');
+qiepai('2s');
+mingpai();
+normalMoqie();
+mingQiepai('5z');
+normalMoqie();
+hupai();
+
+// 第3局, 123m77888999p11z 自摸7p
+begin_tiles[0] = '123m77888999p115z';
+begin_tiles[1] = '2223334445557z';
+begin_tiles[2] = '1112340678999s';
+begin_tiles[3] = '2223455567888s';
+randomPaishan('1117p', '6z....');
+qiepai();
+normalMoqie(3);
+zimoHu();
+
+// 第4局, 77888999p11z 123m 自摸7p
+begin_tiles[0] = '78m77888999p25s11z';
+begin_tiles[1] = '111p2223334447z';
+begin_tiles[2] = '888m3666777999s';
+begin_tiles[3] = '2223405567888s';
+randomPaishan('7p', '5z.5z.6z..29m');
+qiepai('2s');
+mingpai();
+normalMoqie();
+mingQiepai('5s');
+mingpai();
+normalMoqie();
+zimoHu();
+
+// 第5局, 111m77888999p11z 荣和7p
+begin_tiles[0] = '111m77888999p115z';
+begin_tiles[1] = '3334445556667z';
+begin_tiles[2] = '1112340678999s';
+begin_tiles[3] = '2223455567888s';
+randomPaishan('7p', '2z....');
+qiepai();
+normalMoqie();
+hupai();
+
+// 第6局, 1239m777888999p 荣和9m
+begin_tiles[0] = '1239m777888999p5z';
+begin_tiles[1] = '1112223334447z';
+begin_tiles[2] = '1112340678999s';
+begin_tiles[3] = '2223455567888s';
+randomPaishan('9m', '7z....');
+qiepai();
+normalMoqie();
+hupai();
+
+// 第7局, 9m777888999p 123m 荣和9m
+begin_tiles[0] = '129m777888999p2s5z';
+begin_tiles[1] = '1112223334447z';
+begin_tiles[2] = '888m3666777999s';
+begin_tiles[3] = '2223455567888s';
+randomPaishan('9m', '7z.7z...3m');
+qiepai('2s');
+mingpai();
+normalMoqie();
+mingQiepai('5z');
+normalMoqie();
+hupai();
+
+// 第8局, 11123m77888999p 自摸7p
+begin_tiles[0] = '12399m77888999p5z';
+begin_tiles[1] = '1112223334447z';
+begin_tiles[2] = '1112340678999s';
+begin_tiles[3] = '2223455567888s';
+randomPaishan('555z7p', '6z....');
+qiepai();
+normalMoqie(3);
+zimoHu();
+
+// 第9局, 11m77888999p 789m 自摸7p
+begin_tiles[0] = '1178m77888999p25s';
+begin_tiles[1] = '1112223334447z';
+begin_tiles[2] = '888m3666777999s';
+begin_tiles[3] = '2223405567888s';
+randomPaishan('7p', '5z.5z.6z..29m');
+qiepai('2s');
+mingpai();
+normalMoqie();
+mingQiepai('5s');
+mingpai();
+normalMoqie();
+zimoHu();
+
+// 第10局, 11199m77888999p 荣和7p
+begin_tiles[0] = '11199m77888999p5z';
+begin_tiles[1] = '1113334446667z';
+begin_tiles[2] = '1112340678999s';
+begin_tiles[3] = '2223455567888s';
+randomPaishan('7p', '2z....');
+qiepai();
+normalMoqie();
+hupai();
+
+// 第11局, 11122233378m11p 荣和6m
+begin_tiles[0] = '11122233378m11p6z';
+begin_tiles[1] = '1112223334445z';
+begin_tiles[2] = '1122340678999p';
+begin_tiles[3] = '1112340678999s';
+randomPaishan('6m', '1z....');
+qiepai();
+normalMoqie();
+hupai();
+
+// 第12局, 123m123p1123344s 荣和2s
+begin_tiles[0] = '123m123p1123344s5z';
+begin_tiles[1] = '1113334446667z';
+begin_tiles[2] = '4444055566667m';
+begin_tiles[3] = '4444055566667p';
+randomPaishan('2s', '2z....');
+qiepai();
+normalMoqie();
+hupai();
+
+// 第13局, 123m123p1123344s 荣和4s
+begin_tiles[0] = '123m123p1122334s5z';
+begin_tiles[1] = '1113334446667z';
+begin_tiles[2] = '4444055566667m';
+begin_tiles[3] = '4444055566667p';
+randomPaishan('4s', '2z....');
+qiepai();
+normalMoqie();
+hupai();
