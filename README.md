@@ -10,6 +10,8 @@
 
 B站视频教程(偏过时): [【雀魂】如何自制牌谱回放](https://www.bilibili.com/video/BV1tJ6xY4E16)
 
+文字版说明：请访问[这里](https://github.com/GrandDawn/majsoul-replay-editor/wiki/%E7%BC%96%E8%BE%91%E6%AF%8F%E4%B8%80%E5%9C%BA%E6%B8%B8%E6%88%8F%E7%9A%84%E6%96%B9%E6%B3%95)，并配有[example](https://github.com/GrandDawn/majsoul-replay-editor/wiki/examples%E6%96%87%E4%BB%B6%E8%A7%A3%E9%87%8A)作样例。
+
 ## 免责声明: 本仓库属于第三方脚本, 猫粮可能发威封号, 使用时请用小号登录实验, 个人对任何因封号导致的损失概不负责
 
 账号被封的话可以用账号邮箱发邮件给猫粮(中文服是 **cs@catfoodstudio.com** 或 **cs@maj-soul.com**), 申请注销账号,
