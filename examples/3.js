@@ -73,7 +73,3 @@ begin_tiles[1] = '222444s666s6z333z';
 randomPaishan('6z9m');
 huanpai(['78p8s', '333z', '9p9m9s', '333s'], 1);
 hupai(true);
-roundend();
-
-gameend();
-try{MRE.close();}catch(e){};
